@@ -1,5 +1,5 @@
 
-(ns layers.Dense
+(ns keras.layers.Dense
   (:require [keras.layers.core.Dense]))
 
 (defonce Dense keras.layers.core.Dense/Dense)

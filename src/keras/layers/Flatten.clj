@@ -1,5 +1,5 @@
 
-(ns layers.Flatten
+(ns keras.layers.Flatten
   (:require [keras.layers.core.Flatten]))
 
 (defonce Flatten keras.layers.core.Flatten/Flatten)
