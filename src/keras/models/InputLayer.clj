@@ -1,5 +1,5 @@
 
-(ns models.InputLayer
+(ns keras.models.InputLayer
   (:require [keras.engine.input_layer.InputLayer]))
 
 (defonce InputLayer keras.engine.input_layer.InputLayer/InputLayer)
