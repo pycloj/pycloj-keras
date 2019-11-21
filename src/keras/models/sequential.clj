@@ -1,6 +1,6 @@
 
-(ns keras.models.Sequential
-  (:require [keras.engine.sequential]))
+(ns models.Sequential
+  (:require [keras.engine.sequential.Sequential]))
 
 (defonce Sequential keras.engine.sequential.Sequential/Sequential)
 
