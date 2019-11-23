@@ -1,4 +1,3 @@
-
 (ns keras.utils.conv-utils
   "Utilities used in convolutional layers.
 "
@@ -8,18 +7,12 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce conv-utils (import-module "keras.utils.conv_utils"))
 
-(defn conv-input-length [ & {:keys [output_length filter_size padding stride]} ]
+(defn conv-input-length 
   "Determines input length of a convolution given output length.
 
     # Arguments
@@ -31,6 +24,7 @@
     # Returns
         The input length (integer).
     "
+  [ & {:keys [output_length filter_size padding stride]} ]
    (py/call-attr-kw conv-utils "conv_input_length" [] {:output_length output_length :filter_size filter_size :padding padding :stride stride }))
 
 (defn conv-output-length 
@@ -51,7 +45,7 @@
   
    (py/call-attr-kw conv-utils "conv_output_length" [] {:input_length input_length :filter_size filter_size :padding padding :stride stride :dilation dilation }))
 
-(defn convert-kernel [ & {:keys [kernel]} ]
+(defn convert-kernel 
   "Converts a Numpy kernel matrix from Theano format to TensorFlow format.
 
     Also works reciprocally, since the transformation is its own inverse.
@@ -65,6 +59,7 @@
     # Raises
         ValueError: in case of invalid kernel shape or invalid data_format.
     "
+  [ & {:keys [kernel]} ]
    (py/call-attr-kw conv-utils "convert_kernel" [] {:kernel kernel }))
 
 (defn deconv-length 
@@ -88,11 +83,12 @@
   
    (py/call-attr-kw conv-utils "deconv_length" [] {:dim_size dim_size :stride_size stride_size :kernel_size kernel_size :padding padding :output_padding output_padding :dilation dilation }))
 
-(defn normalize-padding [ & {:keys [value]} ]
+(defn normalize-padding 
   ""
+  [ & {:keys [value]} ]
    (py/call-attr-kw conv-utils "normalize_padding" [] {:value value }))
 
-(defn normalize-tuple [ & {:keys [value n name]} ]
+(defn normalize-tuple 
   "Transforms a single int or iterable of ints into an int tuple.
 
     # Arguments
@@ -109,4 +105,5 @@
         ValueError: If something else than an int/long or iterable thereof was
         passed.
     "
+  [ & {:keys [value n name]} ]
    (py/call-attr-kw conv-utils "normalize_tuple" [] {:value value :n n :name name }))

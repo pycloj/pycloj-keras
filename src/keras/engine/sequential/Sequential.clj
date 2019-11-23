@@ -1,4 +1,3 @@
-
 (ns keras.engine.sequential.Sequential
   "Linear stack of layers.
 
@@ -66,18 +65,12 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce sequential (import-module "keras.engine.sequential"))
 
-(defn Sequential [ & {:keys [layers name]} ]
+(defn Sequential 
   "Linear stack of layers.
 
     # Arguments
@@ -138,6 +131,7 @@
     model.weights  # returns list of length 4
     ```
     "
+  [ & {:keys [layers name]} ]
    (py/call-attr-kw sequential "Sequential" [] {:layers layers :name name }))
 
 (defn add 
@@ -325,7 +319,7 @@
   [self  & {:keys [input_shape]} ]
     (py/call-attr-kw sequential "compute_output_shape" [self] {:input_shape input_shape }))
 
-(defn count-params [ self ]
+(defn count-params 
   "Counts the total number of scalars composing the weights.
 
         # Returns
@@ -335,6 +329,7 @@
             RuntimeError: if the layer isn't yet built
                 (in which case its weights aren't yet defined).
         "
+  [ self ]
   (py/call-attr sequential "count_params"  self ))
 
 (defn evaluate 
@@ -647,8 +642,9 @@
                        :or {epochs 1 verbose 1 max_queue_size 10 workers 1 use_multiprocessing false shuffle true initial_epoch 0}} ]
     (py/call-attr-kw sequential "fit_generator" [] {:generator generator :steps_per_epoch steps_per_epoch :epochs epochs :verbose verbose :callbacks callbacks :validation_data validation_data :validation_steps validation_steps :class_weight class_weight :max_queue_size max_queue_size :workers workers :use_multiprocessing use_multiprocessing :shuffle shuffle :initial_epoch initial_epoch }))
 
-(defn get-config [ self ]
+(defn get-config 
   ""
+  [ self ]
   (py/call-attr sequential "get_config"  self ))
 
 (defn get-input-at 
@@ -775,12 +771,13 @@
   [self  & {:keys [inputs]} ]
     (py/call-attr-kw sequential "get_updates_for" [self] {:inputs inputs }))
 
-(defn get-weights [ self ]
+(defn get-weights 
   "Retrieves the weights of the model.
 
         # Returns
             A flat list of Numpy arrays.
         "
+  [ self ]
   (py/call-attr sequential "get_weights"  self ))
 
 (defn input 
@@ -956,12 +953,13 @@
   [ self ]
     (py/call-attr sequential "output_shape"  self))
 
-(defn pop [ self ]
+(defn pop 
   "Removes the last layer in the model.
 
         # Raises
             TypeError: if there are no layers in the model.
         "
+  [ self ]
   (py/call-attr sequential "pop"  self ))
 
 (defn predict 
@@ -1079,8 +1077,9 @@
                        :or {batch_size 32 verbose 0}} ]
     (py/call-attr-kw sequential "predict_proba" [] {:x x :batch_size batch_size :verbose verbose }))
 
-(defn reset-states [ self ]
+(defn reset-states 
   ""
+  [ self ]
   (py/call-attr sequential "reset_states"  self ))
 
 (defn run-internal-graph 
@@ -1243,7 +1242,7 @@
   [self  & {:keys [x y sample_weight]} ]
     (py/call-attr-kw sequential "test_on_batch" [self] {:x x :y y :sample_weight sample_weight }))
 
-(defn to-json [ self ]
+(defn to-json 
   "Returns a JSON string containing the network configuration.
 
         To load a network from a JSON save file, use
@@ -1256,9 +1255,10 @@
         # Returns
             A JSON string.
         "
+  [ self ]
   (py/call-attr sequential "to_json"  self ))
 
-(defn to-yaml [ self ]
+(defn to-yaml 
   "Returns a yaml string containing the network configuration.
 
         To load a network from a yaml save file, use
@@ -1275,6 +1275,7 @@
         # Returns
             A YAML string.
         "
+  [ self ]
   (py/call-attr sequential "to_yaml"  self ))
 
 (defn train-on-batch 

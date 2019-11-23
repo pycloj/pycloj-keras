@@ -1,4 +1,3 @@
-
 (ns keras.datasets.cifar10
   "CIFAR10 small images classification dataset.
 "
@@ -8,13 +7,7 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce cifar10 (import-module "keras.datasets.cifar10"))
@@ -80,10 +73,11 @@
   
    (py/call-attr-kw cifar10 "load_batch" [] {:fpath fpath :label_key label_key }))
 
-(defn load-data [  ]
+(defn load-data 
   "Loads CIFAR10 dataset.
 
     # Returns
         Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)`.
     "
+  [  ]
   (py/call-attr cifar10 "load_data"   ))

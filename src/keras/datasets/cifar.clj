@@ -1,4 +1,3 @@
-
 (ns keras.datasets.cifar
   "Utilities common to CIFAR10 and CIFAR100 datasets.
 "
@@ -8,13 +7,7 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce cifar (import-module "keras.datasets.cifar"))

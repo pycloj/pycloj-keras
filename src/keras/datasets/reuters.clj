@@ -1,4 +1,3 @@
-
 (ns keras.datasets.reuters
   "Reuters topic classification dataset.
 "
@@ -8,29 +7,10 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce reuters (import-module "keras.datasets.reuters"))
-
-(defn -remove-long-seq [ & {:keys [maxlen seq label]} ]
-  "Removes sequences that exceed the maximum length.
-
-    # Arguments
-        maxlen: Int, maximum length of the output sequences.
-        seq: List of lists, where each sublist is a sequence.
-        label: List where each element is an integer.
-
-    # Returns
-        new_seq, new_label: shortened lists for `seq` and `label`.
-    "
-   (py/call-attr-kw reuters "_remove_long_seq" [] {:maxlen maxlen :seq seq :label label }))
 
 (defn get-file 
   "Downloads a file from a URL if it not already in the cache.

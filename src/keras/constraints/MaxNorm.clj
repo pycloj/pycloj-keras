@@ -1,5 +1,4 @@
-
-(ns keras.constraints.MaxNorm
+(ns keras.constraints.maxnorm
   "MaxNorm weight constraint.
 
     Constrains the weights incident to each hidden unit
@@ -29,18 +28,12 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce constraints (import-module "keras.constraints"))
 
-(defn MaxNorm 
+(defn maxnorm 
   "MaxNorm weight constraint.
 
     Constrains the weights incident to each hidden unit
@@ -67,8 +60,9 @@
   [ & {:keys [max_value axis]
        :or {max_value 2 axis 0}} ]
   
-   (py/call-attr-kw constraints "MaxNorm" [] {:max_value max_value :axis axis }))
+   (py/call-attr-kw constraints "maxnorm" [] {:max_value max_value :axis axis }))
 
-(defn get-config [ self ]
+(defn get-config 
   ""
+  [ self ]
   (py/call-attr constraints "get_config"  self ))

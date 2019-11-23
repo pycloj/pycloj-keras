@@ -1,8 +1,24 @@
+(ns keras.initializers.Initializer
+  "Initializer base class: all initializers inherit from this class.
+    "
+  (:require [libpython-clj.python
+             :refer [import-module
+                     get-item
+                     get-attr
+                     python-type
+                     call-attr
+                     call-attr-kw]:as py]))
 
-(ns initializers.Initializer
-  (:require [keras.initializers.Initializer]))
+(py/initialize!)
+(defonce initializers (import-module "keras.initializers"))
 
-(defonce Initializer keras.initializers.Initializer/Initializer)
+(defn Initializer 
+  "Initializer base class: all initializers inherit from this class.
+    "
+  [  ]
+  (py/call-attr initializers "Initializer"   ))
 
-
-(defonce get-config keras.initializers.Initializer/get-config)
+(defn get-config 
+  ""
+  [ self ]
+  (py/call-attr initializers "get_config"  self ))

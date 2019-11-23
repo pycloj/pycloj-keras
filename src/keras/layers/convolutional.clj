@@ -1,4 +1,3 @@
-
 (ns keras.layers.convolutional
   "Convolutional layers.
 "
@@ -8,34 +7,32 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce convolutional (import-module "keras.layers.convolutional"))
 
-(defn AtrousConv1D [  ]
+(defn AtrousConv1D 
   ""
+  [  ]
   (py/call-attr convolutional "AtrousConv1D"   ))
 
-(defn AtrousConv2D [  ]
+(defn AtrousConv2D 
   ""
+  [  ]
   (py/call-attr convolutional "AtrousConv2D"   ))
 
-(defn AtrousConvolution1D [  ]
+(defn AtrousConvolution1D 
   ""
+  [  ]
   (py/call-attr convolutional "AtrousConvolution1D"   ))
 
-(defn AtrousConvolution2D [  ]
+(defn AtrousConvolution2D 
   ""
+  [  ]
   (py/call-attr convolutional "AtrousConvolution2D"   ))
 
-(defn transpose-shape [ & {:keys [shape target_format spatial_axes]} ]
+(defn transpose-shape 
   "Converts a tuple or a list to the correct `data_format`.
 
     It does so by switching the positions of its elements.
@@ -68,4 +65,5 @@
     # Raises
         ValueError: if `value` or the global `data_format` invalid.
     "
+  [ & {:keys [shape target_format spatial_axes]} ]
    (py/call-attr-kw convolutional "transpose_shape" [] {:shape shape :target_format target_format :spatial_axes spatial_axes }))

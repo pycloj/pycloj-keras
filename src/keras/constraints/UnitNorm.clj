@@ -1,5 +1,4 @@
-
-(ns keras.constraints.UnitNorm
+(ns keras.constraints.unitnorm
   "Constrains the weights incident to each hidden unit to have unit norm.
 
     # Arguments
@@ -21,18 +20,12 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce constraints (import-module "keras.constraints"))
 
-(defn UnitNorm 
+(defn unitnorm 
   "Constrains the weights incident to each hidden unit to have unit norm.
 
     # Arguments
@@ -51,8 +44,9 @@
   [ & {:keys [axis]
        :or {axis 0}} ]
   
-   (py/call-attr-kw constraints "UnitNorm" [] {:axis axis }))
+   (py/call-attr-kw constraints "unitnorm" [] {:axis axis }))
 
-(defn get-config [ self ]
+(defn get-config 
   ""
+  [ self ]
   (py/call-attr constraints "get_config"  self ))

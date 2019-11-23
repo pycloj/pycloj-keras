@@ -1,4 +1,3 @@
-
 (ns keras.layers.convolutional-recurrent
   "Convolutional-recurrent layers.
 "
@@ -8,44 +7,10 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce convolutional-recurrent (import-module "keras.layers.convolutional_recurrent"))
-
-(defn -generate-dropout-mask 
-  ""
-  [ & {:keys [ones rate training count]
-       :or {count 1}} ]
-  
-   (py/call-attr-kw convolutional-recurrent "_generate_dropout_mask" [] {:ones ones :rate rate :training training :count count }))
-
-(defn -standardize-args [ & {:keys [inputs initial_state constants num_constants]} ]
-  "Standardize `__call__` to a single list of tensor inputs.
-
-    When running a model loaded from file, the input tensors
-    `initial_state` and `constants` can be passed to `RNN.__call__` as part
-    of `inputs` instead of by the dedicated keyword arguments. This method
-    makes sure the arguments are separated and that `initial_state` and
-    `constants` are lists of tensors (or None).
-
-    # Arguments
-        inputs: tensor or list/tuple of tensors
-        initial_state: tensor or list of tensors or None
-        constants: tensor or list of tensors or None
-
-    # Returns
-        inputs: tensor
-        initial_state: list of tensors or None
-        constants: list of tensors or None
-    "
-   (py/call-attr-kw convolutional-recurrent "_standardize_args" [] {:inputs inputs :initial_state initial_state :constants constants :num_constants num_constants }))
 
 (defn has-arg 
   "Checks if a callable accepts a given keyword argument.
@@ -91,7 +56,7 @@
   
    (py/call-attr-kw convolutional-recurrent "to_list" [] {:x x :allow_tuple allow_tuple }))
 
-(defn transpose-shape [ & {:keys [shape target_format spatial_axes]} ]
+(defn transpose-shape 
   "Converts a tuple or a list to the correct `data_format`.
 
     It does so by switching the positions of its elements.
@@ -124,4 +89,5 @@
     # Raises
         ValueError: if `value` or the global `data_format` invalid.
     "
+  [ & {:keys [shape target_format spatial_axes]} ]
    (py/call-attr-kw convolutional-recurrent "transpose_shape" [] {:shape shape :target_format target_format :spatial_axes spatial_axes }))

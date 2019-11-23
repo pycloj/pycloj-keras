@@ -1,8 +1,24 @@
+(ns keras.initializers.ones
+  "Initializer that generates tensors initialized to 1.
+    "
+  (:require [libpython-clj.python
+             :refer [import-module
+                     get-item
+                     get-attr
+                     python-type
+                     call-attr
+                     call-attr-kw]:as py]))
 
-(ns initializers.Ones
-  (:require [keras.initializers.Ones]))
+(py/initialize!)
+(defonce initializers (import-module "keras.initializers"))
 
-(defonce Ones keras.initializers.Ones/Ones)
+(defn ones 
+  "Initializer that generates tensors initialized to 1.
+    "
+  [  ]
+  (py/call-attr initializers "ones"   ))
 
-
-(defonce get-config keras.initializers.Ones/get-config)
+(defn get-config 
+  ""
+  [ self ]
+  (py/call-attr initializers "get_config"  self ))

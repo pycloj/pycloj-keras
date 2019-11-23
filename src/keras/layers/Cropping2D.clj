@@ -1,70 +1,510 @@
+(ns keras.layers.Cropping2D
+  "Cropping layer for 2D input (e.g. picture).
 
-(ns layers.Cropping2D
-  (:require [keras.layers.convolutional.Cropping2D]))
+    It crops along spatial dimensions, i.e. height and width.
 
-(defonce Cropping2D keras.layers.convolutional.Cropping2D/Cropping2D)
+    # Arguments
+        cropping: int, or tuple of 2 ints, or tuple of 2 tuples of 2 ints.
+            - If int: the same symmetric cropping
+                is applied to height and width.
+            - If tuple of 2 ints:
+                interpreted as two different
+                symmetric cropping values for height and width:
+                `(symmetric_height_crop, symmetric_width_crop)`.
+            - If tuple of 2 tuples of 2 ints:
+                interpreted as
+                `((top_crop, bottom_crop), (left_crop, right_crop))`
+        data_format: A string,
+            one of `\"channels_last\"` or `\"channels_first\"`.
+            The ordering of the dimensions in the inputs.
+            `\"channels_last\"` corresponds to inputs with shape
+            `(batch, height, width, channels)` while `\"channels_first\"`
+            corresponds to inputs with shape
+            `(batch, channels, height, width)`.
+            It defaults to the `image_data_format` value found in your
+            Keras config file at `~/.keras/keras.json`.
+            If you never set it, then it will be \"channels_last\".
 
+    # Input shape
+        4D tensor with shape:
+        - If `data_format` is `\"channels_last\"`:
+            `(batch, rows, cols, channels)`
+        - If `data_format` is `\"channels_first\"`:
+            `(batch, channels, rows, cols)`
 
-(defonce add-loss keras.layers.convolutional.Cropping2D/add-loss)
+    # Output shape
+        4D tensor with shape:
+        - If `data_format` is `\"channels_last\"`:
+            `(batch, cropped_rows, cropped_cols, channels)`
+        - If `data_format` is `\"channels_first\"`:
+            `(batch, channels, cropped_rows, cropped_cols)`
 
-(defonce add-update keras.layers.convolutional.Cropping2D/add-update)
+    # Examples
 
-(defonce add-weight keras.layers.convolutional.Cropping2D/add-weight)
+    ```python
+        # Crop the input 2D images or feature maps
+        model = Sequential()
+        model.add(Cropping2D(cropping=((2, 2), (4, 4)),
+                             input_shape=(28, 28, 3)))
+        # now model.output_shape == (None, 24, 20, 3)
+        model.add(Conv2D(64, (3, 3), padding='same'))
+        model.add(Cropping2D(cropping=((2, 2), (2, 2))))
+        # now model.output_shape == (None, 20, 16, 64)
+    ```
+    "
+  (:require [libpython-clj.python
+             :refer [import-module
+                     get-item
+                     get-attr
+                     python-type
+                     call-attr
+                     call-attr-kw]:as py]))
 
-(defonce assert-input-compatibility keras.layers.convolutional.Cropping2D/assert-input-compatibility)
+(py/initialize!)
+(defonce layers (import-module "keras.layers"))
 
-(defonce build keras.layers.convolutional.Cropping2D/build)
+(defn Cropping2D 
+  "Cropping layer for 2D input (e.g. picture).
 
-(defonce built keras.layers.convolutional.Cropping2D/built)
+    It crops along spatial dimensions, i.e. height and width.
 
-(defonce call keras.layers.convolutional.Cropping2D/call)
+    # Arguments
+        cropping: int, or tuple of 2 ints, or tuple of 2 tuples of 2 ints.
+            - If int: the same symmetric cropping
+                is applied to height and width.
+            - If tuple of 2 ints:
+                interpreted as two different
+                symmetric cropping values for height and width:
+                `(symmetric_height_crop, symmetric_width_crop)`.
+            - If tuple of 2 tuples of 2 ints:
+                interpreted as
+                `((top_crop, bottom_crop), (left_crop, right_crop))`
+        data_format: A string,
+            one of `\"channels_last\"` or `\"channels_first\"`.
+            The ordering of the dimensions in the inputs.
+            `\"channels_last\"` corresponds to inputs with shape
+            `(batch, height, width, channels)` while `\"channels_first\"`
+            corresponds to inputs with shape
+            `(batch, channels, height, width)`.
+            It defaults to the `image_data_format` value found in your
+            Keras config file at `~/.keras/keras.json`.
+            If you never set it, then it will be \"channels_last\".
 
-(defonce compute-mask keras.layers.convolutional.Cropping2D/compute-mask)
+    # Input shape
+        4D tensor with shape:
+        - If `data_format` is `\"channels_last\"`:
+            `(batch, rows, cols, channels)`
+        - If `data_format` is `\"channels_first\"`:
+            `(batch, channels, rows, cols)`
 
-(defonce compute-output-shape keras.layers.convolutional.Cropping2D/compute-output-shape)
+    # Output shape
+        4D tensor with shape:
+        - If `data_format` is `\"channels_last\"`:
+            `(batch, cropped_rows, cropped_cols, channels)`
+        - If `data_format` is `\"channels_first\"`:
+            `(batch, channels, cropped_rows, cropped_cols)`
 
-(defonce count-params keras.layers.convolutional.Cropping2D/count-params)
+    # Examples
 
-(defonce get-config keras.layers.convolutional.Cropping2D/get-config)
+    ```python
+        # Crop the input 2D images or feature maps
+        model = Sequential()
+        model.add(Cropping2D(cropping=((2, 2), (4, 4)),
+                             input_shape=(28, 28, 3)))
+        # now model.output_shape == (None, 24, 20, 3)
+        model.add(Conv2D(64, (3, 3), padding='same'))
+        model.add(Cropping2D(cropping=((2, 2), (2, 2))))
+        # now model.output_shape == (None, 20, 16, 64)
+    ```
+    "
+  [ & {:keys [cropping data_format]
+       :or {cropping ((0, 0), (0, 0))}} ]
+  
+   (py/call-attr-kw layers "Cropping2D" [] {:cropping cropping :data_format data_format }))
 
-(defonce get-input-at keras.layers.convolutional.Cropping2D/get-input-at)
+(defn add-loss 
+  "Adds losses to the layer.
 
-(defonce get-input-mask-at keras.layers.convolutional.Cropping2D/get-input-mask-at)
+        The loss may potentially be conditional on some inputs tensors,
+        for instance activity losses are conditional on the layer's inputs.
 
-(defonce get-input-shape-at keras.layers.convolutional.Cropping2D/get-input-shape-at)
+        # Arguments
+            losses: loss tensor or list of loss tensors
+                to add to the layer.
+            inputs: input tensor or list of inputs tensors to mark
+                the losses as conditional on these inputs.
+                If None is passed, the loss is assumed unconditional
+                (e.g. L2 weight regularization, which only depends
+                on the layer's weights variables, not on any inputs tensors).
+        "
+  [self  & {:keys [losses inputs]} ]
+    (py/call-attr-kw layers "add_loss" [self] {:losses losses :inputs inputs }))
 
-(defonce get-losses-for keras.layers.convolutional.Cropping2D/get-losses-for)
+(defn add-update 
+  "Adds updates to the layer.
 
-(defonce get-output-at keras.layers.convolutional.Cropping2D/get-output-at)
+        The updates may potentially be conditional on some inputs tensors,
+        for instance batch norm updates are conditional on the layer's inputs.
 
-(defonce get-output-mask-at keras.layers.convolutional.Cropping2D/get-output-mask-at)
+        # Arguments
+            updates: update op or list of update ops
+                to add to the layer.
+            inputs: input tensor or list of inputs tensors to mark
+                the updates as conditional on these inputs.
+                If None is passed, the updates are assumed unconditional.
+        "
+  [self  & {:keys [updates inputs]} ]
+    (py/call-attr-kw layers "add_update" [self] {:updates updates :inputs inputs }))
 
-(defonce get-output-shape-at keras.layers.convolutional.Cropping2D/get-output-shape-at)
+(defn add-weight 
+  "Adds a weight variable to the layer.
 
-(defonce get-updates-for keras.layers.convolutional.Cropping2D/get-updates-for)
+        # Arguments
+            name: String, the name for the weight variable.
+            shape: The shape tuple of the weight.
+            dtype: The dtype of the weight.
+            initializer: An Initializer instance (callable).
+            regularizer: An optional Regularizer instance.
+            trainable: A boolean, whether the weight should
+                be trained via backprop or not (assuming
+                that the layer itself is also trainable).
+            constraint: An optional Constraint instance.
 
-(defonce get-weights keras.layers.convolutional.Cropping2D/get-weights)
+        # Returns
+            The created weight variable.
+        "
+  [self & {:keys [name shape dtype initializer regularizer trainable constraint]
+                       :or {trainable true}} ]
+    (py/call-attr-kw layers "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
 
-(defonce input keras.layers.convolutional.Cropping2D/input)
+(defn assert-input-compatibility 
+  "Checks compatibility between the layer and provided inputs.
 
-(defonce input-mask keras.layers.convolutional.Cropping2D/input-mask)
+        This checks that the tensor(s) `input`
+        verify the input assumptions of the layer
+        (if any). If not, exceptions are raised.
 
-(defonce input-shape keras.layers.convolutional.Cropping2D/input-shape)
+        # Arguments
+            inputs: input tensor or list of input tensors.
 
-(defonce losses keras.layers.convolutional.Cropping2D/losses)
+        # Raises
+            ValueError: in case of mismatch between
+                the provided inputs and the expectations of the layer.
+        "
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "assert_input_compatibility" [self] {:inputs inputs }))
 
-(defonce non-trainable-weights keras.layers.convolutional.Cropping2D/non-trainable-weights)
+(defn build 
+  "Creates the layer weights.
 
-(defonce output keras.layers.convolutional.Cropping2D/output)
+        Must be implemented on all layers that have weights.
 
-(defonce output-mask keras.layers.convolutional.Cropping2D/output-mask)
+        # Arguments
+            input_shape: Keras tensor (future input to layer)
+                or list/tuple of Keras tensors to reference
+                for weight shape computations.
+        "
+  [self  & {:keys [input_shape]} ]
+    (py/call-attr-kw layers "build" [self] {:input_shape input_shape }))
 
-(defonce output-shape keras.layers.convolutional.Cropping2D/output-shape)
+(defn built 
+  ""
+  [ self ]
+    (py/call-attr layers "built"  self))
 
-(defonce set-weights keras.layers.convolutional.Cropping2D/set-weights)
+(defn call 
+  ""
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "call" [self] {:inputs inputs }))
 
-(defonce trainable-weights keras.layers.convolutional.Cropping2D/trainable-weights)
+(defn compute-mask 
+  "Computes an output mask tensor.
 
-(defonce updates keras.layers.convolutional.Cropping2D/updates)
+        # Arguments
+            inputs: Tensor or list of tensors.
+            mask: Tensor or list of tensors.
 
-(defonce weights keras.layers.convolutional.Cropping2D/weights)
+        # Returns
+            None or a tensor (or list of tensors,
+                one per output tensor of the layer).
+        "
+  [self  & {:keys [inputs mask]} ]
+    (py/call-attr-kw layers "compute_mask" [self] {:inputs inputs :mask mask }))
+
+(defn compute-output-shape 
+  ""
+  [self  & {:keys [input_shape]} ]
+    (py/call-attr-kw layers "compute_output_shape" [self] {:input_shape input_shape }))
+
+(defn count-params 
+  "Counts the total number of scalars composing the weights.
+
+        # Returns
+            An integer count.
+
+        # Raises
+            RuntimeError: if the layer isn't yet built
+                (in which case its weights aren't yet defined).
+        "
+  [ self ]
+  (py/call-attr layers "count_params"  self ))
+
+(defn get-config 
+  ""
+  [ self ]
+  (py/call-attr layers "get_config"  self ))
+
+(defn get-input-at 
+  "Retrieves the input tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A tensor (or list of tensors if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_at" [self] {:node_index node_index }))
+
+(defn get-input-mask-at 
+  "Retrieves the input mask tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A mask tensor
+            (or list of tensors if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_mask_at" [self] {:node_index node_index }))
+
+(defn get-input-shape-at 
+  "Retrieves the input shape(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A shape tuple
+            (or list of shape tuples if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_shape_at" [self] {:node_index node_index }))
+
+(defn get-losses-for 
+  ""
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "get_losses_for" [self] {:inputs inputs }))
+
+(defn get-output-at 
+  "Retrieves the output tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A tensor (or list of tensors if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_at" [self] {:node_index node_index }))
+
+(defn get-output-mask-at 
+  "Retrieves the output mask tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A mask tensor
+            (or list of tensors if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_mask_at" [self] {:node_index node_index }))
+
+(defn get-output-shape-at 
+  "Retrieves the output shape(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A shape tuple
+            (or list of shape tuples if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_shape_at" [self] {:node_index node_index }))
+
+(defn get-updates-for 
+  ""
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "get_updates_for" [self] {:inputs inputs }))
+
+(defn get-weights 
+  "Returns the current weights of the layer.
+
+        # Returns
+            Weights values as a list of numpy arrays.
+        "
+  [ self ]
+  (py/call-attr layers "get_weights"  self ))
+
+(defn input 
+  "Retrieves the input tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input tensor or list of input tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input"  self))
+
+(defn input-mask 
+  "Retrieves the input mask tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input mask tensor (potentially None) or list of input
+            mask tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input_mask"  self))
+
+(defn input-shape 
+  "Retrieves the input shape tuple(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input shape tuple
+            (or list of input shape tuples, one tuple per input tensor).
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input_shape"  self))
+
+(defn losses 
+  ""
+  [ self ]
+    (py/call-attr layers "losses"  self))
+
+(defn non-trainable-weights 
+  ""
+  [ self ]
+    (py/call-attr layers "non_trainable_weights"  self))
+
+(defn output 
+  "Retrieves the output tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Output tensor or list of output tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output"  self))
+
+(defn output-mask 
+  "Retrieves the output mask tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Output mask tensor (potentially None) or list of output
+            mask tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output_mask"  self))
+
+(defn output-shape 
+  "Retrieves the output shape tuple(s) of a layer.
+
+        Only applicable if the layer has one inbound node,
+        or if all inbound nodes have the same output shape.
+
+        # Returns
+            Output shape tuple
+            (or list of input shape tuples, one tuple per output tensor).
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output_shape"  self))
+
+(defn set-weights 
+  "Sets the weights of the layer, from Numpy arrays.
+
+        # Arguments
+            weights: a list of Numpy arrays. The number
+                of arrays and their shape must match
+                number of the dimensions of the weights
+                of the layer (i.e. it should match the
+                output of `get_weights`).
+
+        # Raises
+            ValueError: If the provided weights list does not match the
+                layer's specifications.
+        "
+  [self  & {:keys [weights]} ]
+    (py/call-attr-kw layers "set_weights" [self] {:weights weights }))
+
+(defn trainable-weights 
+  ""
+  [ self ]
+    (py/call-attr layers "trainable_weights"  self))
+
+(defn updates 
+  ""
+  [ self ]
+    (py/call-attr layers "updates"  self))
+
+(defn weights 
+  ""
+  [ self ]
+    (py/call-attr layers "weights"  self))

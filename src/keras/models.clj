@@ -1,4 +1,3 @@
-
 (ns keras.models
   "Model-related utilities.
 "
@@ -8,13 +7,7 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce models (import-module "keras.models"))
@@ -74,53 +67,7 @@
   
    (py/call-attr-kw models "Input" [] {:shape shape :batch_shape batch_shape :name name :dtype dtype :sparse sparse :tensor tensor }))
 
-(defn -clone-functional-model [ & {:keys [model input_tensors]} ]
-  "Clone a functional `Model` instance.
-
-    Model cloning is similar to calling a model on new inputs,
-    except that it creates new layers (and thus new weights) instead
-    of sharing the weights of the existing layers.
-
-    # Arguments
-        model: Instance of `Model`.
-        input_tensors: optional list of input tensors
-            to build the model upon. If not provided,
-            placeholders will be created.
-
-    # Returns
-        An instance of `Model` reproducing the behavior
-        of the original model, on top of new inputs tensors,
-        using newly instantiated weights.
-
-    # Raises
-        ValueError: in case of invalid `model` argument value.
-    "
-   (py/call-attr-kw models "_clone_functional_model" [] {:model model :input_tensors input_tensors }))
-
-(defn -clone-sequential-model [ & {:keys [model input_tensors]} ]
-  "Clone a `Sequential` model instance.
-
-    Model cloning is similar to calling a model on new inputs,
-    except that it creates new layers (and thus new weights) instead
-    of sharing the weights of the existing layers.
-
-    # Arguments
-        model: Instance of `Sequential`.
-        input_tensors: optional list of input tensors
-            to build the model upon. If not provided,
-            placeholders will be created.
-
-    # Returns
-        An instance of `Sequential` reproducing the behavior
-        of the original model, on top of new inputs tensors,
-        using newly instantiated weights.
-
-    # Raises
-        ValueError: in case of invalid `model` argument value.
-    "
-   (py/call-attr-kw models "_clone_sequential_model" [] {:model model :input_tensors input_tensors }))
-
-(defn clone-model [ & {:keys [model input_tensors]} ]
+(defn clone-model 
   "Clone any `Model` instance.
 
     Model cloning is similar to calling a model on new inputs,
@@ -142,6 +89,7 @@
     # Raises
         ValueError: in case of invalid `model` argument value.
     "
+  [ & {:keys [model input_tensors]} ]
    (py/call-attr-kw models "clone_model" [] {:model model :input_tensors input_tensors }))
 
 (defn has-arg 
@@ -197,7 +145,7 @@
   
    (py/call-attr-kw models "load_model" [] {:filepath filepath :custom_objects custom_objects :compile compile }))
 
-(defn model-from-config [ & {:keys [config custom_objects]} ]
+(defn model-from-config 
   "Instantiates a Keras model from its config.
 
     # Arguments
@@ -212,9 +160,10 @@
     # Raises
         TypeError: if `config` is not a dictionary.
     "
+  [ & {:keys [config custom_objects]} ]
    (py/call-attr-kw models "model_from_config" [] {:config config :custom_objects custom_objects }))
 
-(defn model-from-json [ & {:keys [json_string custom_objects]} ]
+(defn model-from-json 
   "Parses a JSON model configuration file and returns a model instance.
 
     # Arguments
@@ -226,9 +175,10 @@
     # Returns
         A Keras model instance (uncompiled).
     "
+  [ & {:keys [json_string custom_objects]} ]
    (py/call-attr-kw models "model_from_json" [] {:json_string json_string :custom_objects custom_objects }))
 
-(defn model-from-yaml [ & {:keys [yaml_string custom_objects]} ]
+(defn model-from-yaml 
   "Parses a yaml model configuration file and returns a model instance.
 
     # Arguments
@@ -240,6 +190,7 @@
     # Returns
         A Keras model instance (uncompiled).
     "
+  [ & {:keys [yaml_string custom_objects]} ]
    (py/call-attr-kw models "model_from_yaml" [] {:yaml_string yaml_string :custom_objects custom_objects }))
 
 (defn save-model 

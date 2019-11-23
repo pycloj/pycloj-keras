@@ -1,4 +1,3 @@
-
 (ns keras.layers.core
   "Core Keras layers.
 "
@@ -8,13 +7,7 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce core (import-module "keras.layers.core"))
@@ -26,7 +19,7 @@
   
    (py/call-attr-kw core "deserialize_keras_object" [] {:identifier identifier :module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
 
-(defn func-dump [ & {:keys [func]} ]
+(defn func-dump 
   "Serializes a user defined function.
 
     # Arguments
@@ -35,9 +28,10 @@
     # Returns
         A tuple `(code, defaults, closure)`.
     "
+  [ & {:keys [func]} ]
    (py/call-attr-kw core "func_dump" [] {:func func }))
 
-(defn func-load [ & {:keys [code defaults closure globs]} ]
+(defn func-load 
   "Deserializes a user defined function.
 
     # Arguments
@@ -49,6 +43,7 @@
     # Returns
         A function object.
     "
+  [ & {:keys [code defaults closure globs]} ]
    (py/call-attr-kw core "func_load" [] {:code code :defaults defaults :closure closure :globs globs }))
 
 (defn has-arg 
