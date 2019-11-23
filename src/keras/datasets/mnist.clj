@@ -1,4 +1,3 @@
-
 (ns keras.datasets.mnist
   "MNIST handwritten digits dataset.
 "
@@ -8,13 +7,7 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce mnist (import-module "keras.datasets.mnist"))

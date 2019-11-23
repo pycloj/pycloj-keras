@@ -1,4 +1,3 @@
-
 (ns keras.engine.training.Model
   "The `Model` class adds training & evaluation routines to a `Network`.
     "
@@ -8,20 +7,15 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce training (import-module "keras.engine.training"))
 
-(defn Model [  ]
+(defn Model 
   "The `Model` class adds training & evaluation routines to a `Network`.
     "
+  [  ]
   (py/call-attr training "Model"   ))
 
 (defn add-loss 
@@ -200,7 +194,7 @@
   [self  & {:keys [input_shape]} ]
     (py/call-attr-kw training "compute_output_shape" [self] {:input_shape input_shape }))
 
-(defn count-params [ self ]
+(defn count-params 
   "Counts the total number of scalars composing the weights.
 
         # Returns
@@ -210,6 +204,7 @@
             RuntimeError: if the layer isn't yet built
                 (in which case its weights aren't yet defined).
         "
+  [ self ]
   (py/call-attr training "count_params"  self ))
 
 (defn evaluate 
@@ -522,8 +517,9 @@
                        :or {epochs 1 verbose 1 max_queue_size 10 workers 1 use_multiprocessing false shuffle true initial_epoch 0}} ]
     (py/call-attr-kw training "fit_generator" [] {:generator generator :steps_per_epoch steps_per_epoch :epochs epochs :verbose verbose :callbacks callbacks :validation_data validation_data :validation_steps validation_steps :class_weight class_weight :max_queue_size max_queue_size :workers workers :use_multiprocessing use_multiprocessing :shuffle shuffle :initial_epoch initial_epoch }))
 
-(defn get-config [ self ]
+(defn get-config 
   ""
+  [ self ]
   (py/call-attr training "get_config"  self ))
 
 (defn get-input-at 
@@ -650,12 +646,13 @@
   [self  & {:keys [inputs]} ]
     (py/call-attr-kw training "get_updates_for" [self] {:inputs inputs }))
 
-(defn get-weights [ self ]
+(defn get-weights 
   "Retrieves the weights of the model.
 
         # Returns
             A flat list of Numpy arrays.
         "
+  [ self ]
   (py/call-attr training "get_weights"  self ))
 
 (defn input 
@@ -905,8 +902,9 @@
   [self  & {:keys [x]} ]
     (py/call-attr-kw training "predict_on_batch" [self] {:x x }))
 
-(defn reset-states [ self ]
+(defn reset-states 
   ""
+  [ self ]
   (py/call-attr training "reset_states"  self ))
 
 (defn run-internal-graph 
@@ -1069,7 +1067,7 @@
   [self  & {:keys [x y sample_weight]} ]
     (py/call-attr-kw training "test_on_batch" [self] {:x x :y y :sample_weight sample_weight }))
 
-(defn to-json [ self ]
+(defn to-json 
   "Returns a JSON string containing the network configuration.
 
         To load a network from a JSON save file, use
@@ -1082,9 +1080,10 @@
         # Returns
             A JSON string.
         "
+  [ self ]
   (py/call-attr training "to_json"  self ))
 
-(defn to-yaml [ self ]
+(defn to-yaml 
   "Returns a yaml string containing the network configuration.
 
         To load a network from a yaml save file, use
@@ -1101,6 +1100,7 @@
         # Returns
             A YAML string.
         "
+  [ self ]
   (py/call-attr training "to_yaml"  self ))
 
 (defn train-on-batch 

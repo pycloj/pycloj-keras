@@ -1,5 +1,4 @@
-
-(ns keras.constraints.NonNeg
+(ns keras.constraints.nonneg
   "Constrains the weights to be non-negative.
     "
   (:require [libpython-clj.python
@@ -8,22 +7,18 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce constraints (import-module "keras.constraints"))
 
-(defn NonNeg [  ]
+(defn nonneg 
   "Constrains the weights to be non-negative.
     "
-  (py/call-attr constraints "NonNeg"   ))
+  [  ]
+  (py/call-attr constraints "nonneg"   ))
 
-(defn get-config [ self ]
+(defn get-config 
   ""
+  [ self ]
   (py/call-attr constraints "get_config"  self ))

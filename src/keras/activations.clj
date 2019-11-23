@@ -1,4 +1,3 @@
-
 (ns keras.activations
   "Built-in activation functions.
 "
@@ -8,19 +7,14 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce activations (import-module "keras.activations"))
 
-(defn deserialize [ & {:keys [name custom_objects]} ]
+(defn deserialize 
   ""
+  [ & {:keys [name custom_objects]} ]
    (py/call-attr-kw activations "deserialize" [] {:name name :custom_objects custom_objects }))
 
 (defn deserialize-keras-object 
@@ -50,12 +44,13 @@
   
    (py/call-attr-kw activations "elu" [] {:x x :alpha alpha }))
 
-(defn exponential [ & {:keys [x]} ]
+(defn exponential 
   "Exponential (base e) activation function.
     "
+  [ & {:keys [x]} ]
    (py/call-attr-kw activations "exponential" [] {:x x }))
 
-(defn get [ & {:keys [identifier]} ]
+(defn get 
   "Get the `identifier` activation function.
 
     # Arguments
@@ -67,9 +62,10 @@
     # Raises
         ValueError if unknown identifier
     "
+  [ & {:keys [identifier]} ]
    (py/call-attr-kw activations "get" [] {:identifier identifier }))
 
-(defn hard-sigmoid [ & {:keys [x]} ]
+(defn hard-sigmoid 
   "Hard sigmoid activation function.
 
     Faster to compute than sigmoid activation.
@@ -84,11 +80,13 @@
         - `1` if `x > 2.5`
         - `0.2 * x + 0.5` if `-2.5 <= x <= 2.5`.
     "
+  [ & {:keys [x]} ]
    (py/call-attr-kw activations "hard_sigmoid" [] {:x x }))
 
-(defn linear [ & {:keys [x]} ]
+(defn linear 
   "Linear (i.e. identity) activation function.
     "
+  [ & {:keys [x]} ]
    (py/call-attr-kw activations "linear" [] {:x x }))
 
 (defn relu 
@@ -115,7 +113,7 @@
   
    (py/call-attr-kw activations "relu" [] {:x x :alpha alpha :max_value max_value :threshold threshold }))
 
-(defn selu [ & {:keys [x]} ]
+(defn selu 
   "Scaled Exponential Linear Unit (SELU).
 
     SELU is equal to: `scale * elu(x, alpha)`, where alpha and scale
@@ -138,15 +136,18 @@
     # References
         - [Self-Normalizing Neural Networks](https://arxiv.org/abs/1706.02515)
     "
+  [ & {:keys [x]} ]
    (py/call-attr-kw activations "selu" [] {:x x }))
 
-(defn serialize [ & {:keys [activation]} ]
+(defn serialize 
   ""
+  [ & {:keys [activation]} ]
    (py/call-attr-kw activations "serialize" [] {:activation activation }))
 
-(defn sigmoid [ & {:keys [x]} ]
+(defn sigmoid 
   "Sigmoid activation function.
     "
+  [ & {:keys [x]} ]
    (py/call-attr-kw activations "sigmoid" [] {:x x }))
 
 (defn softmax 
@@ -167,7 +168,7 @@
   
    (py/call-attr-kw activations "softmax" [] {:x x :axis axis }))
 
-(defn softplus [ & {:keys [x]} ]
+(defn softplus 
   "Softplus activation function.
 
     # Arguments
@@ -176,9 +177,10 @@
     # Returns
         The softplus activation: `log(exp(x) + 1)`.
     "
+  [ & {:keys [x]} ]
    (py/call-attr-kw activations "softplus" [] {:x x }))
 
-(defn softsign [ & {:keys [x]} ]
+(defn softsign 
   "Softsign activation function.
 
     # Arguments
@@ -187,9 +189,11 @@
     # Returns
         The softplus activation: `x / (abs(x) + 1)`.
     "
+  [ & {:keys [x]} ]
    (py/call-attr-kw activations "softsign" [] {:x x }))
 
-(defn tanh [ & {:keys [x]} ]
+(defn tanh 
   "Hyperbolic tangent activation function.
     "
+  [ & {:keys [x]} ]
    (py/call-attr-kw activations "tanh" [] {:x x }))

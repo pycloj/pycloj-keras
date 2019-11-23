@@ -1,4 +1,3 @@
-
 (ns keras.layers.merge
   "Layers that can merge several inputs into one.
 "
@@ -8,18 +7,12 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce merge (import-module "keras.layers.merge"))
 
-(defn add [ & {:keys [inputs]} ]
+(defn add 
   "Functional interface to the `Add` layer.
 
     # Arguments
@@ -44,9 +37,10 @@
         model = keras.models.Model(inputs=[input1, input2], outputs=out)
     ```
     "
+  [ & {:keys [inputs]} ]
    (py/call-attr-kw merge "add" [] {:inputs inputs }))
 
-(defn average [ & {:keys [inputs]} ]
+(defn average 
   "Functional interface to the `Average` layer.
 
     # Arguments
@@ -56,6 +50,7 @@
     # Returns
         A tensor, the average of the inputs.
     "
+  [ & {:keys [inputs]} ]
    (py/call-attr-kw merge "average" [] {:inputs inputs }))
 
 (defn concatenate 
@@ -95,7 +90,7 @@
   
    (py/call-attr-kw merge "dot" [] {:inputs inputs :axes axes :normalize normalize }))
 
-(defn maximum [ & {:keys [inputs]} ]
+(defn maximum 
   "Functional interface to the `Maximum` layer.
 
     # Arguments
@@ -105,9 +100,10 @@
     # Returns
         A tensor, the element-wise maximum of the inputs.
     "
+  [ & {:keys [inputs]} ]
    (py/call-attr-kw merge "maximum" [] {:inputs inputs }))
 
-(defn minimum [ & {:keys [inputs]} ]
+(defn minimum 
   "Functional interface to the `Minimum` layer.
 
     # Arguments
@@ -117,9 +113,10 @@
     # Returns
         A tensor, the element-wise minimum of the inputs.
     "
+  [ & {:keys [inputs]} ]
    (py/call-attr-kw merge "minimum" [] {:inputs inputs }))
 
-(defn multiply [ & {:keys [inputs]} ]
+(defn multiply 
   "Functional interface to the `Multiply` layer.
 
     # Arguments
@@ -129,9 +126,10 @@
     # Returns
         A tensor, the element-wise product of the inputs.
     "
+  [ & {:keys [inputs]} ]
    (py/call-attr-kw merge "multiply" [] {:inputs inputs }))
 
-(defn subtract [ & {:keys [inputs]} ]
+(defn subtract 
   "Functional interface to the `Subtract` layer.
 
     # Arguments
@@ -156,4 +154,5 @@
         model = keras.models.Model(inputs=[input1, input2], outputs=out)
     ```
     "
+  [ & {:keys [inputs]} ]
    (py/call-attr-kw merge "subtract" [] {:inputs inputs }))

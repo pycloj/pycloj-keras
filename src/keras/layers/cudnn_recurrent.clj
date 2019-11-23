@@ -1,4 +1,3 @@
-
 (ns keras.layers.cudnn-recurrent
   "Recurrent layers backed by cuDNN.
 "
@@ -8,13 +7,7 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce cudnn-recurrent (import-module "keras.layers.cudnn_recurrent"))

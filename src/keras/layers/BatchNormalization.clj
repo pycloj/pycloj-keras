@@ -1,70 +1,480 @@
+(ns keras.layers.BatchNormalization
+  "Batch normalization layer (Ioffe and Szegedy, 2014).
 
-(ns layers.BatchNormalization
-  (:require [keras.layers.normalization.BatchNormalization]))
+    Normalize the activations of the previous layer at each batch,
+    i.e. applies a transformation that maintains the mean activation
+    close to 0 and the activation standard deviation close to 1.
 
-(defonce BatchNormalization keras.layers.normalization.BatchNormalization/BatchNormalization)
+    # Arguments
+        axis: Integer, the axis that should be normalized
+            (typically the features axis).
+            For instance, after a `Conv2D` layer with
+            `data_format=\"channels_first\"`,
+            set `axis=1` in `BatchNormalization`.
+        momentum: Momentum for the moving mean and the moving variance.
+        epsilon: Small float added to variance to avoid dividing by zero.
+        center: If True, add offset of `beta` to normalized tensor.
+            If False, `beta` is ignored.
+        scale: If True, multiply by `gamma`.
+            If False, `gamma` is not used.
+            When the next layer is linear (also e.g. `nn.relu`),
+            this can be disabled since the scaling
+            will be done by the next layer.
+        beta_initializer: Initializer for the beta weight.
+        gamma_initializer: Initializer for the gamma weight.
+        moving_mean_initializer: Initializer for the moving mean.
+        moving_variance_initializer: Initializer for the moving variance.
+        beta_regularizer: Optional regularizer for the beta weight.
+        gamma_regularizer: Optional regularizer for the gamma weight.
+        beta_constraint: Optional constraint for the beta weight.
+        gamma_constraint: Optional constraint for the gamma weight.
 
+    # Input shape
+        Arbitrary. Use the keyword argument `input_shape`
+        (tuple of integers, does not include the samples axis)
+        when using this layer as the first layer in a model.
 
-(defonce add-loss keras.layers.normalization.BatchNormalization/add-loss)
+    # Output shape
+        Same shape as input.
 
-(defonce add-update keras.layers.normalization.BatchNormalization/add-update)
+    # References
+        - [Batch Normalization: Accelerating Deep Network Training by
+           Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167)
+    "
+  (:require [libpython-clj.python
+             :refer [import-module
+                     get-item
+                     get-attr
+                     python-type
+                     call-attr
+                     call-attr-kw]:as py]))
 
-(defonce add-weight keras.layers.normalization.BatchNormalization/add-weight)
+(py/initialize!)
+(defonce layers (import-module "keras.layers"))
 
-(defonce assert-input-compatibility keras.layers.normalization.BatchNormalization/assert-input-compatibility)
+(defn BatchNormalization 
+  "Batch normalization layer (Ioffe and Szegedy, 2014).
 
-(defonce build keras.layers.normalization.BatchNormalization/build)
+    Normalize the activations of the previous layer at each batch,
+    i.e. applies a transformation that maintains the mean activation
+    close to 0 and the activation standard deviation close to 1.
 
-(defonce built keras.layers.normalization.BatchNormalization/built)
+    # Arguments
+        axis: Integer, the axis that should be normalized
+            (typically the features axis).
+            For instance, after a `Conv2D` layer with
+            `data_format=\"channels_first\"`,
+            set `axis=1` in `BatchNormalization`.
+        momentum: Momentum for the moving mean and the moving variance.
+        epsilon: Small float added to variance to avoid dividing by zero.
+        center: If True, add offset of `beta` to normalized tensor.
+            If False, `beta` is ignored.
+        scale: If True, multiply by `gamma`.
+            If False, `gamma` is not used.
+            When the next layer is linear (also e.g. `nn.relu`),
+            this can be disabled since the scaling
+            will be done by the next layer.
+        beta_initializer: Initializer for the beta weight.
+        gamma_initializer: Initializer for the gamma weight.
+        moving_mean_initializer: Initializer for the moving mean.
+        moving_variance_initializer: Initializer for the moving variance.
+        beta_regularizer: Optional regularizer for the beta weight.
+        gamma_regularizer: Optional regularizer for the gamma weight.
+        beta_constraint: Optional constraint for the beta weight.
+        gamma_constraint: Optional constraint for the gamma weight.
 
-(defonce call keras.layers.normalization.BatchNormalization/call)
+    # Input shape
+        Arbitrary. Use the keyword argument `input_shape`
+        (tuple of integers, does not include the samples axis)
+        when using this layer as the first layer in a model.
 
-(defonce compute-mask keras.layers.normalization.BatchNormalization/compute-mask)
+    # Output shape
+        Same shape as input.
 
-(defonce compute-output-shape keras.layers.normalization.BatchNormalization/compute-output-shape)
+    # References
+        - [Batch Normalization: Accelerating Deep Network Training by
+           Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167)
+    "
+  [ & {:keys [axis momentum epsilon center scale beta_initializer gamma_initializer moving_mean_initializer moving_variance_initializer beta_regularizer gamma_regularizer beta_constraint gamma_constraint]
+       :or {axis -1 momentum 0.99 epsilon 0.001 center true scale true beta_initializer "zeros" gamma_initializer "ones" moving_mean_initializer "zeros" moving_variance_initializer "ones"}} ]
+  
+   (py/call-attr-kw layers "BatchNormalization" [] {:axis axis :momentum momentum :epsilon epsilon :center center :scale scale :beta_initializer beta_initializer :gamma_initializer gamma_initializer :moving_mean_initializer moving_mean_initializer :moving_variance_initializer moving_variance_initializer :beta_regularizer beta_regularizer :gamma_regularizer gamma_regularizer :beta_constraint beta_constraint :gamma_constraint gamma_constraint }))
 
-(defonce count-params keras.layers.normalization.BatchNormalization/count-params)
+(defn add-loss 
+  "Adds losses to the layer.
 
-(defonce get-config keras.layers.normalization.BatchNormalization/get-config)
+        The loss may potentially be conditional on some inputs tensors,
+        for instance activity losses are conditional on the layer's inputs.
 
-(defonce get-input-at keras.layers.normalization.BatchNormalization/get-input-at)
+        # Arguments
+            losses: loss tensor or list of loss tensors
+                to add to the layer.
+            inputs: input tensor or list of inputs tensors to mark
+                the losses as conditional on these inputs.
+                If None is passed, the loss is assumed unconditional
+                (e.g. L2 weight regularization, which only depends
+                on the layer's weights variables, not on any inputs tensors).
+        "
+  [self  & {:keys [losses inputs]} ]
+    (py/call-attr-kw layers "add_loss" [self] {:losses losses :inputs inputs }))
 
-(defonce get-input-mask-at keras.layers.normalization.BatchNormalization/get-input-mask-at)
+(defn add-update 
+  "Adds updates to the layer.
 
-(defonce get-input-shape-at keras.layers.normalization.BatchNormalization/get-input-shape-at)
+        The updates may potentially be conditional on some inputs tensors,
+        for instance batch norm updates are conditional on the layer's inputs.
 
-(defonce get-losses-for keras.layers.normalization.BatchNormalization/get-losses-for)
+        # Arguments
+            updates: update op or list of update ops
+                to add to the layer.
+            inputs: input tensor or list of inputs tensors to mark
+                the updates as conditional on these inputs.
+                If None is passed, the updates are assumed unconditional.
+        "
+  [self  & {:keys [updates inputs]} ]
+    (py/call-attr-kw layers "add_update" [self] {:updates updates :inputs inputs }))
 
-(defonce get-output-at keras.layers.normalization.BatchNormalization/get-output-at)
+(defn add-weight 
+  "Adds a weight variable to the layer.
 
-(defonce get-output-mask-at keras.layers.normalization.BatchNormalization/get-output-mask-at)
+        # Arguments
+            name: String, the name for the weight variable.
+            shape: The shape tuple of the weight.
+            dtype: The dtype of the weight.
+            initializer: An Initializer instance (callable).
+            regularizer: An optional Regularizer instance.
+            trainable: A boolean, whether the weight should
+                be trained via backprop or not (assuming
+                that the layer itself is also trainable).
+            constraint: An optional Constraint instance.
 
-(defonce get-output-shape-at keras.layers.normalization.BatchNormalization/get-output-shape-at)
+        # Returns
+            The created weight variable.
+        "
+  [self & {:keys [name shape dtype initializer regularizer trainable constraint]
+                       :or {trainable true}} ]
+    (py/call-attr-kw layers "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
 
-(defonce get-updates-for keras.layers.normalization.BatchNormalization/get-updates-for)
+(defn assert-input-compatibility 
+  "Checks compatibility between the layer and provided inputs.
 
-(defonce get-weights keras.layers.normalization.BatchNormalization/get-weights)
+        This checks that the tensor(s) `input`
+        verify the input assumptions of the layer
+        (if any). If not, exceptions are raised.
 
-(defonce input keras.layers.normalization.BatchNormalization/input)
+        # Arguments
+            inputs: input tensor or list of input tensors.
 
-(defonce input-mask keras.layers.normalization.BatchNormalization/input-mask)
+        # Raises
+            ValueError: in case of mismatch between
+                the provided inputs and the expectations of the layer.
+        "
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "assert_input_compatibility" [self] {:inputs inputs }))
 
-(defonce input-shape keras.layers.normalization.BatchNormalization/input-shape)
+(defn build 
+  ""
+  [self  & {:keys [input_shape]} ]
+    (py/call-attr-kw layers "build" [self] {:input_shape input_shape }))
 
-(defonce losses keras.layers.normalization.BatchNormalization/losses)
+(defn built 
+  ""
+  [ self ]
+    (py/call-attr layers "built"  self))
 
-(defonce non-trainable-weights keras.layers.normalization.BatchNormalization/non-trainable-weights)
+(defn call 
+  ""
+  [self  & {:keys [inputs training]} ]
+    (py/call-attr-kw layers "call" [self] {:inputs inputs :training training }))
 
-(defonce output keras.layers.normalization.BatchNormalization/output)
+(defn compute-mask 
+  "Computes an output mask tensor.
 
-(defonce output-mask keras.layers.normalization.BatchNormalization/output-mask)
+        # Arguments
+            inputs: Tensor or list of tensors.
+            mask: Tensor or list of tensors.
 
-(defonce output-shape keras.layers.normalization.BatchNormalization/output-shape)
+        # Returns
+            None or a tensor (or list of tensors,
+                one per output tensor of the layer).
+        "
+  [self  & {:keys [inputs mask]} ]
+    (py/call-attr-kw layers "compute_mask" [self] {:inputs inputs :mask mask }))
 
-(defonce set-weights keras.layers.normalization.BatchNormalization/set-weights)
+(defn compute-output-shape 
+  ""
+  [self  & {:keys [input_shape]} ]
+    (py/call-attr-kw layers "compute_output_shape" [self] {:input_shape input_shape }))
 
-(defonce trainable-weights keras.layers.normalization.BatchNormalization/trainable-weights)
+(defn count-params 
+  "Counts the total number of scalars composing the weights.
 
-(defonce updates keras.layers.normalization.BatchNormalization/updates)
+        # Returns
+            An integer count.
 
-(defonce weights keras.layers.normalization.BatchNormalization/weights)
+        # Raises
+            RuntimeError: if the layer isn't yet built
+                (in which case its weights aren't yet defined).
+        "
+  [ self ]
+  (py/call-attr layers "count_params"  self ))
+
+(defn get-config 
+  ""
+  [ self ]
+  (py/call-attr layers "get_config"  self ))
+
+(defn get-input-at 
+  "Retrieves the input tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A tensor (or list of tensors if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_at" [self] {:node_index node_index }))
+
+(defn get-input-mask-at 
+  "Retrieves the input mask tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A mask tensor
+            (or list of tensors if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_mask_at" [self] {:node_index node_index }))
+
+(defn get-input-shape-at 
+  "Retrieves the input shape(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A shape tuple
+            (or list of shape tuples if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_shape_at" [self] {:node_index node_index }))
+
+(defn get-losses-for 
+  ""
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "get_losses_for" [self] {:inputs inputs }))
+
+(defn get-output-at 
+  "Retrieves the output tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A tensor (or list of tensors if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_at" [self] {:node_index node_index }))
+
+(defn get-output-mask-at 
+  "Retrieves the output mask tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A mask tensor
+            (or list of tensors if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_mask_at" [self] {:node_index node_index }))
+
+(defn get-output-shape-at 
+  "Retrieves the output shape(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A shape tuple
+            (or list of shape tuples if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_shape_at" [self] {:node_index node_index }))
+
+(defn get-updates-for 
+  ""
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "get_updates_for" [self] {:inputs inputs }))
+
+(defn get-weights 
+  "Returns the current weights of the layer.
+
+        # Returns
+            Weights values as a list of numpy arrays.
+        "
+  [ self ]
+  (py/call-attr layers "get_weights"  self ))
+
+(defn input 
+  "Retrieves the input tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input tensor or list of input tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input"  self))
+
+(defn input-mask 
+  "Retrieves the input mask tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input mask tensor (potentially None) or list of input
+            mask tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input_mask"  self))
+
+(defn input-shape 
+  "Retrieves the input shape tuple(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input shape tuple
+            (or list of input shape tuples, one tuple per input tensor).
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input_shape"  self))
+
+(defn losses 
+  ""
+  [ self ]
+    (py/call-attr layers "losses"  self))
+
+(defn non-trainable-weights 
+  ""
+  [ self ]
+    (py/call-attr layers "non_trainable_weights"  self))
+
+(defn output 
+  "Retrieves the output tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Output tensor or list of output tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output"  self))
+
+(defn output-mask 
+  "Retrieves the output mask tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Output mask tensor (potentially None) or list of output
+            mask tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output_mask"  self))
+
+(defn output-shape 
+  "Retrieves the output shape tuple(s) of a layer.
+
+        Only applicable if the layer has one inbound node,
+        or if all inbound nodes have the same output shape.
+
+        # Returns
+            Output shape tuple
+            (or list of input shape tuples, one tuple per output tensor).
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output_shape"  self))
+
+(defn set-weights 
+  "Sets the weights of the layer, from Numpy arrays.
+
+        # Arguments
+            weights: a list of Numpy arrays. The number
+                of arrays and their shape must match
+                number of the dimensions of the weights
+                of the layer (i.e. it should match the
+                output of `get_weights`).
+
+        # Raises
+            ValueError: If the provided weights list does not match the
+                layer's specifications.
+        "
+  [self  & {:keys [weights]} ]
+    (py/call-attr-kw layers "set_weights" [self] {:weights weights }))
+
+(defn trainable-weights 
+  ""
+  [ self ]
+    (py/call-attr layers "trainable_weights"  self))
+
+(defn updates 
+  ""
+  [ self ]
+    (py/call-attr layers "updates"  self))
+
+(defn weights 
+  ""
+  [ self ]
+    (py/call-attr layers "weights"  self))

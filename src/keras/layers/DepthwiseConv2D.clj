@@ -1,70 +1,546 @@
+(ns keras.layers.DepthwiseConv2D
+  "Depthwise separable 2D convolution.
 
-(ns layers.DepthwiseConv2D
-  (:require [keras.layers.convolutional.DepthwiseConv2D]))
+    Depthwise Separable convolutions consists in performing
+    just the first step in a depthwise spatial convolution
+    (which acts on each input channel separately).
+    The `depth_multiplier` argument controls how many
+    output channels are generated per input channel in the depthwise step.
 
-(defonce DepthwiseConv2D keras.layers.convolutional.DepthwiseConv2D/DepthwiseConv2D)
+    # Arguments
+        kernel_size: An integer or tuple/list of 2 integers, specifying the
+            height and width of the 2D convolution window.
+            Can be a single integer to specify the same value for
+            all spatial dimensions.
+        strides: An integer or tuple/list of 2 integers,
+            specifying the strides of the convolution
+            along the height and width.
+            Can be a single integer to specify the same value for
+            all spatial dimensions.
+            Specifying any stride value != 1 is incompatible with specifying
+            any `dilation_rate` value != 1.
+        padding: one of `\"valid\"` or `\"same\"` (case-insensitive).
+        depth_multiplier: The number of depthwise convolution output channels
+            for each input channel.
+            The total number of depthwise convolution output
+            channels will be equal to `filters_in * depth_multiplier`.
+        data_format: A string,
+            one of `\"channels_last\"` or `\"channels_first\"`.
+            The ordering of the dimensions in the inputs.
+            `\"channels_last\"` corresponds to inputs with shape
+            `(batch, height, width, channels)` while `\"channels_first\"`
+            corresponds to inputs with shape
+            `(batch, channels, height, width)`.
+            It defaults to the `image_data_format` value found in your
+            Keras config file at `~/.keras/keras.json`.
+            If you never set it, then it will be 'channels_last'.
+        activation: Activation function to use
+            (see [activations](../activations.md)).
+            If you don't specify anything, no activation is applied
+            (ie. 'linear' activation: `a(x) = x`).
+        use_bias: Boolean, whether the layer uses a bias vector.
+        depthwise_initializer: Initializer for the depthwise kernel matrix
+            (see [initializers](../initializers.md)).
+        bias_initializer: Initializer for the bias vector
+            (see [initializers](../initializers.md)).
+        depthwise_regularizer: Regularizer function applied to
+            the depthwise kernel matrix
+            (see [regularizer](../regularizers.md)).
+        bias_regularizer: Regularizer function applied to the bias vector
+            (see [regularizer](../regularizers.md)).
+        activity_regularizer: Regularizer function applied to
+            the output of the layer (its 'activation').
+            (see [regularizer](../regularizers.md)).
+        depthwise_constraint: Constraint function applied to
+            the depthwise kernel matrix
+            (see [constraints](../constraints.md)).
+        bias_constraint: Constraint function applied to the bias vector
+            (see [constraints](../constraints.md)).
 
+    # Input shape
+        4D tensor with shape:
+        `(batch, channels, rows, cols)`
+        if `data_format` is `\"channels_first\"`
+        or 4D tensor with shape:
+        `(batch, rows, cols, channels)`
+        if `data_format` is `\"channels_last\"`.
 
-(defonce add-loss keras.layers.convolutional.DepthwiseConv2D/add-loss)
+    # Output shape
+        4D tensor with shape:
+        `(batch, filters, new_rows, new_cols)`
+        if `data_format` is `\"channels_first\"`
+        or 4D tensor with shape:
+        `(batch, new_rows, new_cols, filters)`
+        if `data_format` is `\"channels_last\"`.
+        `rows` and `cols` values might have changed due to padding.
+    "
+  (:require [libpython-clj.python
+             :refer [import-module
+                     get-item
+                     get-attr
+                     python-type
+                     call-attr
+                     call-attr-kw]:as py]))
 
-(defonce add-update keras.layers.convolutional.DepthwiseConv2D/add-update)
+(py/initialize!)
+(defonce layers (import-module "keras.layers"))
 
-(defonce add-weight keras.layers.convolutional.DepthwiseConv2D/add-weight)
+(defn DepthwiseConv2D 
+  "Depthwise separable 2D convolution.
 
-(defonce assert-input-compatibility keras.layers.convolutional.DepthwiseConv2D/assert-input-compatibility)
+    Depthwise Separable convolutions consists in performing
+    just the first step in a depthwise spatial convolution
+    (which acts on each input channel separately).
+    The `depth_multiplier` argument controls how many
+    output channels are generated per input channel in the depthwise step.
 
-(defonce build keras.layers.convolutional.DepthwiseConv2D/build)
+    # Arguments
+        kernel_size: An integer or tuple/list of 2 integers, specifying the
+            height and width of the 2D convolution window.
+            Can be a single integer to specify the same value for
+            all spatial dimensions.
+        strides: An integer or tuple/list of 2 integers,
+            specifying the strides of the convolution
+            along the height and width.
+            Can be a single integer to specify the same value for
+            all spatial dimensions.
+            Specifying any stride value != 1 is incompatible with specifying
+            any `dilation_rate` value != 1.
+        padding: one of `\"valid\"` or `\"same\"` (case-insensitive).
+        depth_multiplier: The number of depthwise convolution output channels
+            for each input channel.
+            The total number of depthwise convolution output
+            channels will be equal to `filters_in * depth_multiplier`.
+        data_format: A string,
+            one of `\"channels_last\"` or `\"channels_first\"`.
+            The ordering of the dimensions in the inputs.
+            `\"channels_last\"` corresponds to inputs with shape
+            `(batch, height, width, channels)` while `\"channels_first\"`
+            corresponds to inputs with shape
+            `(batch, channels, height, width)`.
+            It defaults to the `image_data_format` value found in your
+            Keras config file at `~/.keras/keras.json`.
+            If you never set it, then it will be 'channels_last'.
+        activation: Activation function to use
+            (see [activations](../activations.md)).
+            If you don't specify anything, no activation is applied
+            (ie. 'linear' activation: `a(x) = x`).
+        use_bias: Boolean, whether the layer uses a bias vector.
+        depthwise_initializer: Initializer for the depthwise kernel matrix
+            (see [initializers](../initializers.md)).
+        bias_initializer: Initializer for the bias vector
+            (see [initializers](../initializers.md)).
+        depthwise_regularizer: Regularizer function applied to
+            the depthwise kernel matrix
+            (see [regularizer](../regularizers.md)).
+        bias_regularizer: Regularizer function applied to the bias vector
+            (see [regularizer](../regularizers.md)).
+        activity_regularizer: Regularizer function applied to
+            the output of the layer (its 'activation').
+            (see [regularizer](../regularizers.md)).
+        depthwise_constraint: Constraint function applied to
+            the depthwise kernel matrix
+            (see [constraints](../constraints.md)).
+        bias_constraint: Constraint function applied to the bias vector
+            (see [constraints](../constraints.md)).
 
-(defonce built keras.layers.convolutional.DepthwiseConv2D/built)
+    # Input shape
+        4D tensor with shape:
+        `(batch, channels, rows, cols)`
+        if `data_format` is `\"channels_first\"`
+        or 4D tensor with shape:
+        `(batch, rows, cols, channels)`
+        if `data_format` is `\"channels_last\"`.
 
-(defonce call keras.layers.convolutional.DepthwiseConv2D/call)
+    # Output shape
+        4D tensor with shape:
+        `(batch, filters, new_rows, new_cols)`
+        if `data_format` is `\"channels_first\"`
+        or 4D tensor with shape:
+        `(batch, new_rows, new_cols, filters)`
+        if `data_format` is `\"channels_last\"`.
+        `rows` and `cols` values might have changed due to padding.
+    "
+  [ & {:keys [kernel_size strides padding depth_multiplier data_format activation use_bias depthwise_initializer bias_initializer depthwise_regularizer bias_regularizer activity_regularizer depthwise_constraint bias_constraint]
+       :or {strides (1, 1) padding "valid" depth_multiplier 1 use_bias true depthwise_initializer "glorot_uniform" bias_initializer "zeros"}} ]
+  
+   (py/call-attr-kw layers "DepthwiseConv2D" [] {:kernel_size kernel_size :strides strides :padding padding :depth_multiplier depth_multiplier :data_format data_format :activation activation :use_bias use_bias :depthwise_initializer depthwise_initializer :bias_initializer bias_initializer :depthwise_regularizer depthwise_regularizer :bias_regularizer bias_regularizer :activity_regularizer activity_regularizer :depthwise_constraint depthwise_constraint :bias_constraint bias_constraint }))
 
-(defonce compute-mask keras.layers.convolutional.DepthwiseConv2D/compute-mask)
+(defn add-loss 
+  "Adds losses to the layer.
 
-(defonce compute-output-shape keras.layers.convolutional.DepthwiseConv2D/compute-output-shape)
+        The loss may potentially be conditional on some inputs tensors,
+        for instance activity losses are conditional on the layer's inputs.
 
-(defonce count-params keras.layers.convolutional.DepthwiseConv2D/count-params)
+        # Arguments
+            losses: loss tensor or list of loss tensors
+                to add to the layer.
+            inputs: input tensor or list of inputs tensors to mark
+                the losses as conditional on these inputs.
+                If None is passed, the loss is assumed unconditional
+                (e.g. L2 weight regularization, which only depends
+                on the layer's weights variables, not on any inputs tensors).
+        "
+  [self  & {:keys [losses inputs]} ]
+    (py/call-attr-kw layers "add_loss" [self] {:losses losses :inputs inputs }))
 
-(defonce get-config keras.layers.convolutional.DepthwiseConv2D/get-config)
+(defn add-update 
+  "Adds updates to the layer.
 
-(defonce get-input-at keras.layers.convolutional.DepthwiseConv2D/get-input-at)
+        The updates may potentially be conditional on some inputs tensors,
+        for instance batch norm updates are conditional on the layer's inputs.
 
-(defonce get-input-mask-at keras.layers.convolutional.DepthwiseConv2D/get-input-mask-at)
+        # Arguments
+            updates: update op or list of update ops
+                to add to the layer.
+            inputs: input tensor or list of inputs tensors to mark
+                the updates as conditional on these inputs.
+                If None is passed, the updates are assumed unconditional.
+        "
+  [self  & {:keys [updates inputs]} ]
+    (py/call-attr-kw layers "add_update" [self] {:updates updates :inputs inputs }))
 
-(defonce get-input-shape-at keras.layers.convolutional.DepthwiseConv2D/get-input-shape-at)
+(defn add-weight 
+  "Adds a weight variable to the layer.
 
-(defonce get-losses-for keras.layers.convolutional.DepthwiseConv2D/get-losses-for)
+        # Arguments
+            name: String, the name for the weight variable.
+            shape: The shape tuple of the weight.
+            dtype: The dtype of the weight.
+            initializer: An Initializer instance (callable).
+            regularizer: An optional Regularizer instance.
+            trainable: A boolean, whether the weight should
+                be trained via backprop or not (assuming
+                that the layer itself is also trainable).
+            constraint: An optional Constraint instance.
 
-(defonce get-output-at keras.layers.convolutional.DepthwiseConv2D/get-output-at)
+        # Returns
+            The created weight variable.
+        "
+  [self & {:keys [name shape dtype initializer regularizer trainable constraint]
+                       :or {trainable true}} ]
+    (py/call-attr-kw layers "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
 
-(defonce get-output-mask-at keras.layers.convolutional.DepthwiseConv2D/get-output-mask-at)
+(defn assert-input-compatibility 
+  "Checks compatibility between the layer and provided inputs.
 
-(defonce get-output-shape-at keras.layers.convolutional.DepthwiseConv2D/get-output-shape-at)
+        This checks that the tensor(s) `input`
+        verify the input assumptions of the layer
+        (if any). If not, exceptions are raised.
 
-(defonce get-updates-for keras.layers.convolutional.DepthwiseConv2D/get-updates-for)
+        # Arguments
+            inputs: input tensor or list of input tensors.
 
-(defonce get-weights keras.layers.convolutional.DepthwiseConv2D/get-weights)
+        # Raises
+            ValueError: in case of mismatch between
+                the provided inputs and the expectations of the layer.
+        "
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "assert_input_compatibility" [self] {:inputs inputs }))
 
-(defonce input keras.layers.convolutional.DepthwiseConv2D/input)
+(defn build 
+  ""
+  [self  & {:keys [input_shape]} ]
+    (py/call-attr-kw layers "build" [self] {:input_shape input_shape }))
 
-(defonce input-mask keras.layers.convolutional.DepthwiseConv2D/input-mask)
+(defn built 
+  ""
+  [ self ]
+    (py/call-attr layers "built"  self))
 
-(defonce input-shape keras.layers.convolutional.DepthwiseConv2D/input-shape)
+(defn call 
+  ""
+  [self  & {:keys [inputs training]} ]
+    (py/call-attr-kw layers "call" [self] {:inputs inputs :training training }))
 
-(defonce losses keras.layers.convolutional.DepthwiseConv2D/losses)
+(defn compute-mask 
+  "Computes an output mask tensor.
 
-(defonce non-trainable-weights keras.layers.convolutional.DepthwiseConv2D/non-trainable-weights)
+        # Arguments
+            inputs: Tensor or list of tensors.
+            mask: Tensor or list of tensors.
 
-(defonce output keras.layers.convolutional.DepthwiseConv2D/output)
+        # Returns
+            None or a tensor (or list of tensors,
+                one per output tensor of the layer).
+        "
+  [self  & {:keys [inputs mask]} ]
+    (py/call-attr-kw layers "compute_mask" [self] {:inputs inputs :mask mask }))
 
-(defonce output-mask keras.layers.convolutional.DepthwiseConv2D/output-mask)
+(defn compute-output-shape 
+  ""
+  [self  & {:keys [input_shape]} ]
+    (py/call-attr-kw layers "compute_output_shape" [self] {:input_shape input_shape }))
 
-(defonce output-shape keras.layers.convolutional.DepthwiseConv2D/output-shape)
+(defn count-params 
+  "Counts the total number of scalars composing the weights.
 
-(defonce set-weights keras.layers.convolutional.DepthwiseConv2D/set-weights)
+        # Returns
+            An integer count.
 
-(defonce trainable-weights keras.layers.convolutional.DepthwiseConv2D/trainable-weights)
+        # Raises
+            RuntimeError: if the layer isn't yet built
+                (in which case its weights aren't yet defined).
+        "
+  [ self ]
+  (py/call-attr layers "count_params"  self ))
 
-(defonce updates keras.layers.convolutional.DepthwiseConv2D/updates)
+(defn get-config 
+  ""
+  [ self ]
+  (py/call-attr layers "get_config"  self ))
 
-(defonce weights keras.layers.convolutional.DepthwiseConv2D/weights)
+(defn get-input-at 
+  "Retrieves the input tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A tensor (or list of tensors if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_at" [self] {:node_index node_index }))
+
+(defn get-input-mask-at 
+  "Retrieves the input mask tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A mask tensor
+            (or list of tensors if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_mask_at" [self] {:node_index node_index }))
+
+(defn get-input-shape-at 
+  "Retrieves the input shape(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A shape tuple
+            (or list of shape tuples if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_shape_at" [self] {:node_index node_index }))
+
+(defn get-losses-for 
+  ""
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "get_losses_for" [self] {:inputs inputs }))
+
+(defn get-output-at 
+  "Retrieves the output tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A tensor (or list of tensors if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_at" [self] {:node_index node_index }))
+
+(defn get-output-mask-at 
+  "Retrieves the output mask tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A mask tensor
+            (or list of tensors if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_mask_at" [self] {:node_index node_index }))
+
+(defn get-output-shape-at 
+  "Retrieves the output shape(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A shape tuple
+            (or list of shape tuples if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_shape_at" [self] {:node_index node_index }))
+
+(defn get-updates-for 
+  ""
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "get_updates_for" [self] {:inputs inputs }))
+
+(defn get-weights 
+  "Returns the current weights of the layer.
+
+        # Returns
+            Weights values as a list of numpy arrays.
+        "
+  [ self ]
+  (py/call-attr layers "get_weights"  self ))
+
+(defn input 
+  "Retrieves the input tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input tensor or list of input tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input"  self))
+
+(defn input-mask 
+  "Retrieves the input mask tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input mask tensor (potentially None) or list of input
+            mask tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input_mask"  self))
+
+(defn input-shape 
+  "Retrieves the input shape tuple(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input shape tuple
+            (or list of input shape tuples, one tuple per input tensor).
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input_shape"  self))
+
+(defn losses 
+  ""
+  [ self ]
+    (py/call-attr layers "losses"  self))
+
+(defn non-trainable-weights 
+  ""
+  [ self ]
+    (py/call-attr layers "non_trainable_weights"  self))
+
+(defn output 
+  "Retrieves the output tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Output tensor or list of output tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output"  self))
+
+(defn output-mask 
+  "Retrieves the output mask tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Output mask tensor (potentially None) or list of output
+            mask tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output_mask"  self))
+
+(defn output-shape 
+  "Retrieves the output shape tuple(s) of a layer.
+
+        Only applicable if the layer has one inbound node,
+        or if all inbound nodes have the same output shape.
+
+        # Returns
+            Output shape tuple
+            (or list of input shape tuples, one tuple per output tensor).
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output_shape"  self))
+
+(defn set-weights 
+  "Sets the weights of the layer, from Numpy arrays.
+
+        # Arguments
+            weights: a list of Numpy arrays. The number
+                of arrays and their shape must match
+                number of the dimensions of the weights
+                of the layer (i.e. it should match the
+                output of `get_weights`).
+
+        # Raises
+            ValueError: If the provided weights list does not match the
+                layer's specifications.
+        "
+  [self  & {:keys [weights]} ]
+    (py/call-attr-kw layers "set_weights" [self] {:weights weights }))
+
+(defn trainable-weights 
+  ""
+  [ self ]
+    (py/call-attr layers "trainable_weights"  self))
+
+(defn updates 
+  ""
+  [ self ]
+    (py/call-attr layers "updates"  self))
+
+(defn weights 
+  ""
+  [ self ]
+    (py/call-attr layers "weights"  self))

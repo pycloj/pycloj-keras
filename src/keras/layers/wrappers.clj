@@ -1,4 +1,3 @@
-
 (ns keras.layers.wrappers
   "Layers that augment the functionality of a base layer.
 "
@@ -8,13 +7,7 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce wrappers (import-module "keras.layers.wrappers"))
@@ -42,6 +35,7 @@
   
    (py/call-attr-kw wrappers "has_arg" [] {:fn fn :name name :accept_all accept_all }))
 
-(defn object-list-uid [ & {:keys [object_list]} ]
+(defn object-list-uid 
   ""
+  [ & {:keys [object_list]} ]
    (py/call-attr-kw wrappers "object_list_uid" [] {:object_list object_list }))

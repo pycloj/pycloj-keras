@@ -1,4 +1,3 @@
-
 (ns keras
   ""
   (:require [libpython-clj.python
@@ -7,13 +6,7 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce keras (import-module "keras"))

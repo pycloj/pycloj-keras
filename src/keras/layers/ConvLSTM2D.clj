@@ -1,118 +1,745 @@
+(ns keras.layers.ConvLSTM2D
+  "Convolutional LSTM.
 
-(ns layers.ConvLSTM2D
-  (:require [keras.layers.convolutional_recurrent.ConvLSTM2D]))
+    It is similar to an LSTM layer, but the input transformations
+    and recurrent transformations are both convolutional.
 
-(defonce ConvLSTM2D keras.layers.convolutional_recurrent.ConvLSTM2D/ConvLSTM2D)
+    # Arguments
+        filters: Integer, the dimensionality of the output space
+            (i.e. the number output of filters in the convolution).
+        kernel_size: An integer or tuple/list of n integers, specifying the
+            dimensions of the convolution window.
+        strides: An integer or tuple/list of n integers,
+            specifying the strides of the convolution.
+            Specifying any stride value != 1 is incompatible with specifying
+            any `dilation_rate` value != 1.
+        padding: One of `\"valid\"` or `\"same\"` (case-insensitive).
+        data_format: A string,
+            one of `\"channels_last\"` (default) or `\"channels_first\"`.
+            The ordering of the dimensions in the inputs.
+            `\"channels_last\"` corresponds to inputs with shape
+            `(batch, time, ..., channels)`
+            while `\"channels_first\"` corresponds to
+            inputs with shape `(batch, time, channels, ...)`.
+            It defaults to the `image_data_format` value found in your
+            Keras config file at `~/.keras/keras.json`.
+            If you never set it, then it will be `\"channels_last\"`.
+        dilation_rate: An integer or tuple/list of n integers, specifying
+            the dilation rate to use for dilated convolution.
+            Currently, specifying any `dilation_rate` value != 1 is
+            incompatible with specifying any `strides` value != 1.
+        activation: Activation function to use
+            (see [activations](../activations.md)).
+            If you don't specify anything, no activation is applied
+            (ie. \"linear\" activation: `a(x) = x`).
+        recurrent_activation: Activation function to use
+            for the recurrent step
+            (see [activations](../activations.md)).
+        use_bias: Boolean, whether the layer uses a bias vector.
+        kernel_initializer: Initializer for the `kernel` weights matrix,
+            used for the linear transformation of the inputs.
+            (see [initializers](../initializers.md)).
+        recurrent_initializer: Initializer for the `recurrent_kernel`
+            weights matrix,
+            used for the linear transformation of the recurrent state.
+            (see [initializers](../initializers.md)).
+        bias_initializer: Initializer for the bias vector
+            (see [initializers](../initializers.md)).
+        unit_forget_bias: Boolean.
+            If True, add 1 to the bias of the forget gate at initialization.
+            Use in combination with `bias_initializer=\"zeros\"`.
+            This is recommended in [Jozefowicz et al.]
+            (http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf).
+        kernel_regularizer: Regularizer function applied to
+            the `kernel` weights matrix
+            (see [regularizer](../regularizers.md)).
+        recurrent_regularizer: Regularizer function applied to
+            the `recurrent_kernel` weights matrix
+            (see [regularizer](../regularizers.md)).
+        bias_regularizer: Regularizer function applied to the bias vector
+            (see [regularizer](../regularizers.md)).
+        activity_regularizer: Regularizer function applied to
+            the output of the layer (its \"activation\").
+            (see [regularizer](../regularizers.md)).
+        kernel_constraint: Constraint function applied to
+            the `kernel` weights matrix
+            (see [constraints](../constraints.md)).
+        recurrent_constraint: Constraint function applied to
+            the `recurrent_kernel` weights matrix
+            (see [constraints](../constraints.md)).
+        bias_constraint: Constraint function applied to the bias vector
+            (see [constraints](../constraints.md)).
+        return_sequences: Boolean. Whether to return the last output
+            in the output sequence, or the full sequence.
+        go_backwards: Boolean (default False).
+            If True, process the input sequence backwards.
+        stateful: Boolean (default False). If True, the last state
+            for each sample at index i in a batch will be used as initial
+            state for the sample of index i in the following batch.
+        dropout: Float between 0 and 1.
+            Fraction of the units to drop for
+            the linear transformation of the inputs.
+        recurrent_dropout: Float between 0 and 1.
+            Fraction of the units to drop for
+            the linear transformation of the recurrent state.
 
+    # Input shape
+        - if data_format='channels_first'
+            5D tensor with shape:
+            `(samples, time, channels, rows, cols)`
+        - if data_format='channels_last'
+            5D tensor with shape:
+            `(samples, time, rows, cols, channels)`
 
-(defonce activation keras.layers.convolutional_recurrent.ConvLSTM2D/activation)
+    # Output shape
+        - if `return_sequences`
+             - if data_format='channels_first'
+                5D tensor with shape:
+                `(samples, time, filters, output_row, output_col)`
+             - if data_format='channels_last'
+                5D tensor with shape:
+                `(samples, time, output_row, output_col, filters)`
+        - else
+            - if data_format='channels_first'
+                4D tensor with shape:
+                `(samples, filters, output_row, output_col)`
+            - if data_format='channels_last'
+                4D tensor with shape:
+                `(samples, output_row, output_col, filters)`
+            where o_row and o_col depend on the shape of the filter and
+            the padding
 
-(defonce add-loss keras.layers.convolutional_recurrent.ConvLSTM2D/add-loss)
+    # Raises
+        ValueError: in case of invalid constructor arguments.
 
-(defonce add-update keras.layers.convolutional_recurrent.ConvLSTM2D/add-update)
+    # References
+        - [Convolutional LSTM Network: A Machine Learning Approach for
+        Precipitation Nowcasting](http://arxiv.org/abs/1506.04214v1)
+        The current implementation does not include the feedback loop on the
+        cells output
+    "
+  (:require [libpython-clj.python
+             :refer [import-module
+                     get-item
+                     get-attr
+                     python-type
+                     call-attr
+                     call-attr-kw]:as py]))
 
-(defonce add-weight keras.layers.convolutional_recurrent.ConvLSTM2D/add-weight)
+(py/initialize!)
+(defonce layers (import-module "keras.layers"))
 
-(defonce assert-input-compatibility keras.layers.convolutional_recurrent.ConvLSTM2D/assert-input-compatibility)
+(defn ConvLSTM2D 
+  "Convolutional LSTM.
 
-(defonce bias-constraint keras.layers.convolutional_recurrent.ConvLSTM2D/bias-constraint)
+    It is similar to an LSTM layer, but the input transformations
+    and recurrent transformations are both convolutional.
 
-(defonce bias-initializer keras.layers.convolutional_recurrent.ConvLSTM2D/bias-initializer)
+    # Arguments
+        filters: Integer, the dimensionality of the output space
+            (i.e. the number output of filters in the convolution).
+        kernel_size: An integer or tuple/list of n integers, specifying the
+            dimensions of the convolution window.
+        strides: An integer or tuple/list of n integers,
+            specifying the strides of the convolution.
+            Specifying any stride value != 1 is incompatible with specifying
+            any `dilation_rate` value != 1.
+        padding: One of `\"valid\"` or `\"same\"` (case-insensitive).
+        data_format: A string,
+            one of `\"channels_last\"` (default) or `\"channels_first\"`.
+            The ordering of the dimensions in the inputs.
+            `\"channels_last\"` corresponds to inputs with shape
+            `(batch, time, ..., channels)`
+            while `\"channels_first\"` corresponds to
+            inputs with shape `(batch, time, channels, ...)`.
+            It defaults to the `image_data_format` value found in your
+            Keras config file at `~/.keras/keras.json`.
+            If you never set it, then it will be `\"channels_last\"`.
+        dilation_rate: An integer or tuple/list of n integers, specifying
+            the dilation rate to use for dilated convolution.
+            Currently, specifying any `dilation_rate` value != 1 is
+            incompatible with specifying any `strides` value != 1.
+        activation: Activation function to use
+            (see [activations](../activations.md)).
+            If you don't specify anything, no activation is applied
+            (ie. \"linear\" activation: `a(x) = x`).
+        recurrent_activation: Activation function to use
+            for the recurrent step
+            (see [activations](../activations.md)).
+        use_bias: Boolean, whether the layer uses a bias vector.
+        kernel_initializer: Initializer for the `kernel` weights matrix,
+            used for the linear transformation of the inputs.
+            (see [initializers](../initializers.md)).
+        recurrent_initializer: Initializer for the `recurrent_kernel`
+            weights matrix,
+            used for the linear transformation of the recurrent state.
+            (see [initializers](../initializers.md)).
+        bias_initializer: Initializer for the bias vector
+            (see [initializers](../initializers.md)).
+        unit_forget_bias: Boolean.
+            If True, add 1 to the bias of the forget gate at initialization.
+            Use in combination with `bias_initializer=\"zeros\"`.
+            This is recommended in [Jozefowicz et al.]
+            (http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf).
+        kernel_regularizer: Regularizer function applied to
+            the `kernel` weights matrix
+            (see [regularizer](../regularizers.md)).
+        recurrent_regularizer: Regularizer function applied to
+            the `recurrent_kernel` weights matrix
+            (see [regularizer](../regularizers.md)).
+        bias_regularizer: Regularizer function applied to the bias vector
+            (see [regularizer](../regularizers.md)).
+        activity_regularizer: Regularizer function applied to
+            the output of the layer (its \"activation\").
+            (see [regularizer](../regularizers.md)).
+        kernel_constraint: Constraint function applied to
+            the `kernel` weights matrix
+            (see [constraints](../constraints.md)).
+        recurrent_constraint: Constraint function applied to
+            the `recurrent_kernel` weights matrix
+            (see [constraints](../constraints.md)).
+        bias_constraint: Constraint function applied to the bias vector
+            (see [constraints](../constraints.md)).
+        return_sequences: Boolean. Whether to return the last output
+            in the output sequence, or the full sequence.
+        go_backwards: Boolean (default False).
+            If True, process the input sequence backwards.
+        stateful: Boolean (default False). If True, the last state
+            for each sample at index i in a batch will be used as initial
+            state for the sample of index i in the following batch.
+        dropout: Float between 0 and 1.
+            Fraction of the units to drop for
+            the linear transformation of the inputs.
+        recurrent_dropout: Float between 0 and 1.
+            Fraction of the units to drop for
+            the linear transformation of the recurrent state.
 
-(defonce bias-regularizer keras.layers.convolutional_recurrent.ConvLSTM2D/bias-regularizer)
+    # Input shape
+        - if data_format='channels_first'
+            5D tensor with shape:
+            `(samples, time, channels, rows, cols)`
+        - if data_format='channels_last'
+            5D tensor with shape:
+            `(samples, time, rows, cols, channels)`
 
-(defonce build keras.layers.convolutional_recurrent.ConvLSTM2D/build)
+    # Output shape
+        - if `return_sequences`
+             - if data_format='channels_first'
+                5D tensor with shape:
+                `(samples, time, filters, output_row, output_col)`
+             - if data_format='channels_last'
+                5D tensor with shape:
+                `(samples, time, output_row, output_col, filters)`
+        - else
+            - if data_format='channels_first'
+                4D tensor with shape:
+                `(samples, filters, output_row, output_col)`
+            - if data_format='channels_last'
+                4D tensor with shape:
+                `(samples, output_row, output_col, filters)`
+            where o_row and o_col depend on the shape of the filter and
+            the padding
 
-(defonce built keras.layers.convolutional_recurrent.ConvLSTM2D/built)
+    # Raises
+        ValueError: in case of invalid constructor arguments.
 
-(defonce call keras.layers.convolutional_recurrent.ConvLSTM2D/call)
+    # References
+        - [Convolutional LSTM Network: A Machine Learning Approach for
+        Precipitation Nowcasting](http://arxiv.org/abs/1506.04214v1)
+        The current implementation does not include the feedback loop on the
+        cells output
+    "
+  [ & {:keys [filters kernel_size strides padding data_format dilation_rate activation recurrent_activation use_bias kernel_initializer recurrent_initializer bias_initializer unit_forget_bias kernel_regularizer recurrent_regularizer bias_regularizer activity_regularizer kernel_constraint recurrent_constraint bias_constraint return_sequences go_backwards stateful dropout recurrent_dropout]
+       :or {strides (1, 1) padding "valid" dilation_rate (1, 1) activation "tanh" recurrent_activation "hard_sigmoid" use_bias true kernel_initializer "glorot_uniform" recurrent_initializer "orthogonal" bias_initializer "zeros" unit_forget_bias true return_sequences false go_backwards false stateful false dropout 0.0 recurrent_dropout 0.0}} ]
+  
+   (py/call-attr-kw layers "ConvLSTM2D" [] {:filters filters :kernel_size kernel_size :strides strides :padding padding :data_format data_format :dilation_rate dilation_rate :activation activation :recurrent_activation recurrent_activation :use_bias use_bias :kernel_initializer kernel_initializer :recurrent_initializer recurrent_initializer :bias_initializer bias_initializer :unit_forget_bias unit_forget_bias :kernel_regularizer kernel_regularizer :recurrent_regularizer recurrent_regularizer :bias_regularizer bias_regularizer :activity_regularizer activity_regularizer :kernel_constraint kernel_constraint :recurrent_constraint recurrent_constraint :bias_constraint bias_constraint :return_sequences return_sequences :go_backwards go_backwards :stateful stateful :dropout dropout :recurrent_dropout recurrent_dropout }))
 
-(defonce compute-mask keras.layers.convolutional_recurrent.ConvLSTM2D/compute-mask)
+(defn activation 
+  ""
+  [ self ]
+    (py/call-attr layers "activation"  self))
 
-(defonce compute-output-shape keras.layers.convolutional_recurrent.ConvLSTM2D/compute-output-shape)
+(defn add-loss 
+  "Adds losses to the layer.
 
-(defonce count-params keras.layers.convolutional_recurrent.ConvLSTM2D/count-params)
+        The loss may potentially be conditional on some inputs tensors,
+        for instance activity losses are conditional on the layer's inputs.
 
-(defonce data-format keras.layers.convolutional_recurrent.ConvLSTM2D/data-format)
+        # Arguments
+            losses: loss tensor or list of loss tensors
+                to add to the layer.
+            inputs: input tensor or list of inputs tensors to mark
+                the losses as conditional on these inputs.
+                If None is passed, the loss is assumed unconditional
+                (e.g. L2 weight regularization, which only depends
+                on the layer's weights variables, not on any inputs tensors).
+        "
+  [self  & {:keys [losses inputs]} ]
+    (py/call-attr-kw layers "add_loss" [self] {:losses losses :inputs inputs }))
 
-(defonce dilation-rate keras.layers.convolutional_recurrent.ConvLSTM2D/dilation-rate)
+(defn add-update 
+  "Adds updates to the layer.
 
-(defonce dropout keras.layers.convolutional_recurrent.ConvLSTM2D/dropout)
+        The updates may potentially be conditional on some inputs tensors,
+        for instance batch norm updates are conditional on the layer's inputs.
 
-(defonce filters keras.layers.convolutional_recurrent.ConvLSTM2D/filters)
+        # Arguments
+            updates: update op or list of update ops
+                to add to the layer.
+            inputs: input tensor or list of inputs tensors to mark
+                the updates as conditional on these inputs.
+                If None is passed, the updates are assumed unconditional.
+        "
+  [self  & {:keys [updates inputs]} ]
+    (py/call-attr-kw layers "add_update" [self] {:updates updates :inputs inputs }))
 
-(defonce get-config keras.layers.convolutional_recurrent.ConvLSTM2D/get-config)
+(defn add-weight 
+  "Adds a weight variable to the layer.
 
-(defonce get-initial-state keras.layers.convolutional_recurrent.ConvLSTM2D/get-initial-state)
+        # Arguments
+            name: String, the name for the weight variable.
+            shape: The shape tuple of the weight.
+            dtype: The dtype of the weight.
+            initializer: An Initializer instance (callable).
+            regularizer: An optional Regularizer instance.
+            trainable: A boolean, whether the weight should
+                be trained via backprop or not (assuming
+                that the layer itself is also trainable).
+            constraint: An optional Constraint instance.
 
-(defonce get-input-at keras.layers.convolutional_recurrent.ConvLSTM2D/get-input-at)
+        # Returns
+            The created weight variable.
+        "
+  [self & {:keys [name shape dtype initializer regularizer trainable constraint]
+                       :or {trainable true}} ]
+    (py/call-attr-kw layers "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
 
-(defonce get-input-mask-at keras.layers.convolutional_recurrent.ConvLSTM2D/get-input-mask-at)
+(defn assert-input-compatibility 
+  "Checks compatibility between the layer and provided inputs.
 
-(defonce get-input-shape-at keras.layers.convolutional_recurrent.ConvLSTM2D/get-input-shape-at)
+        This checks that the tensor(s) `input`
+        verify the input assumptions of the layer
+        (if any). If not, exceptions are raised.
 
-(defonce get-losses-for keras.layers.convolutional_recurrent.ConvLSTM2D/get-losses-for)
+        # Arguments
+            inputs: input tensor or list of input tensors.
 
-(defonce get-output-at keras.layers.convolutional_recurrent.ConvLSTM2D/get-output-at)
+        # Raises
+            ValueError: in case of mismatch between
+                the provided inputs and the expectations of the layer.
+        "
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "assert_input_compatibility" [self] {:inputs inputs }))
 
-(defonce get-output-mask-at keras.layers.convolutional_recurrent.ConvLSTM2D/get-output-mask-at)
+(defn bias-constraint 
+  ""
+  [ self ]
+    (py/call-attr layers "bias_constraint"  self))
 
-(defonce get-output-shape-at keras.layers.convolutional_recurrent.ConvLSTM2D/get-output-shape-at)
+(defn bias-initializer 
+  ""
+  [ self ]
+    (py/call-attr layers "bias_initializer"  self))
 
-(defonce get-updates-for keras.layers.convolutional_recurrent.ConvLSTM2D/get-updates-for)
+(defn bias-regularizer 
+  ""
+  [ self ]
+    (py/call-attr layers "bias_regularizer"  self))
 
-(defonce get-weights keras.layers.convolutional_recurrent.ConvLSTM2D/get-weights)
+(defn build 
+  ""
+  [self  & {:keys [input_shape]} ]
+    (py/call-attr-kw layers "build" [self] {:input_shape input_shape }))
 
-(defonce input keras.layers.convolutional_recurrent.ConvLSTM2D/input)
+(defn built 
+  ""
+  [ self ]
+    (py/call-attr layers "built"  self))
 
-(defonce input-mask keras.layers.convolutional_recurrent.ConvLSTM2D/input-mask)
+(defn call 
+  ""
+  [self  & {:keys [inputs mask training initial_state]} ]
+    (py/call-attr-kw layers "call" [self] {:inputs inputs :mask mask :training training :initial_state initial_state }))
 
-(defonce input-shape keras.layers.convolutional_recurrent.ConvLSTM2D/input-shape)
+(defn compute-mask 
+  ""
+  [self  & {:keys [inputs mask]} ]
+    (py/call-attr-kw layers "compute_mask" [self] {:inputs inputs :mask mask }))
 
-(defonce kernel-constraint keras.layers.convolutional_recurrent.ConvLSTM2D/kernel-constraint)
+(defn compute-output-shape 
+  ""
+  [self  & {:keys [input_shape]} ]
+    (py/call-attr-kw layers "compute_output_shape" [self] {:input_shape input_shape }))
 
-(defonce kernel-initializer keras.layers.convolutional_recurrent.ConvLSTM2D/kernel-initializer)
+(defn count-params 
+  "Counts the total number of scalars composing the weights.
 
-(defonce kernel-regularizer keras.layers.convolutional_recurrent.ConvLSTM2D/kernel-regularizer)
+        # Returns
+            An integer count.
 
-(defonce kernel-size keras.layers.convolutional_recurrent.ConvLSTM2D/kernel-size)
+        # Raises
+            RuntimeError: if the layer isn't yet built
+                (in which case its weights aren't yet defined).
+        "
+  [ self ]
+  (py/call-attr layers "count_params"  self ))
 
-(defonce losses keras.layers.convolutional_recurrent.ConvLSTM2D/losses)
+(defn data-format 
+  ""
+  [ self ]
+    (py/call-attr layers "data_format"  self))
 
-(defonce non-trainable-weights keras.layers.convolutional_recurrent.ConvLSTM2D/non-trainable-weights)
+(defn dilation-rate 
+  ""
+  [ self ]
+    (py/call-attr layers "dilation_rate"  self))
 
-(defonce output keras.layers.convolutional_recurrent.ConvLSTM2D/output)
+(defn dropout 
+  ""
+  [ self ]
+    (py/call-attr layers "dropout"  self))
 
-(defonce output-mask keras.layers.convolutional_recurrent.ConvLSTM2D/output-mask)
+(defn filters 
+  ""
+  [ self ]
+    (py/call-attr layers "filters"  self))
 
-(defonce output-shape keras.layers.convolutional_recurrent.ConvLSTM2D/output-shape)
+(defn get-config 
+  ""
+  [ self ]
+  (py/call-attr layers "get_config"  self ))
 
-(defonce padding keras.layers.convolutional_recurrent.ConvLSTM2D/padding)
+(defn get-initial-state 
+  ""
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "get_initial_state" [self] {:inputs inputs }))
 
-(defonce recurrent-activation keras.layers.convolutional_recurrent.ConvLSTM2D/recurrent-activation)
+(defn get-input-at 
+  "Retrieves the input tensor(s) of a layer at a given node.
 
-(defonce recurrent-constraint keras.layers.convolutional_recurrent.ConvLSTM2D/recurrent-constraint)
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
 
-(defonce recurrent-dropout keras.layers.convolutional_recurrent.ConvLSTM2D/recurrent-dropout)
+        # Returns
+            A tensor (or list of tensors if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_at" [self] {:node_index node_index }))
 
-(defonce recurrent-initializer keras.layers.convolutional_recurrent.ConvLSTM2D/recurrent-initializer)
+(defn get-input-mask-at 
+  "Retrieves the input mask tensor(s) of a layer at a given node.
 
-(defonce recurrent-regularizer keras.layers.convolutional_recurrent.ConvLSTM2D/recurrent-regularizer)
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
 
-(defonce reset-states keras.layers.convolutional_recurrent.ConvLSTM2D/reset-states)
+        # Returns
+            A mask tensor
+            (or list of tensors if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_mask_at" [self] {:node_index node_index }))
 
-(defonce set-weights keras.layers.convolutional_recurrent.ConvLSTM2D/set-weights)
+(defn get-input-shape-at 
+  "Retrieves the input shape(s) of a layer at a given node.
 
-(defonce states keras.layers.convolutional_recurrent.ConvLSTM2D/states)
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
 
-(defonce strides keras.layers.convolutional_recurrent.ConvLSTM2D/strides)
+        # Returns
+            A shape tuple
+            (or list of shape tuples if the layer has multiple inputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_input_shape_at" [self] {:node_index node_index }))
 
-(defonce trainable-weights keras.layers.convolutional_recurrent.ConvLSTM2D/trainable-weights)
+(defn get-losses-for 
+  ""
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "get_losses_for" [self] {:inputs inputs }))
 
-(defonce unit-forget-bias keras.layers.convolutional_recurrent.ConvLSTM2D/unit-forget-bias)
+(defn get-output-at 
+  "Retrieves the output tensor(s) of a layer at a given node.
 
-(defonce updates keras.layers.convolutional_recurrent.ConvLSTM2D/updates)
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
 
-(defonce use-bias keras.layers.convolutional_recurrent.ConvLSTM2D/use-bias)
+        # Returns
+            A tensor (or list of tensors if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_at" [self] {:node_index node_index }))
 
-(defonce weights keras.layers.convolutional_recurrent.ConvLSTM2D/weights)
+(defn get-output-mask-at 
+  "Retrieves the output mask tensor(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A mask tensor
+            (or list of tensors if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_mask_at" [self] {:node_index node_index }))
+
+(defn get-output-shape-at 
+  "Retrieves the output shape(s) of a layer at a given node.
+
+        # Arguments
+            node_index: Integer, index of the node
+                from which to retrieve the attribute.
+                E.g. `node_index=0` will correspond to the
+                first time the layer was called.
+
+        # Returns
+            A shape tuple
+            (or list of shape tuples if the layer has multiple outputs).
+        "
+  [self  & {:keys [node_index]} ]
+    (py/call-attr-kw layers "get_output_shape_at" [self] {:node_index node_index }))
+
+(defn get-updates-for 
+  ""
+  [self  & {:keys [inputs]} ]
+    (py/call-attr-kw layers "get_updates_for" [self] {:inputs inputs }))
+
+(defn get-weights 
+  "Returns the current weights of the layer.
+
+        # Returns
+            Weights values as a list of numpy arrays.
+        "
+  [ self ]
+  (py/call-attr layers "get_weights"  self ))
+
+(defn input 
+  "Retrieves the input tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input tensor or list of input tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input"  self))
+
+(defn input-mask 
+  "Retrieves the input mask tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input mask tensor (potentially None) or list of input
+            mask tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input_mask"  self))
+
+(defn input-shape 
+  "Retrieves the input shape tuple(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Input shape tuple
+            (or list of input shape tuples, one tuple per input tensor).
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "input_shape"  self))
+
+(defn kernel-constraint 
+  ""
+  [ self ]
+    (py/call-attr layers "kernel_constraint"  self))
+
+(defn kernel-initializer 
+  ""
+  [ self ]
+    (py/call-attr layers "kernel_initializer"  self))
+
+(defn kernel-regularizer 
+  ""
+  [ self ]
+    (py/call-attr layers "kernel_regularizer"  self))
+
+(defn kernel-size 
+  ""
+  [ self ]
+    (py/call-attr layers "kernel_size"  self))
+
+(defn losses 
+  ""
+  [ self ]
+    (py/call-attr layers "losses"  self))
+
+(defn non-trainable-weights 
+  ""
+  [ self ]
+    (py/call-attr layers "non_trainable_weights"  self))
+
+(defn output 
+  "Retrieves the output tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Output tensor or list of output tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output"  self))
+
+(defn output-mask 
+  "Retrieves the output mask tensor(s) of a layer.
+
+        Only applicable if the layer has exactly one inbound node,
+        i.e. if it is connected to one incoming layer.
+
+        # Returns
+            Output mask tensor (potentially None) or list of output
+            mask tensors.
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output_mask"  self))
+
+(defn output-shape 
+  "Retrieves the output shape tuple(s) of a layer.
+
+        Only applicable if the layer has one inbound node,
+        or if all inbound nodes have the same output shape.
+
+        # Returns
+            Output shape tuple
+            (or list of input shape tuples, one tuple per output tensor).
+
+        # Raises
+            AttributeError: if the layer is connected to
+            more than one incoming layers.
+        "
+  [ self ]
+    (py/call-attr layers "output_shape"  self))
+
+(defn padding 
+  ""
+  [ self ]
+    (py/call-attr layers "padding"  self))
+
+(defn recurrent-activation 
+  ""
+  [ self ]
+    (py/call-attr layers "recurrent_activation"  self))
+
+(defn recurrent-constraint 
+  ""
+  [ self ]
+    (py/call-attr layers "recurrent_constraint"  self))
+
+(defn recurrent-dropout 
+  ""
+  [ self ]
+    (py/call-attr layers "recurrent_dropout"  self))
+
+(defn recurrent-initializer 
+  ""
+  [ self ]
+    (py/call-attr layers "recurrent_initializer"  self))
+
+(defn recurrent-regularizer 
+  ""
+  [ self ]
+    (py/call-attr layers "recurrent_regularizer"  self))
+
+(defn reset-states 
+  ""
+  [self  & {:keys [states]} ]
+    (py/call-attr-kw layers "reset_states" [self] {:states states }))
+
+(defn set-weights 
+  "Sets the weights of the layer, from Numpy arrays.
+
+        # Arguments
+            weights: a list of Numpy arrays. The number
+                of arrays and their shape must match
+                number of the dimensions of the weights
+                of the layer (i.e. it should match the
+                output of `get_weights`).
+
+        # Raises
+            ValueError: If the provided weights list does not match the
+                layer's specifications.
+        "
+  [self  & {:keys [weights]} ]
+    (py/call-attr-kw layers "set_weights" [self] {:weights weights }))
+
+(defn states 
+  ""
+  [ self ]
+    (py/call-attr layers "states"  self))
+
+(defn strides 
+  ""
+  [ self ]
+    (py/call-attr layers "strides"  self))
+
+(defn trainable-weights 
+  ""
+  [ self ]
+    (py/call-attr layers "trainable_weights"  self))
+
+(defn unit-forget-bias 
+  ""
+  [ self ]
+    (py/call-attr layers "unit_forget_bias"  self))
+
+(defn updates 
+  ""
+  [ self ]
+    (py/call-attr layers "updates"  self))
+
+(defn use-bias 
+  ""
+  [ self ]
+    (py/call-attr layers "use_bias"  self))
+
+(defn weights 
+  ""
+  [ self ]
+    (py/call-attr layers "weights"  self))

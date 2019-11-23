@@ -1,4 +1,3 @@
-
 (ns keras.constraints.MinMaxNorm
   "MinMaxNorm weight constraint.
 
@@ -33,13 +32,7 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce constraints (import-module "keras.constraints"))
@@ -77,6 +70,7 @@
   
    (py/call-attr-kw constraints "MinMaxNorm" [] {:min_value min_value :max_value max_value :rate rate :axis axis }))
 
-(defn get-config [ self ]
+(defn get-config 
   ""
+  [ self ]
   (py/call-attr constraints "get_config"  self ))

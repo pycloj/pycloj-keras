@@ -1,4 +1,3 @@
-
 (ns keras.datasets.fashion-mnist
   "Fashion-MNIST dataset.
 "
@@ -8,13 +7,7 @@
                      get-attr
                      python-type
                      call-attr
-                     call-attr-kw
-                     att-type-map
-                     ->py-dict
-                     ->py-list
-                     ]
-             :as py]
-            [clojure.pprint :as pp]))
+                     call-attr-kw]:as py]))
 
 (py/initialize!)
 (defonce fashion-mnist (import-module "keras.datasets.fashion_mnist"))
@@ -64,10 +57,11 @@
   
    (py/call-attr-kw fashion-mnist "get_file" [] {:fname fname :origin origin :untar untar :md5_hash md5_hash :file_hash file_hash :cache_subdir cache_subdir :hash_algorithm hash_algorithm :extract extract :archive_format archive_format :cache_dir cache_dir }))
 
-(defn load-data [  ]
+(defn load-data 
   "Loads the Fashion-MNIST dataset.
 
     # Returns
         Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)`.
     "
+  [  ]
   (py/call-attr fashion-mnist "load_data"   ))
