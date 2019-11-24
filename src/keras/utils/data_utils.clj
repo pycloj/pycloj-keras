@@ -177,7 +177,7 @@
 
     "
   [ & {:keys [url data timeout cafile capath cadefault context]
-       :or {timeout <object object at 0x10791cb40> cadefault false}} ]
+       :or {timeout <object object at 0x106325b40> cadefault false}} ]
   
    (py/call-attr-kw data-utils "urlopen" [] {:url url :data data :timeout timeout :cafile cafile :capath capath :cadefault cadefault :context context }))
 
