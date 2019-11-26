@@ -14,65 +14,73 @@
 
 (defn KLD 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "KLD" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "KLD"  y_true y_pred ))
 
 (defn MAE 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "MAE" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "MAE"  y_true y_pred ))
 
 (defn MAPE 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "MAPE" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "MAPE"  y_true y_pred ))
 
 (defn MSE 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "MSE" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "MSE"  y_true y_pred ))
 
 (defn MSLE 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "MSLE" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "MSLE"  y_true y_pred ))
 
 (defn binary-crossentropy 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "binary_crossentropy" [] {:y_true y_true :y_pred y_pred }))
+  [y_true y_pred & {:keys [from_logits label_smoothing]
+                       :or {from_logits false label_smoothing 0}} ]
+    (py/call-attr-kw losses "binary_crossentropy" [y_true y_pred] {:from_logits from_logits :label_smoothing label_smoothing }))
 
 (defn categorical-crossentropy 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "categorical_crossentropy" [] {:y_true y_true :y_pred y_pred }))
+  [y_true y_pred & {:keys [from_logits label_smoothing]
+                       :or {from_logits false label_smoothing 0}} ]
+    (py/call-attr-kw losses "categorical_crossentropy" [y_true y_pred] {:from_logits from_logits :label_smoothing label_smoothing }))
 
 (defn categorical-hinge 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "categorical_hinge" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "categorical_hinge"  y_true y_pred ))
 
 (defn cosine 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "cosine" [] {:y_true y_true :y_pred y_pred }))
+  [y_true y_pred & {:keys [axis]
+                       :or {axis -1}} ]
+    (py/call-attr-kw losses "cosine" [y_true y_pred] {:axis axis }))
 
 (defn cosine-proximity 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "cosine_proximity" [] {:y_true y_true :y_pred y_pred }))
+  [y_true y_pred & {:keys [axis]
+                       :or {axis -1}} ]
+    (py/call-attr-kw losses "cosine_proximity" [y_true y_pred] {:axis axis }))
 
+(defn cosine-similarity 
+  ""
+  [y_true y_pred & {:keys [axis]
+                       :or {axis -1}} ]
+    (py/call-attr-kw losses "cosine_similarity" [y_true y_pred] {:axis axis }))
 (defn deserialize 
   ""
-  [ & {:keys [name custom_objects]} ]
-   (py/call-attr-kw losses "deserialize" [] {:name name :custom_objects custom_objects }))
+  [name  & {:keys [custom_objects]} ]
+    (py/call-attr-kw losses "deserialize" [name] {:custom_objects custom_objects }))
 
 (defn deserialize-keras-object 
   ""
-  [ & {:keys [identifier module_objects custom_objects printable_module_name]
-       :or {printable_module_name "object"}} ]
-  
-   (py/call-attr-kw losses "deserialize_keras_object" [] {:identifier identifier :module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
+  [identifier & {:keys [module_objects custom_objects printable_module_name]
+                       :or {printable_module_name "object"}} ]
+    (py/call-attr-kw losses "deserialize_keras_object" [identifier] {:module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
 
 (defn get 
   "Get the `identifier` loss function.
@@ -86,23 +94,34 @@
     # Raises
         ValueError if unknown identifier.
     "
-  [ & {:keys [identifier]} ]
-   (py/call-attr-kw losses "get" [] {:identifier identifier }))
+  [ identifier ]
+  (py/call-attr losses "get"  identifier ))
 
 (defn hinge 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "hinge" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "hinge"  y_true y_pred ))
+
+(defn huber-loss 
+  ""
+  [y_true y_pred & {:keys [delta]
+                       :or {delta 1.0}} ]
+    (py/call-attr-kw losses "huber_loss" [y_true y_pred] {:delta delta }))
+
+(defn is-categorical-crossentropy 
+  ""
+  [ loss ]
+  (py/call-attr losses "is_categorical_crossentropy"  loss ))
 
 (defn kld 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "kld" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "kld"  y_true y_pred ))
 
 (defn kullback-leibler-divergence 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "kullback_leibler_divergence" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "kullback_leibler_divergence"  y_true y_pred ))
 
 (defn logcosh 
   "Logarithm of the hyperbolic cosine of the prediction error.
@@ -119,70 +138,71 @@
     # Returns
         Tensor with one scalar loss entry per sample.
     "
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "logcosh" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "logcosh"  y_true y_pred ))
 
 (defn mae 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "mae" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "mae"  y_true y_pred ))
 
 (defn mape 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "mape" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "mape"  y_true y_pred ))
 
 (defn mean-absolute-error 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "mean_absolute_error" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "mean_absolute_error"  y_true y_pred ))
 
 (defn mean-absolute-percentage-error 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "mean_absolute_percentage_error" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "mean_absolute_percentage_error"  y_true y_pred ))
 
 (defn mean-squared-error 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "mean_squared_error" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "mean_squared_error"  y_true y_pred ))
 
 (defn mean-squared-logarithmic-error 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "mean_squared_logarithmic_error" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "mean_squared_logarithmic_error"  y_true y_pred ))
 
 (defn mse 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "mse" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "mse"  y_true y_pred ))
 
 (defn msle 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "msle" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "msle"  y_true y_pred ))
 
 (defn poisson 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "poisson" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "poisson"  y_true y_pred ))
 
 (defn serialize 
   ""
-  [ & {:keys [loss]} ]
-   (py/call-attr-kw losses "serialize" [] {:loss loss }))
+  [ loss ]
+  (py/call-attr losses "serialize"  loss ))
 
 (defn serialize-keras-object 
   ""
-  [ & {:keys [instance]} ]
-   (py/call-attr-kw losses "serialize_keras_object" [] {:instance instance }))
+  [ instance ]
+  (py/call-attr losses "serialize_keras_object"  instance ))
 
 (defn sparse-categorical-crossentropy 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "sparse_categorical_crossentropy" [] {:y_true y_true :y_pred y_pred }))
+  [y_true y_pred & {:keys [from_logits axis]
+                       :or {from_logits false axis -1}} ]
+    (py/call-attr-kw losses "sparse_categorical_crossentropy" [y_true y_pred] {:from_logits from_logits :axis axis }))
 
 (defn squared-hinge 
   ""
-  [ & {:keys [y_true y_pred]} ]
-   (py/call-attr-kw losses "squared_hinge" [] {:y_true y_true :y_pred y_pred }))
+  [ y_true y_pred ]
+  (py/call-attr losses "squared_hinge"  y_true y_pred ))

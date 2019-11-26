@@ -36,5 +36,5 @@
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr initializers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

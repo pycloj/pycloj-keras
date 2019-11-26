@@ -67,10 +67,9 @@
             validation_split is set in ImageDataGenerator.
         dtype: Dtype to use for the generated arrays.
     "
-  [ & {:keys [x y image_data_generator batch_size shuffle sample_weight seed data_format save_to_dir save_prefix save_format subset dtype]
-       :or {batch_size 32 shuffle false save_prefix "" save_format "png"}} ]
-  
-   (py/call-attr-kw image "NumpyArrayIterator" [] {:x x :y y :image_data_generator image_data_generator :batch_size batch_size :shuffle shuffle :sample_weight sample_weight :seed seed :data_format data_format :save_to_dir save_to_dir :save_prefix save_prefix :save_format save_format :subset subset :dtype dtype }))
+  [x y image_data_generator & {:keys [batch_size shuffle sample_weight seed data_format save_to_dir save_prefix save_format subset dtype]
+                       :or {batch_size 32 shuffle false save_prefix "" save_format "png"}} ]
+    (py/call-attr-kw image "NumpyArrayIterator" [x y image_data_generator] {:batch_size batch_size :shuffle shuffle :sample_weight sample_weight :seed seed :data_format data_format :save_to_dir save_to_dir :save_prefix save_prefix :save_format save_format :subset subset :dtype dtype }))
 
 (defn next 
   "For python 2.x.
@@ -78,15 +77,15 @@
         # Returns
             The next batch.
         "
-  [ self ]
-  (py/call-attr image "next"  self ))
+  [ self  ]
+  (py/call-attr self "next"  self  ))
 
 (defn on-epoch-end 
   ""
-  [ self ]
-  (py/call-attr image "on_epoch_end"  self ))
+  [ self  ]
+  (py/call-attr self "on_epoch_end"  self  ))
 
 (defn reset 
   ""
-  [ self ]
-  (py/call-attr image "reset"  self ))
+  [ self  ]
+  (py/call-attr self "reset"  self  ))

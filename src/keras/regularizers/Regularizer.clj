@@ -16,4 +16,4 @@
   "Regularizer base class.
     "
   [  ]
-  (py/call-attr regularizers "Regularizer"   ))
+  (py/call-attr regularizers "Regularizer"  ))

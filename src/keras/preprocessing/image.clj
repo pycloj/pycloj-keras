@@ -36,10 +36,9 @@
     # Returns
         The transformed version of the input.
     "
-  [ & {:keys [x theta tx ty shear zx zy row_axis col_axis channel_axis fill_mode cval order]
-       :or {theta 0 tx 0 ty 0 shear 0 zx 1 zy 1 row_axis 0 col_axis 1 channel_axis 2 fill_mode "nearest" cval 0.0 order 1}} ]
-  
-   (py/call-attr-kw image "apply_affine_transform" [] {:x x :theta theta :tx tx :ty ty :shear shear :zx zx :zy zy :row_axis row_axis :col_axis col_axis :channel_axis channel_axis :fill_mode fill_mode :cval cval :order order }))
+  [x & {:keys [theta tx ty shear zx zy row_axis col_axis channel_axis fill_mode cval order]
+                       :or {theta 0 tx 0 ty 0 shear 0 zx 1 zy 1 row_axis 0 col_axis 1 channel_axis 2 fill_mode "nearest" cval 0.0 order 1}} ]
+    (py/call-attr-kw image "apply_affine_transform" [x] {:theta theta :tx tx :ty ty :shear shear :zx zx :zy zy :row_axis row_axis :col_axis col_axis :channel_axis channel_axis :fill_mode fill_mode :cval cval :order order }))
 
 (defn apply-brightness-shift 
   "Performs a brightness shift.
@@ -55,8 +54,8 @@
     # Raises
         ValueError if `brightness_range` isn't a tuple.
     "
-  [ & {:keys [x brightness]} ]
-   (py/call-attr-kw image "apply_brightness_shift" [] {:x x :brightness brightness }))
+  [ x brightness ]
+  (py/call-attr image "apply_brightness_shift"  x brightness ))
 
 (defn apply-channel-shift 
   "Performs a channel shift.
@@ -70,10 +69,9 @@
         Numpy image tensor.
 
     "
-  [ & {:keys [x intensity channel_axis]
-       :or {channel_axis 0}} ]
-  
-   (py/call-attr-kw image "apply_channel_shift" [] {:x x :intensity intensity :channel_axis channel_axis }))
+  [x intensity & {:keys [channel_axis]
+                       :or {channel_axis 0}} ]
+    (py/call-attr-kw image "apply_channel_shift" [x intensity] {:channel_axis channel_axis }))
 
 (defn array-to-img 
   "Converts a 3D Numpy array to a PIL Image instance.
@@ -93,11 +91,9 @@
         ImportError: if PIL is not available.
         ValueError: if invalid `x` or `data_format` is passed.
     "
-  [ & {:keys [x data_format scale dtype]
-       :or {scale true}} ]
-  
-   (py/call-attr-kw image "array_to_img" [] {:x x :data_format data_format :scale scale :dtype dtype }))
-
+  [x & {:keys [data_format scale dtype]
+                       :or {scale true}} ]
+    (py/call-attr-kw image "array_to_img" [x] {:data_format data_format :scale scale :dtype dtype }))
 (defn img-to-array 
   "Converts a PIL Image instance to a Numpy array.
 
@@ -113,8 +109,8 @@
     # Raises
         ValueError: if invalid `img` or `data_format` is passed.
     "
-  [ & {:keys [img data_format dtype]} ]
-   (py/call-attr-kw image "img_to_array" [] {:img img :data_format data_format :dtype dtype }))
+  [img  & {:keys [data_format dtype]} ]
+    (py/call-attr-kw image "img_to_array" [img] {:data_format data_format :dtype dtype }))
 
 (defn load-img 
   "Loads an image into PIL format.
@@ -140,10 +136,9 @@
         ImportError: if PIL is not available.
         ValueError: if interpolation method is not supported.
     "
-  [ & {:keys [path grayscale color_mode target_size interpolation]
-       :or {grayscale false color_mode "rgb" interpolation "nearest"}} ]
-  
-   (py/call-attr-kw image "load_img" [] {:path path :grayscale grayscale :color_mode color_mode :target_size target_size :interpolation interpolation }))
+  [path & {:keys [grayscale color_mode target_size interpolation]
+                       :or {grayscale false color_mode "rgb" interpolation "nearest"}} ]
+    (py/call-attr-kw image "load_img" [path] {:grayscale grayscale :color_mode color_mode :target_size target_size :interpolation interpolation }))
 
 (defn random-brightness 
   "Performs a random brightness shift.
@@ -159,8 +154,8 @@
     # Raises
         ValueError if `brightness_range` isn't a tuple.
     "
-  [ & {:keys [x brightness_range]} ]
-   (py/call-attr-kw image "random_brightness" [] {:x x :brightness_range brightness_range }))
+  [ x brightness_range ]
+  (py/call-attr image "random_brightness"  x brightness_range ))
 
 (defn random-channel-shift 
   "Performs a random channel shift.
@@ -173,10 +168,9 @@
     # Returns
         Numpy image tensor.
     "
-  [ & {:keys [x intensity_range channel_axis]
-       :or {channel_axis 0}} ]
-  
-   (py/call-attr-kw image "random_channel_shift" [] {:x x :intensity_range intensity_range :channel_axis channel_axis }))
+  [x intensity_range & {:keys [channel_axis]
+                       :or {channel_axis 0}} ]
+    (py/call-attr-kw image "random_channel_shift" [x intensity_range] {:channel_axis channel_axis }))
 
 (defn random-rotation 
   "Performs a random rotation of a Numpy image tensor.
@@ -198,10 +192,9 @@
     # Returns
         Rotated Numpy image tensor.
     "
-  [ & {:keys [x rg row_axis col_axis channel_axis fill_mode cval interpolation_order]
-       :or {row_axis 1 col_axis 2 channel_axis 0 fill_mode "nearest" cval 0.0 interpolation_order 1}} ]
-  
-   (py/call-attr-kw image "random_rotation" [] {:x x :rg rg :row_axis row_axis :col_axis col_axis :channel_axis channel_axis :fill_mode fill_mode :cval cval :interpolation_order interpolation_order }))
+  [x rg & {:keys [row_axis col_axis channel_axis fill_mode cval interpolation_order]
+                       :or {row_axis 1 col_axis 2 channel_axis 0 fill_mode "nearest" cval 0.0 interpolation_order 1}} ]
+    (py/call-attr-kw image "random_rotation" [x rg] {:row_axis row_axis :col_axis col_axis :channel_axis channel_axis :fill_mode fill_mode :cval cval :interpolation_order interpolation_order }))
 
 (defn random-shear 
   "Performs a random spatial shear of a Numpy image tensor.
@@ -223,10 +216,9 @@
     # Returns
         Sheared Numpy image tensor.
     "
-  [ & {:keys [x intensity row_axis col_axis channel_axis fill_mode cval interpolation_order]
-       :or {row_axis 1 col_axis 2 channel_axis 0 fill_mode "nearest" cval 0.0 interpolation_order 1}} ]
-  
-   (py/call-attr-kw image "random_shear" [] {:x x :intensity intensity :row_axis row_axis :col_axis col_axis :channel_axis channel_axis :fill_mode fill_mode :cval cval :interpolation_order interpolation_order }))
+  [x intensity & {:keys [row_axis col_axis channel_axis fill_mode cval interpolation_order]
+                       :or {row_axis 1 col_axis 2 channel_axis 0 fill_mode "nearest" cval 0.0 interpolation_order 1}} ]
+    (py/call-attr-kw image "random_shear" [x intensity] {:row_axis row_axis :col_axis col_axis :channel_axis channel_axis :fill_mode fill_mode :cval cval :interpolation_order interpolation_order }))
 
 (defn random-shift 
   "Performs a random spatial shift of a Numpy image tensor.
@@ -249,10 +241,9 @@
     # Returns
         Shifted Numpy image tensor.
     "
-  [ & {:keys [x wrg hrg row_axis col_axis channel_axis fill_mode cval interpolation_order]
-       :or {row_axis 1 col_axis 2 channel_axis 0 fill_mode "nearest" cval 0.0 interpolation_order 1}} ]
-  
-   (py/call-attr-kw image "random_shift" [] {:x x :wrg wrg :hrg hrg :row_axis row_axis :col_axis col_axis :channel_axis channel_axis :fill_mode fill_mode :cval cval :interpolation_order interpolation_order }))
+  [x wrg hrg & {:keys [row_axis col_axis channel_axis fill_mode cval interpolation_order]
+                       :or {row_axis 1 col_axis 2 channel_axis 0 fill_mode "nearest" cval 0.0 interpolation_order 1}} ]
+    (py/call-attr-kw image "random_shift" [x wrg hrg] {:row_axis row_axis :col_axis col_axis :channel_axis channel_axis :fill_mode fill_mode :cval cval :interpolation_order interpolation_order }))
 
 (defn random-zoom 
   "Performs a random spatial zoom of a Numpy image tensor.
@@ -277,10 +268,9 @@
     # Raises
         ValueError: if `zoom_range` isn't a tuple.
     "
-  [ & {:keys [x zoom_range row_axis col_axis channel_axis fill_mode cval interpolation_order]
-       :or {row_axis 1 col_axis 2 channel_axis 0 fill_mode "nearest" cval 0.0 interpolation_order 1}} ]
-  
-   (py/call-attr-kw image "random_zoom" [] {:x x :zoom_range zoom_range :row_axis row_axis :col_axis col_axis :channel_axis channel_axis :fill_mode fill_mode :cval cval :interpolation_order interpolation_order }))
+  [x zoom_range & {:keys [row_axis col_axis channel_axis fill_mode cval interpolation_order]
+                       :or {row_axis 1 col_axis 2 channel_axis 0 fill_mode "nearest" cval 0.0 interpolation_order 1}} ]
+    (py/call-attr-kw image "random_zoom" [x zoom_range] {:row_axis row_axis :col_axis col_axis :channel_axis channel_axis :fill_mode fill_mode :cval cval :interpolation_order interpolation_order }))
 
 (defn save-img 
   "Saves an image stored as a Numpy array to a path or file object.
@@ -297,7 +287,6 @@
         scale: Whether to rescale image values to be within `[0, 255]`.
         **kwargs: Additional keyword arguments passed to `PIL.Image.save()`.
     "
-  [ & {:keys [path x data_format file_format scale]
-       :or {scale true}} ]
-  
-   (py/call-attr-kw image "save_img" [] {:path path :x x :data_format data_format :file_format file_format :scale scale }))
+  [path x & {:keys [data_format file_format scale]
+                       :or {scale true}} ]
+    (py/call-attr-kw image "save_img" [path x] {:data_format data_format :file_format file_format :scale scale }))

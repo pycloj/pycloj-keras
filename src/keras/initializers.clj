@@ -11,23 +11,21 @@
 
 (py/initialize!)
 (defonce initializers (import-module "keras.initializers"))
-
 (defn deserialize 
   ""
-  [ & {:keys [config custom_objects]} ]
-   (py/call-attr-kw initializers "deserialize" [] {:config config :custom_objects custom_objects }))
+  [config  & {:keys [custom_objects]} ]
+    (py/call-attr-kw initializers "deserialize" [config] {:custom_objects custom_objects }))
 
 (defn deserialize-keras-object 
   ""
-  [ & {:keys [identifier module_objects custom_objects printable_module_name]
-       :or {printable_module_name "object"}} ]
-  
-   (py/call-attr-kw initializers "deserialize_keras_object" [] {:identifier identifier :module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
+  [identifier & {:keys [module_objects custom_objects printable_module_name]
+                       :or {printable_module_name "object"}} ]
+    (py/call-attr-kw initializers "deserialize_keras_object" [identifier] {:module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
 
 (defn get 
   ""
-  [ & {:keys [identifier]} ]
-   (py/call-attr-kw initializers "get" [] {:identifier identifier }))
+  [ identifier ]
+  (py/call-attr initializers "get"  identifier ))
 
 (defn glorot-normal 
   "Glorot normal initializer, also called Xavier normal initializer.
@@ -44,8 +42,8 @@
         An initializer.
 
     # References
-        Glorot & Bengio, AISTATS 2010
-        http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf
+        - [Understanding the difficulty of training deep feedforward neural
+           networks](http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf)
     "
   [ & {:keys [seed]} ]
    (py/call-attr-kw initializers "glorot_normal" [] {:seed seed }))
@@ -65,8 +63,8 @@
         An initializer.
 
     # References
-        Glorot & Bengio, AISTATS 2010
-        http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf
+        - [Understanding the difficulty of training deep feedforward neural
+           networks](http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf)
     "
   [ & {:keys [seed]} ]
    (py/call-attr-kw initializers "glorot_uniform" [] {:seed seed }))
@@ -85,7 +83,8 @@
         An initializer.
 
     # References
-        He et al., http://arxiv.org/abs/1502.01852
+        - [Delving Deep into Rectifiers: Surpassing Human-Level Performance on
+           ImageNet Classification](http://arxiv.org/abs/1502.01852)
     "
   [ & {:keys [seed]} ]
    (py/call-attr-kw initializers "he_normal" [] {:seed seed }))
@@ -104,7 +103,8 @@
         An initializer.
 
     # References
-        He et al., http://arxiv.org/abs/1502.01852
+        - [Delving Deep into Rectifiers: Surpassing Human-Level Performance on
+           ImageNet Classification](http://arxiv.org/abs/1502.01852)
     "
   [ & {:keys [seed]} ]
    (py/call-attr-kw initializers "he_uniform" [] {:seed seed }))
@@ -143,18 +143,17 @@
         An initializer.
 
     # References
-        LeCun 98, Efficient Backprop,
-        http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf
+        - [Efficient BackProp](http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf)
     "
   [ & {:keys [seed]} ]
    (py/call-attr-kw initializers "lecun_uniform" [] {:seed seed }))
 
 (defn serialize 
   ""
-  [ & {:keys [initializer]} ]
-   (py/call-attr-kw initializers "serialize" [] {:initializer initializer }))
+  [ initializer ]
+  (py/call-attr initializers "serialize"  initializer ))
 
 (defn serialize-keras-object 
   ""
-  [ & {:keys [instance]} ]
-   (py/call-attr-kw initializers "serialize_keras_object" [] {:instance instance }))
+  [ instance ]
+  (py/call-attr initializers "serialize_keras_object"  instance ))

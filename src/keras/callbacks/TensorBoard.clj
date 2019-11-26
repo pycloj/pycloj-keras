@@ -1,7 +1,7 @@
 (ns keras.callbacks.TensorBoard
   "TensorBoard basic visualizations.
 
-    [TensorBoard](https://www.tensorflow.org/get_started/summaries_and_tensorboard)
+    [TensorBoard](https://www.tensorflow.org/guide/summaries_and_tensorboard)
     is a visualization tool provided with TensorFlow.
 
     This callback writes a log for TensorBoard, which allows
@@ -26,13 +26,13 @@
             and weight histograms for the layers of the model. If set to 0,
             histograms won't be computed. Validation data (or split) must be
             specified for histogram visualizations.
+        batch_size: size of batch of inputs to feed to the network
+            for histograms computation.
         write_graph: whether to visualize the graph in TensorBoard.
             The log file can become quite large when
             write_graph is set to True.
         write_grads: whether to visualize gradient histograms in TensorBoard.
             `histogram_freq` must be greater than 0.
-        batch_size: size of batch of inputs to feed to the network
-            for histograms computation.
         write_images: whether to write model weights to visualize as
             image in TensorBoard.
         embeddings_freq: frequency (in epochs) at which selected embedding
@@ -43,14 +43,14 @@
             None or empty list all the embedding layer will be watched.
         embeddings_metadata: a dictionary which maps layer name to a file name
             in which metadata for this embedding layer is saved. See the
-            [details](https://www.tensorflow.org/how_tos/embedding_viz/#metadata_optional)
+            [details](https://www.tensorflow.org/guide/embedding#metadata)
             about metadata files format. In case if the same metadata file is
             used for all embedding layers, string can be passed.
         embeddings_data: data to be embedded at layers specified in
             `embeddings_layer_names`. Numpy array (if the model has a single
             input) or list of Numpy arrays (if the model has multiple inputs).
-            Learn [more about embeddings]
-            (https://www.tensorflow.org/programmers_guide/embedding).
+            Learn [more about embeddings](
+            https://www.tensorflow.org/guide/embedding).
         update_freq: `'batch'` or `'epoch'` or integer. When using `'batch'`, writes
             the losses and metrics to TensorBoard after each batch. The same
             applies for `'epoch'`. If using an integer, let's say `10000`,
@@ -72,7 +72,7 @@
 (defn TensorBoard 
   "TensorBoard basic visualizations.
 
-    [TensorBoard](https://www.tensorflow.org/get_started/summaries_and_tensorboard)
+    [TensorBoard](https://www.tensorflow.org/guide/summaries_and_tensorboard)
     is a visualization tool provided with TensorFlow.
 
     This callback writes a log for TensorBoard, which allows
@@ -97,13 +97,13 @@
             and weight histograms for the layers of the model. If set to 0,
             histograms won't be computed. Validation data (or split) must be
             specified for histogram visualizations.
+        batch_size: size of batch of inputs to feed to the network
+            for histograms computation.
         write_graph: whether to visualize the graph in TensorBoard.
             The log file can become quite large when
             write_graph is set to True.
         write_grads: whether to visualize gradient histograms in TensorBoard.
             `histogram_freq` must be greater than 0.
-        batch_size: size of batch of inputs to feed to the network
-            for histograms computation.
         write_images: whether to write model weights to visualize as
             image in TensorBoard.
         embeddings_freq: frequency (in epochs) at which selected embedding
@@ -114,14 +114,14 @@
             None or empty list all the embedding layer will be watched.
         embeddings_metadata: a dictionary which maps layer name to a file name
             in which metadata for this embedding layer is saved. See the
-            [details](https://www.tensorflow.org/how_tos/embedding_viz/#metadata_optional)
+            [details](https://www.tensorflow.org/guide/embedding#metadata)
             about metadata files format. In case if the same metadata file is
             used for all embedding layers, string can be passed.
         embeddings_data: data to be embedded at layers specified in
             `embeddings_layer_names`. Numpy array (if the model has a single
             input) or list of Numpy arrays (if the model has multiple inputs).
-            Learn [more about embeddings]
-            (https://www.tensorflow.org/programmers_guide/embedding).
+            Learn [more about embeddings](
+            https://www.tensorflow.org/guide/embedding).
         update_freq: `'batch'` or `'epoch'` or integer. When using `'batch'`, writes
             the losses and metrics to TensorBoard after each batch. The same
             applies for `'epoch'`. If using an integer, let's say `10000`,
@@ -130,46 +130,175 @@
             can slow down your training.
     "
   [ & {:keys [log_dir histogram_freq batch_size write_graph write_grads write_images embeddings_freq embeddings_layer_names embeddings_metadata embeddings_data update_freq]
-       :or {log_dir "./logs" histogram_freq 0 batch_size 32 write_graph true write_grads false write_images false embeddings_freq 0 update_freq "epoch"}} ]
+       :or {log_dir "./logs" histogram_freq 0 write_graph true write_grads false write_images false embeddings_freq 0 update_freq "epoch"}} ]
   
    (py/call-attr-kw callbacks "TensorBoard" [] {:log_dir log_dir :histogram_freq histogram_freq :batch_size batch_size :write_graph write_graph :write_grads write_grads :write_images write_images :embeddings_freq embeddings_freq :embeddings_layer_names embeddings_layer_names :embeddings_metadata embeddings_metadata :embeddings_data embeddings_data :update_freq update_freq }))
-
 (defn on-batch-begin 
-  ""
-  [self  & {:keys [batch logs]} ]
-    (py/call-attr-kw callbacks "on_batch_begin" [self] {:batch batch :logs logs }))
-
+  "A backwards compatibility alias for `on_train_batch_begin`."
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_batch_begin" [batch] {:logs logs }))
 (defn on-batch-end 
-  ""
-  [self  & {:keys [batch logs]} ]
-    (py/call-attr-kw callbacks "on_batch_end" [self] {:batch batch :logs logs }))
+  "Writes scalar summaries for metrics on every training batch.
 
+    Performs profiling if current batch is in profiler_batches.
+
+    Arguments:
+      batch: Integer, index of batch within the current epoch.
+      logs: Dict. Metric results for this batch.
+    "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_batch_end" [batch] {:logs logs }))
 (defn on-epoch-begin 
-  ""
-  [self  & {:keys [epoch logs]} ]
-    (py/call-attr-kw callbacks "on_epoch_begin" [self] {:epoch epoch :logs logs }))
+  "Called at the start of an epoch.
 
+    Subclasses should override for any actions to run. This function should only
+    be called during TRAIN mode.
+
+    Arguments:
+        epoch: integer, index of epoch.
+        logs: dict. Currently no data is passed to this argument for this method
+          but that may change in the future.
+    "
+  [self epoch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_epoch_begin" [epoch] {:logs logs }))
 (defn on-epoch-end 
-  ""
-  [self  & {:keys [epoch logs]} ]
-    (py/call-attr-kw callbacks "on_epoch_end" [self] {:epoch epoch :logs logs }))
+  "Runs metrics and histogram summaries at epoch end."
+  [self epoch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_epoch_end" [epoch] {:logs logs }))
+(defn on-predict-batch-begin 
+  "Called at the beginning of a batch in `predict` methods.
 
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: integer, index of batch within the current epoch.
+        logs: dict. Has keys `batch` and `size` representing the current batch
+          number and the size of the batch.
+    "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_batch_begin" [batch] {:logs logs }))
+(defn on-predict-batch-end 
+  "Called at the end of a batch in `predict` methods.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: integer, index of batch within the current epoch.
+        logs: dict. Metric results for this batch.
+    "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_batch_end" [batch] {:logs logs }))
+(defn on-predict-begin 
+  "Called at the beginning of prediction.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        logs: dict. Currently no data is passed to this argument for this method
+          but that may change in the future.
+    "
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_begin" [] {:logs logs }))
+(defn on-predict-end 
+  "Called at the end of prediction.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        logs: dict. Currently no data is passed to this argument for this method
+          but that may change in the future.
+    "
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_end" [] {:logs logs }))
+(defn on-test-batch-begin 
+  "Called at the beginning of a batch in `evaluate` methods.
+
+    Also called at the beginning of a validation batch in the `fit`
+    methods, if validation data is provided.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: integer, index of batch within the current epoch.
+        logs: dict. Has keys `batch` and `size` representing the current batch
+          number and the size of the batch.
+    "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_batch_begin" [batch] {:logs logs }))
+(defn on-test-batch-end 
+  "Called at the end of a batch in `evaluate` methods.
+
+    Also called at the end of a validation batch in the `fit`
+    methods, if validation data is provided.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: integer, index of batch within the current epoch.
+        logs: dict. Metric results for this batch.
+    "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_batch_end" [batch] {:logs logs }))
+(defn on-test-begin 
+  "Called at the beginning of evaluation or validation.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        logs: dict. Currently no data is passed to this argument for this method
+          but that may change in the future.
+    "
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_begin" [] {:logs logs }))
+(defn on-test-end 
+  "Called at the end of evaluation or validation.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        logs: dict. Currently no data is passed to this argument for this method
+          but that may change in the future.
+    "
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_end" [] {:logs logs }))
+(defn on-train-batch-begin 
+  "Called at the beginning of a training batch in `fit` methods.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: integer, index of batch within the current epoch.
+        logs: dict. Has keys `batch` and `size` representing the current batch
+          number and the size of the batch.
+    "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_batch_begin" [batch] {:logs logs }))
+(defn on-train-batch-end 
+  "Called at the end of a training batch in `fit` methods.
+
+    Subclasses should override for any actions to run.
+
+    Arguments:
+        batch: integer, index of batch within the current epoch.
+        logs: dict. Metric results for this batch.
+    "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_batch_end" [batch] {:logs logs }))
 (defn on-train-begin 
   ""
-  [self  & {:keys [logs]} ]
-    (py/call-attr-kw callbacks "on_train_begin" [self] {:logs logs }))
-
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_begin" [] {:logs logs }))
 (defn on-train-end 
   ""
-  [self  & {:keys [_]} ]
-    (py/call-attr-kw callbacks "on_train_end" [self] {:_ _ }))
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_end" [] {:logs logs }))
 
 (defn set-model 
-  ""
-  [self  & {:keys [model]} ]
-    (py/call-attr-kw callbacks "set_model" [self] {:model model }))
+  "Sets Keras model and writes graph if specified."
+  [ self model ]
+  (py/call-attr self "set_model"  self model ))
 
 (defn set-params 
   ""
-  [self  & {:keys [params]} ]
-    (py/call-attr-kw callbacks "set_params" [self] {:params params }))
+  [ self params ]
+  (py/call-attr self "set_params"  self params ))

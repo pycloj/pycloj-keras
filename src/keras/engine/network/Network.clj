@@ -14,6 +14,7 @@
                 - ndim
                 - dtype
         trainable (boolean)
+        dtype
         input_shape
         output_shape
         weights (list of variables)
@@ -75,6 +76,7 @@
                 - ndim
                 - dtype
         trainable (boolean)
+        dtype
         input_shape
         output_shape
         weights (list of variables)
@@ -110,8 +112,7 @@
             (tensors returned by `Input`).
     "
   [  ]
-  (py/call-attr network "Network"   ))
-
+  (py/call-attr network "Network"  ))
 (defn add-loss 
   "Adds losses to the layer.
 
@@ -127,9 +128,17 @@
                 (e.g. L2 weight regularization, which only depends
                 on the layer's weights variables, not on any inputs tensors).
         "
-  [self  & {:keys [losses inputs]} ]
-    (py/call-attr-kw network "add_loss" [self] {:losses losses :inputs inputs }))
+  [self losses  & {:keys [inputs]} ]
+    (py/call-attr-kw self "add_loss" [losses] {:inputs inputs }))
+(defn add-metric 
+  "Adds metric tensor to the layer.
 
+        # Arguments
+            value: Metric tensor.
+            name: String metric name.
+        "
+  [self value  & {:keys [name]} ]
+    (py/call-attr-kw self "add_metric" [value] {:name name }))
 (defn add-update 
   "Adds updates to the layer.
 
@@ -143,8 +152,8 @@
                 the updates as conditional on these inputs.
                 If None is passed, the updates are assumed unconditional.
         "
-  [self  & {:keys [updates inputs]} ]
-    (py/call-attr-kw network "add_update" [self] {:updates updates :inputs inputs }))
+  [self updates  & {:keys [inputs]} ]
+    (py/call-attr-kw self "add_update" [updates] {:inputs inputs }))
 
 (defn add-weight 
   "Adds a weight variable to the layer.
@@ -163,9 +172,9 @@
         # Returns
             The created weight variable.
         "
-  [self & {:keys [name shape dtype initializer regularizer trainable constraint]
+  [self  & {:keys [name shape dtype initializer regularizer trainable constraint]
                        :or {trainable true}} ]
-    (py/call-attr-kw network "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
+    (py/call-attr-kw self "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
 
 (defn assert-input-compatibility 
   "Checks compatibility between the layer and provided inputs.
@@ -181,8 +190,8 @@
             ValueError: in case of mismatch between
                 the provided inputs and the expectations of the layer.
         "
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw network "assert_input_compatibility" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "assert_input_compatibility"  self inputs ))
 
 (defn build 
   "Creates the layer weights.
@@ -194,14 +203,13 @@
                 or list/tuple of Keras tensors to reference
                 for weight shape computations.
         "
-  [self  & {:keys [input_shape]} ]
-    (py/call-attr-kw network "build" [self] {:input_shape input_shape }))
+  [ self input_shape ]
+  (py/call-attr self "build"  self input_shape ))
 
 (defn built 
   ""
   [ self ]
-    (py/call-attr network "built"  self))
-
+    (py/call-attr self "built"))
 (defn call 
   "Calls the model on new inputs.
 
@@ -220,18 +228,18 @@
             A tensor if there is a single output, or
             a list of tensors if there are more than one outputs.
         "
-  [self  & {:keys [inputs mask]} ]
-    (py/call-attr-kw network "call" [self] {:inputs inputs :mask mask }))
+  [self inputs  & {:keys [mask]} ]
+    (py/call-attr-kw self "call" [inputs] {:mask mask }))
 
 (defn compute-mask 
   ""
-  [self  & {:keys [inputs mask]} ]
-    (py/call-attr-kw network "compute_mask" [self] {:inputs inputs :mask mask }))
+  [ self inputs mask ]
+  (py/call-attr self "compute_mask"  self inputs mask ))
 
 (defn compute-output-shape 
   ""
-  [self  & {:keys [input_shape]} ]
-    (py/call-attr-kw network "compute_output_shape" [self] {:input_shape input_shape }))
+  [ self input_shape ]
+  (py/call-attr self "compute_output_shape"  self input_shape ))
 
 (defn count-params 
   "Counts the total number of scalars composing the weights.
@@ -243,13 +251,13 @@
             RuntimeError: if the layer isn't yet built
                 (in which case its weights aren't yet defined).
         "
-  [ self ]
-  (py/call-attr network "count_params"  self ))
+  [ self  ]
+  (py/call-attr self "count_params"  self  ))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr network "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))
 
 (defn get-input-at 
   "Retrieves the input tensor(s) of a layer at a given node.
@@ -263,8 +271,8 @@
         # Returns
             A tensor (or list of tensors if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw network "get_input_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_input_at"  self node_index ))
 
 (defn get-input-mask-at 
   "Retrieves the input mask tensor(s) of a layer at a given node.
@@ -279,8 +287,8 @@
             A mask tensor
             (or list of tensors if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw network "get_input_mask_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_input_mask_at"  self node_index ))
 
 (defn get-input-shape-at 
   "Retrieves the input shape(s) of a layer at a given node.
@@ -295,9 +303,8 @@
             A shape tuple
             (or list of shape tuples if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw network "get_input_shape_at" [self] {:node_index node_index }))
-
+  [ self node_index ]
+  (py/call-attr self "get_input_shape_at"  self node_index ))
 (defn get-layer 
   "Retrieves a layer based on either its name (unique) or index.
 
@@ -315,13 +322,13 @@
         # Raises
             ValueError: In case of invalid layer name or index.
         "
-  [self  & {:keys [name index]} ]
-    (py/call-attr-kw network "get_layer" [self] {:name name :index index }))
+  [self   & {:keys [name index]} ]
+    (py/call-attr-kw self "get_layer" [] {:name name :index index }))
 
 (defn get-losses-for 
   ""
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw network "get_losses_for" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "get_losses_for"  self inputs ))
 
 (defn get-output-at 
   "Retrieves the output tensor(s) of a layer at a given node.
@@ -335,8 +342,8 @@
         # Returns
             A tensor (or list of tensors if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw network "get_output_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_at"  self node_index ))
 
 (defn get-output-mask-at 
   "Retrieves the output mask tensor(s) of a layer at a given node.
@@ -351,8 +358,8 @@
             A mask tensor
             (or list of tensors if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw network "get_output_mask_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_mask_at"  self node_index ))
 
 (defn get-output-shape-at 
   "Retrieves the output shape(s) of a layer at a given node.
@@ -367,13 +374,13 @@
             A shape tuple
             (or list of shape tuples if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw network "get_output_shape_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_shape_at"  self node_index ))
 
 (defn get-updates-for 
   ""
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw network "get_updates_for" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "get_updates_for"  self inputs ))
 
 (defn get-weights 
   "Retrieves the weights of the model.
@@ -381,8 +388,8 @@
         # Returns
             A flat list of Numpy arrays.
         "
-  [ self ]
-  (py/call-attr network "get_weights"  self ))
+  [ self  ]
+  (py/call-attr self "get_weights"  self  ))
 
 (defn input 
   "Retrieves the input tensor(s) of a layer.
@@ -398,7 +405,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr network "input"  self))
+    (py/call-attr self "input"))
 
 (defn input-mask 
   "Retrieves the input mask tensor(s) of a layer.
@@ -415,7 +422,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr network "input_mask"  self))
+    (py/call-attr self "input_mask"))
 
 (defn input-shape 
   "Retrieves the input shape tuple(s) of a layer.
@@ -432,7 +439,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr network "input_shape"  self))
+    (py/call-attr self "input_shape"))
 
 (defn input-spec 
   "Gets the model's input specs.
@@ -442,12 +449,12 @@
                 or a single instance if the model has only one input.
         "
   [ self ]
-    (py/call-attr network "input_spec"  self))
+    (py/call-attr self "input_spec"))
 
 (defn layers 
   ""
   [ self ]
-    (py/call-attr network "layers"  self))
+    (py/call-attr self "layers"))
 
 (defn load-weights 
   "Loads all layer weights from a HDF5 save file.
@@ -479,9 +486,9 @@
         # Raises
             ImportError: If h5py is not available.
         "
-  [self & {:keys [filepath by_name skip_mismatch reshape]
+  [self filepath & {:keys [by_name skip_mismatch reshape]
                        :or {by_name false skip_mismatch false reshape false}} ]
-    (py/call-attr-kw network "load_weights" [] {:filepath filepath :by_name by_name :skip_mismatch skip_mismatch :reshape reshape }))
+    (py/call-attr-kw self "load_weights" [filepath] {:by_name by_name :skip_mismatch skip_mismatch :reshape reshape }))
 
 (defn losses 
   "Retrieves the model's losses.
@@ -495,12 +502,17 @@
             A list of loss tensors.
         "
   [ self ]
-    (py/call-attr network "losses"  self))
+    (py/call-attr self "losses"))
+
+(defn metrics 
+  ""
+  [ self ]
+    (py/call-attr self "metrics"))
 
 (defn non-trainable-weights 
   ""
   [ self ]
-    (py/call-attr network "non_trainable_weights"  self))
+    (py/call-attr self "non_trainable_weights"))
 
 (defn output 
   "Retrieves the output tensor(s) of a layer.
@@ -516,7 +528,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr network "output"  self))
+    (py/call-attr self "output"))
 
 (defn output-mask 
   "Retrieves the output mask tensor(s) of a layer.
@@ -533,7 +545,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr network "output_mask"  self))
+    (py/call-attr self "output_mask"))
 
 (defn output-shape 
   "Retrieves the output shape tuple(s) of a layer.
@@ -550,13 +562,12 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr network "output_shape"  self))
+    (py/call-attr self "output_shape"))
 
 (defn reset-states 
   ""
-  [ self ]
-  (py/call-attr network "reset_states"  self ))
-
+  [ self  ]
+  (py/call-attr self "reset_states"  self  ))
 (defn run-internal-graph 
   "Computes output tensors for new inputs.
 
@@ -571,8 +582,8 @@
         # Returns
             Three lists: output_tensors, output_masks, output_shapes
         "
-  [self  & {:keys [inputs masks]} ]
-    (py/call-attr-kw network "run_internal_graph" [self] {:inputs inputs :masks masks }))
+  [self inputs  & {:keys [masks]} ]
+    (py/call-attr-kw self "run_internal_graph" [inputs] {:masks masks }))
 
 (defn save 
   "Saves the model to a single HDF5 file.
@@ -592,7 +603,11 @@
         was never compiled in the first place).
 
         # Arguments
-            filepath: String, path to the file to save the weights to.
+            filepath: one of the following:
+                - string, path to the file to save the model to
+                - h5py.File or h5py.Group object where to save the model
+                - any file-like object implementing the method `write` that accepts
+                    `bytes` data (e.g. `io.BytesIO`).
             overwrite: Whether to silently overwrite any existing file at the
                 target location, or provide the user with a manual prompt.
             include_optimizer: If True, save optimizer's state together.
@@ -610,9 +625,9 @@
         model = load_model('my_model.h5')
         ```
         "
-  [self & {:keys [filepath overwrite include_optimizer]
+  [self filepath & {:keys [overwrite include_optimizer]
                        :or {overwrite true include_optimizer true}} ]
-    (py/call-attr-kw network "save" [] {:filepath filepath :overwrite overwrite :include_optimizer include_optimizer }))
+    (py/call-attr-kw self "save" [filepath] {:overwrite overwrite :include_optimizer include_optimizer }))
 
 (defn save-weights 
   "Dumps all layer weights to a HDF5 file.
@@ -635,9 +650,9 @@
         # Raises
             ImportError: If h5py is not available.
         "
-  [self & {:keys [filepath overwrite]
+  [self filepath & {:keys [overwrite]
                        :or {overwrite true}} ]
-    (py/call-attr-kw network "save_weights" [] {:filepath filepath :overwrite overwrite }))
+    (py/call-attr-kw self "save_weights" [filepath] {:overwrite overwrite }))
 
 (defn set-weights 
   "Sets the weights of the model.
@@ -646,8 +661,8 @@
             weights: A list of Numpy arrays with shapes and types matching
                 the output of `model.get_weights()`.
         "
-  [self  & {:keys [weights]} ]
-    (py/call-attr-kw network "set_weights" [self] {:weights weights }))
+  [ self weights ]
+  (py/call-attr self "set_weights"  self weights ))
 
 (defn state-updates 
   "Returns the `updates` from all layers that are stateful.
@@ -660,13 +675,12 @@
             A list of update ops.
         "
   [ self ]
-    (py/call-attr network "state_updates"  self))
+    (py/call-attr self "state_updates"))
 
 (defn stateful 
   ""
   [ self ]
-    (py/call-attr network "stateful"  self))
-
+    (py/call-attr self "stateful"))
 (defn summary 
   "Prints a string summary of the network.
 
@@ -683,8 +697,8 @@
                 in order to capture the string summary.
                 It defaults to `print` (prints to stdout).
         "
-  [self  & {:keys [line_length positions print_fn]} ]
-    (py/call-attr-kw network "summary" [self] {:line_length line_length :positions positions :print_fn print_fn }))
+  [self   & {:keys [line_length positions print_fn]} ]
+    (py/call-attr-kw self "summary" [] {:line_length line_length :positions positions :print_fn print_fn }))
 
 (defn to-json 
   "Returns a JSON string containing the network configuration.
@@ -699,8 +713,8 @@
         # Returns
             A JSON string.
         "
-  [ self ]
-  (py/call-attr network "to_json"  self ))
+  [ self  ]
+  (py/call-attr self "to_json"  self  ))
 
 (defn to-yaml 
   "Returns a yaml string containing the network configuration.
@@ -719,13 +733,13 @@
         # Returns
             A YAML string.
         "
-  [ self ]
-  (py/call-attr network "to_yaml"  self ))
+  [ self  ]
+  (py/call-attr self "to_yaml"  self  ))
 
 (defn trainable-weights 
   ""
   [ self ]
-    (py/call-attr network "trainable_weights"  self))
+    (py/call-attr self "trainable_weights"))
 
 (defn updates 
   "Retrieves the model's updates.
@@ -739,14 +753,14 @@
             A list of update ops.
         "
   [ self ]
-    (py/call-attr network "updates"  self))
+    (py/call-attr self "updates"))
 
 (defn uses-learning-phase 
   ""
   [ self ]
-    (py/call-attr network "uses_learning_phase"  self))
+    (py/call-attr self "uses_learning_phase"))
 
 (defn weights 
   ""
   [ self ]
-    (py/call-attr network "weights"  self))
+    (py/call-attr self "weights"))

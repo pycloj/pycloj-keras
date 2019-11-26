@@ -11,7 +11,6 @@
 
 (py/initialize!)
 (defonce multi-gpu-utils (import-module "keras.utils.multi_gpu_utils"))
-
 (defn clone-model 
   "Clone any `Model` instance.
 
@@ -34,8 +33,8 @@
     # Raises
         ValueError: in case of invalid `model` argument value.
     "
-  [ & {:keys [model input_tensors]} ]
-   (py/call-attr-kw multi-gpu-utils "clone_model" [] {:model model :input_tensors input_tensors }))
+  [model  & {:keys [input_tensors]} ]
+    (py/call-attr-kw multi-gpu-utils "clone_model" [model] {:input_tensors input_tensors }))
 
 (defn concatenate 
   "Functional interface to the `Concatenate` layer.
@@ -48,10 +47,9 @@
     # Returns
         A tensor, the concatenation of the inputs alongside axis `axis`.
     "
-  [ & {:keys [inputs axis]
-       :or {axis -1}} ]
-  
-   (py/call-attr-kw multi-gpu-utils "concatenate" [] {:inputs inputs :axis axis }))
+  [inputs & {:keys [axis]
+                       :or {axis -1}} ]
+    (py/call-attr-kw multi-gpu-utils "concatenate" [inputs] {:axis axis }))
 
 (defn multi-gpu-model 
   "Replicates a model on different GPUs.
@@ -91,7 +89,9 @@
         A Keras `Model` instance which can be used just like the initial
         `model` argument, but which distributes its workload on multiple GPUs.
 
-    # Example 1 - Training models with weights merge on CPU
+    # Examples
+
+    Example 1 - Training models with weights merge on CPU
 
     ```python
         import tensorflow as tf
@@ -132,7 +132,7 @@
         model.save('my_model.h5')
     ```
 
-    # Example 2 - Training models with weights merge on CPU using cpu_relocation
+    Example 2 - Training models with weights merge on CPU using cpu_relocation
 
     ```python
          ..
@@ -140,16 +140,16 @@
          model = Xception(weights=None, ..)
 
          try:
-             model = multi_gpu_model(model, cpu_relocation=True)
+             parallel_model = multi_gpu_model(model, cpu_relocation=True)
              print(\"Training using multiple GPUs..\")
-         except:
+         except ValueError:
+             parallel_model = model
              print(\"Training using single GPU or CPU..\")
-
-         model.compile(..)
+         parallel_model.compile(..)
          ..
     ```
 
-    # Example 3 - Training models with weights merge on GPU (recommended for NV-link)
+    Example 3 - Training models with weights merge on GPU (recommended for NV-link)
 
     ```python
          ..
@@ -157,12 +157,13 @@
          model = Xception(weights=None, ..)
 
          try:
-             model = multi_gpu_model(model, cpu_merge=False)
+             parallel_model = multi_gpu_model(model, cpu_merge=False)
              print(\"Training using multiple GPUs..\")
          except:
+             parallel_model = model
              print(\"Training using single GPU or CPU..\")
 
-         model.compile(..)
+         parallel_model.compile(..)
          ..
     ```
 
@@ -172,10 +173,9 @@
     with the template model (the argument you passed to `multi_gpu_model`),
     rather than the model returned by `multi_gpu_model`.
     "
-  [ & {:keys [model gpus cpu_merge cpu_relocation]
-       :or {cpu_merge true cpu_relocation false}} ]
-  
-   (py/call-attr-kw multi-gpu-utils "multi_gpu_model" [] {:model model :gpus gpus :cpu_merge cpu_merge :cpu_relocation cpu_relocation }))
+  [model & {:keys [gpus cpu_merge cpu_relocation]
+                       :or {cpu_merge true cpu_relocation false}} ]
+    (py/call-attr-kw multi-gpu-utils "multi_gpu_model" [model] {:gpus gpus :cpu_merge cpu_merge :cpu_relocation cpu_relocation }))
 
 (defn to-list 
   "Normalizes a list/tensor into a list.
@@ -193,7 +193,6 @@
     # Returns
         A list.
     "
-  [ & {:keys [x allow_tuple]
-       :or {allow_tuple false}} ]
-  
-   (py/call-attr-kw multi-gpu-utils "to_list" [] {:x x :allow_tuple allow_tuple }))
+  [x & {:keys [allow_tuple]
+                       :or {allow_tuple false}} ]
+    (py/call-attr-kw multi-gpu-utils "to_list" [x] {:allow_tuple allow_tuple }))

@@ -24,8 +24,8 @@
     # Returns
         The input length (integer).
     "
-  [ & {:keys [output_length filter_size padding stride]} ]
-   (py/call-attr-kw conv-utils "conv_input_length" [] {:output_length output_length :filter_size filter_size :padding padding :stride stride }))
+  [ output_length filter_size padding stride ]
+  (py/call-attr conv-utils "conv_input_length"  output_length filter_size padding stride ))
 
 (defn conv-output-length 
   "Determines output length of a convolution given input length.
@@ -40,10 +40,9 @@
     # Returns
         The output length (integer).
     "
-  [ & {:keys [input_length filter_size padding stride dilation]
-       :or {dilation 1}} ]
-  
-   (py/call-attr-kw conv-utils "conv_output_length" [] {:input_length input_length :filter_size filter_size :padding padding :stride stride :dilation dilation }))
+  [input_length filter_size padding stride & {:keys [dilation]
+                       :or {dilation 1}} ]
+    (py/call-attr-kw conv-utils "conv_output_length" [input_length filter_size padding stride] {:dilation dilation }))
 
 (defn convert-kernel 
   "Converts a Numpy kernel matrix from Theano format to TensorFlow format.
@@ -59,8 +58,8 @@
     # Raises
         ValueError: in case of invalid kernel shape or invalid data_format.
     "
-  [ & {:keys [kernel]} ]
-   (py/call-attr-kw conv-utils "convert_kernel" [] {:kernel kernel }))
+  [ kernel ]
+  (py/call-attr conv-utils "convert_kernel"  kernel ))
 
 (defn deconv-length 
   "Determines output length of a transposed convolution given input length.
@@ -78,15 +77,14 @@
     # Returns
         The output length (integer).
     "
-  [ & {:keys [dim_size stride_size kernel_size padding output_padding dilation]
-       :or {dilation 1}} ]
-  
-   (py/call-attr-kw conv-utils "deconv_length" [] {:dim_size dim_size :stride_size stride_size :kernel_size kernel_size :padding padding :output_padding output_padding :dilation dilation }))
+  [dim_size stride_size kernel_size padding output_padding & {:keys [dilation]
+                       :or {dilation 1}} ]
+    (py/call-attr-kw conv-utils "deconv_length" [dim_size stride_size kernel_size padding output_padding] {:dilation dilation }))
 
 (defn normalize-padding 
   ""
-  [ & {:keys [value]} ]
-   (py/call-attr-kw conv-utils "normalize_padding" [] {:value value }))
+  [ value ]
+  (py/call-attr conv-utils "normalize_padding"  value ))
 
 (defn normalize-tuple 
   "Transforms a single int or iterable of ints into an int tuple.
@@ -105,5 +103,5 @@
         ValueError: If something else than an int/long or iterable thereof was
         passed.
     "
-  [ & {:keys [value n name]} ]
-   (py/call-attr-kw conv-utils "normalize_tuple" [] {:value value :n n :name name }))
+  [ value n name ]
+  (py/call-attr conv-utils "normalize_tuple"  value n name ))

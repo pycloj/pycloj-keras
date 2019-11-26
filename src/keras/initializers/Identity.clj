@@ -1,9 +1,9 @@
-(ns keras.initializers.identity
+(ns keras.initializers.Identity
   "Initializer that generates the identity matrix.
 
     Only use for 2D matrices.
-    If the long side of the matrix is a multiple of the short side,
-    multiple identity matrices are concatenated along the long side.
+    If the desired matrix is not square, it gets padded
+    with zeros for the additional rows/columns.
 
     # Arguments
         gain: Multiplicative factor to apply to the identity matrix.
@@ -19,12 +19,12 @@
 (py/initialize!)
 (defonce initializers (import-module "keras.initializers"))
 
-(defn identity 
+(defn Identity 
   "Initializer that generates the identity matrix.
 
     Only use for 2D matrices.
-    If the long side of the matrix is a multiple of the short side,
-    multiple identity matrices are concatenated along the long side.
+    If the desired matrix is not square, it gets padded
+    with zeros for the additional rows/columns.
 
     # Arguments
         gain: Multiplicative factor to apply to the identity matrix.
@@ -32,9 +32,9 @@
   [ & {:keys [gain]
        :or {gain 1.0}} ]
   
-   (py/call-attr-kw initializers "identity" [] {:gain gain }))
+   (py/call-attr-kw initializers "Identity" [] {:gain gain }))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr initializers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

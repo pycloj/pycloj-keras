@@ -7,8 +7,12 @@
             to qualify as an improvement, i.e. an absolute
             change of less than min_delta, will count as no
             improvement.
-        patience: number of epochs with no improvement
-            after which training will be stopped.
+        patience: number of epochs that produced the monitored
+            quantity with no improvement after which training will
+            be stopped.
+            Validation quantities may not be produced for every
+            epoch, if the validation frequency
+            (`model.fit(validation_freq=5)`) is greater than one.
         verbose: verbosity mode.
         mode: one of {auto, min, max}. In `min` mode,
             training will stop when the quantity
@@ -45,8 +49,12 @@
             to qualify as an improvement, i.e. an absolute
             change of less than min_delta, will count as no
             improvement.
-        patience: number of epochs with no improvement
-            after which training will be stopped.
+        patience: number of epochs that produced the monitored
+            quantity with no improvement after which training will
+            be stopped.
+            Validation quantities may not be produced for every
+            epoch, if the validation frequency
+            (`model.fit(validation_freq=5)`) is greater than one.
         verbose: verbosity mode.
         mode: one of {auto, min, max}. In `min` mode,
             training will stop when the quantity
@@ -70,45 +78,167 @@
 
 (defn get-monitor-value 
   ""
-  [self  & {:keys [logs]} ]
-    (py/call-attr-kw callbacks "get_monitor_value" [self] {:logs logs }))
-
+  [ self logs ]
+  (py/call-attr self "get_monitor_value"  self logs ))
 (defn on-batch-begin 
-  ""
-  [self  & {:keys [batch logs]} ]
-    (py/call-attr-kw callbacks "on_batch_begin" [self] {:batch batch :logs logs }))
-
+  "A backwards compatibility alias for `on_train_batch_begin`."
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_batch_begin" [batch] {:logs logs }))
 (defn on-batch-end 
-  ""
-  [self  & {:keys [batch logs]} ]
-    (py/call-attr-kw callbacks "on_batch_end" [self] {:batch batch :logs logs }))
-
+  "A backwards compatibility alias for `on_train_batch_end`."
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_batch_end" [batch] {:logs logs }))
 (defn on-epoch-begin 
-  ""
-  [self  & {:keys [epoch logs]} ]
-    (py/call-attr-kw callbacks "on_epoch_begin" [self] {:epoch epoch :logs logs }))
+  "Called at the start of an epoch.
 
+        Subclasses should override for any actions to run. This function should only
+        be called during train mode.
+
+        # Arguments
+            epoch: integer, index of epoch.
+            logs: dict, currently no data is passed to this argument for this method
+                but that may change in the future.
+        "
+  [self epoch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_epoch_begin" [epoch] {:logs logs }))
 (defn on-epoch-end 
   ""
-  [self  & {:keys [epoch logs]} ]
-    (py/call-attr-kw callbacks "on_epoch_end" [self] {:epoch epoch :logs logs }))
+  [self epoch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_epoch_end" [epoch] {:logs logs }))
+(defn on-predict-batch-begin 
+  "Called at the beginning of a batch in `predict` methods.
 
+        Subclasses should override for any actions to run.
+
+        # Arguments
+            batch: integer, index of batch within the current epoch.
+            logs: dict, has keys `batch` and `size` representing the current
+                batch number and the size of the batch.
+        "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_batch_begin" [batch] {:logs logs }))
+(defn on-predict-batch-end 
+  "Called at the end of a batch in `predict` methods.
+
+        Subclasses should override for any actions to run.
+
+        # Arguments
+            batch: integer, index of batch within the current epoch.
+            logs: dict, metric results for this batch.
+        "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_batch_end" [batch] {:logs logs }))
+(defn on-predict-begin 
+  "Called at the beginning of prediction.
+
+        Subclasses should override for any actions to run.
+
+        # Arguments
+            logs: dict, currently no data is passed to this argument for this method
+                but that may change in the future.
+        "
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_begin" [] {:logs logs }))
+(defn on-predict-end 
+  "Called at the end of prediction.
+
+        Subclasses should override for any actions to run.
+
+        # Arguments
+            logs: dict, currently no data is passed to this argument for this method
+                but that may change in the future.
+        "
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_end" [] {:logs logs }))
+(defn on-test-batch-begin 
+  "Called at the beginning of a batch in `evaluate` methods.
+
+        Also called at the beginning of a validation batch in the `fit` methods,
+        if validation data is provided.
+
+        Subclasses should override for any actions to run.
+
+        # Arguments
+            batch: integer, index of batch within the current epoch.
+            logs: dict, has keys `batch` and `size` representing the current
+                batch number and the size of the batch.
+        "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_batch_begin" [batch] {:logs logs }))
+(defn on-test-batch-end 
+  "Called at the end of a batch in `evaluate` methods.
+
+        Also called at the end of a validation batch in the `fit` methods,
+        if validation data is provided.
+
+        Subclasses should override for any actions to run.
+
+        # Arguments
+            batch: integer, index of batch within the current epoch.
+            logs: dict, metric results for this batch.
+        "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_batch_end" [batch] {:logs logs }))
+(defn on-test-begin 
+  "Called at the beginning of evaluation or validation.
+
+        Subclasses should override for any actions to run.
+
+        # Arguments
+            logs: dict, currently no data is passed to this argument for this method
+                but that may change in the future.
+        "
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_begin" [] {:logs logs }))
+(defn on-test-end 
+  "Called at the end of evaluation or validation.
+
+        Subclasses should override for any actions to run.
+
+        # Arguments
+            logs: dict, currently no data is passed to this argument for this method
+                but that may change in the future.
+        "
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_end" [] {:logs logs }))
+(defn on-train-batch-begin 
+  "Called at the beginning of a training batch in `fit` methods.
+
+        Subclasses should override for any actions to run.
+
+        # Arguments
+            batch: integer, index of batch within the current epoch.
+            logs: dict, has keys `batch` and `size` representing the current
+                batch number and the size of the batch.
+        "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_batch_begin" [batch] {:logs logs }))
+(defn on-train-batch-end 
+  "Called at the end of a training batch in `fit` methods.
+
+        Subclasses should override for any actions to run.
+
+        # Arguments
+            batch: integer, index of batch within the current epoch.
+            logs: dict, metric results for this batch.
+        "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_batch_end" [batch] {:logs logs }))
 (defn on-train-begin 
   ""
-  [self  & {:keys [logs]} ]
-    (py/call-attr-kw callbacks "on_train_begin" [self] {:logs logs }))
-
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_begin" [] {:logs logs }))
 (defn on-train-end 
   ""
-  [self  & {:keys [logs]} ]
-    (py/call-attr-kw callbacks "on_train_end" [self] {:logs logs }))
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_end" [] {:logs logs }))
 
 (defn set-model 
   ""
-  [self  & {:keys [model]} ]
-    (py/call-attr-kw callbacks "set_model" [self] {:model model }))
+  [ self model ]
+  (py/call-attr self "set_model"  self model ))
 
 (defn set-params 
   ""
-  [self  & {:keys [params]} ]
-    (py/call-attr-kw callbacks "set_params" [self] {:params params }))
+  [ self params ]
+  (py/call-attr self "set_params"  self params ))

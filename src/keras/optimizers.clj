@@ -24,9 +24,8 @@
     # Returns
         Tensor, the gradient clipped if required.
     "
-  [ & {:keys [g c n]} ]
-   (py/call-attr-kw optimizers "clip_norm" [] {:g g :c c :n n }))
-
+  [ g c n ]
+  (py/call-attr optimizers "clip_norm"  g c n ))
 (defn deserialize 
   "Inverse of the `serialize` function.
 
@@ -40,15 +39,14 @@
     # Returns
         A Keras Optimizer instance.
     "
-  [ & {:keys [config custom_objects]} ]
-   (py/call-attr-kw optimizers "deserialize" [] {:config config :custom_objects custom_objects }))
+  [config  & {:keys [custom_objects]} ]
+    (py/call-attr-kw optimizers "deserialize" [config] {:custom_objects custom_objects }))
 
 (defn deserialize-keras-object 
   ""
-  [ & {:keys [identifier module_objects custom_objects printable_module_name]
-       :or {printable_module_name "object"}} ]
-  
-   (py/call-attr-kw optimizers "deserialize_keras_object" [] {:identifier identifier :module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
+  [identifier & {:keys [module_objects custom_objects printable_module_name]
+                       :or {printable_module_name "object"}} ]
+    (py/call-attr-kw optimizers "deserialize_keras_object" [identifier] {:module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
 
 (defn get 
   "Retrieves a Keras Optimizer instance.
@@ -67,15 +65,15 @@
     # Raises
         ValueError: If `identifier` cannot be interpreted.
     "
-  [ & {:keys [identifier]} ]
-   (py/call-attr-kw optimizers "get" [] {:identifier identifier }))
+  [ identifier ]
+  (py/call-attr optimizers "get"  identifier ))
 
 (defn serialize 
   ""
-  [ & {:keys [optimizer]} ]
-   (py/call-attr-kw optimizers "serialize" [] {:optimizer optimizer }))
+  [ optimizer ]
+  (py/call-attr optimizers "serialize"  optimizer ))
 
 (defn serialize-keras-object 
   ""
-  [ & {:keys [instance]} ]
-   (py/call-attr-kw optimizers "serialize_keras_object" [] {:instance instance }))
+  [ instance ]
+  (py/call-attr optimizers "serialize_keras_object"  instance ))

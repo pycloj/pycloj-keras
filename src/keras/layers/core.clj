@@ -14,10 +14,9 @@
 
 (defn deserialize-keras-object 
   ""
-  [ & {:keys [identifier module_objects custom_objects printable_module_name]
-       :or {printable_module_name "object"}} ]
-  
-   (py/call-attr-kw core "deserialize_keras_object" [] {:identifier identifier :module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
+  [identifier & {:keys [module_objects custom_objects printable_module_name]
+                       :or {printable_module_name "object"}} ]
+    (py/call-attr-kw core "deserialize_keras_object" [identifier] {:module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
 
 (defn func-dump 
   "Serializes a user defined function.
@@ -28,9 +27,8 @@
     # Returns
         A tuple `(code, defaults, closure)`.
     "
-  [ & {:keys [func]} ]
-   (py/call-attr-kw core "func_dump" [] {:func func }))
-
+  [ func ]
+  (py/call-attr core "func_dump"  func ))
 (defn func-load 
   "Deserializes a user defined function.
 
@@ -43,8 +41,8 @@
     # Returns
         A function object.
     "
-  [ & {:keys [code defaults closure globs]} ]
-   (py/call-attr-kw core "func_load" [] {:code code :defaults defaults :closure closure :globs globs }))
+  [code  & {:keys [defaults closure globs]} ]
+    (py/call-attr-kw core "func_load" [code] {:defaults defaults :closure closure :globs globs }))
 
 (defn has-arg 
   "Checks if a callable accepts a given keyword argument.
@@ -64,7 +62,6 @@
     # Returns
         bool, whether `fn` accepts a `name` keyword argument.
     "
-  [ & {:keys [fn name accept_all]
-       :or {accept_all false}} ]
-  
-   (py/call-attr-kw core "has_arg" [] {:fn fn :name name :accept_all accept_all }))
+  [fn name & {:keys [accept_all]
+                       :or {accept_all false}} ]
+    (py/call-attr-kw core "has_arg" [fn name] {:accept_all accept_all }))

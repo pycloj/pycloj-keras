@@ -1,5 +1,8 @@
 (ns keras.optimizers.TFOptimizer
   "Wrapper class for native TensorFlow optimizers.
+
+    # Arguments
+        optimizer: Selected optimizer
     "
   (:require [libpython-clj.python
              :refer [import-module
@@ -14,29 +17,27 @@
 
 (defn TFOptimizer 
   "Wrapper class for native TensorFlow optimizers.
-    "
-  [ & {:keys [optimizer]} ]
-   (py/call-attr-kw optimizers "TFOptimizer" [] {:optimizer optimizer }))
 
-(defn from-config 
-  ""
-  [self  & {:keys [config]} ]
-    (py/call-attr-kw optimizers "from_config" [self] {:config config }))
+    # Arguments
+        optimizer: Selected optimizer
+    "
+  [ optimizer ]
+  (py/call-attr optimizers "TFOptimizer"  optimizer ))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr optimizers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))
 
 (defn get-gradients 
   ""
-  [self  & {:keys [loss params]} ]
-    (py/call-attr-kw optimizers "get_gradients" [self] {:loss loss :params params }))
+  [ self loss params ]
+  (py/call-attr self "get_gradients"  self loss params ))
 
 (defn get-updates 
   ""
-  [self  & {:keys [loss params]} ]
-    (py/call-attr-kw optimizers "get_updates" [self] {:loss loss :params params }))
+  [ self loss params ]
+  (py/call-attr self "get_updates"  self loss params ))
 
 (defn get-weights 
   "Returns the current value of the weights of the optimizer.
@@ -44,8 +45,13 @@
         # Returns
             A list of numpy arrays.
         "
+  [ self  ]
+  (py/call-attr self "get_weights"  self  ))
+
+(defn lr 
+  ""
   [ self ]
-  (py/call-attr optimizers "get_weights"  self ))
+    (py/call-attr self "lr"))
 
 (defn set-weights 
   "Sets the weights of the optimizer, from Numpy arrays.
@@ -63,10 +69,10 @@
         # Raises
             ValueError: in case of incompatible weight shapes.
         "
-  [self  & {:keys [weights]} ]
-    (py/call-attr-kw optimizers "set_weights" [self] {:weights weights }))
+  [ self weights ]
+  (py/call-attr self "set_weights"  self weights ))
 
 (defn weights 
   ""
   [ self ]
-    (py/call-attr optimizers "weights"  self))
+    (py/call-attr self "weights"))

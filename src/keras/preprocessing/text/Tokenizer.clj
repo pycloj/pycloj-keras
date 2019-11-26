@@ -81,8 +81,8 @@
             sequences: A list of sequence.
                 A \"sequence\" is a list of integer word indices.
         "
-  [self  & {:keys [sequences]} ]
-    (py/call-attr-kw text "fit_on_sequences" [self] {:sequences sequences }))
+  [ self sequences ]
+  (py/call-attr self "fit_on_sequences"  self sequences ))
 
 (defn fit-on-texts 
   "Updates internal vocabulary based on a list of texts.
@@ -97,8 +97,8 @@
                 a generator of strings (for memory-efficiency),
                 or a list of list of strings.
         "
-  [self  & {:keys [texts]} ]
-    (py/call-attr-kw text "fit_on_texts" [self] {:texts texts }))
+  [ self texts ]
+  (py/call-attr self "fit_on_texts"  self texts ))
 
 (defn get-config 
   "Returns the tokenizer configuration as Python dictionary.
@@ -109,8 +109,8 @@
         # Returns
             A Python dictionary with the tokenizer configuration.
         "
-  [ self ]
-  (py/call-attr text "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))
 
 (defn sequences-to-matrix 
   "Converts a list of sequences into a Numpy matrix.
@@ -127,9 +127,9 @@
             ValueError: In case of invalid `mode` argument,
                 or if the Tokenizer requires to be fit to sample data.
         "
-  [self & {:keys [sequences mode]
+  [self sequences & {:keys [mode]
                        :or {mode "binary"}} ]
-    (py/call-attr-kw text "sequences_to_matrix" [] {:sequences sequences :mode mode }))
+    (py/call-attr-kw self "sequences_to_matrix" [sequences] {:mode mode }))
 
 (defn sequences-to-texts 
   "Transforms each sequence into a list of text.
@@ -143,8 +143,8 @@
         # Returns
             A list of texts (strings)
         "
-  [self  & {:keys [sequences]} ]
-    (py/call-attr-kw text "sequences_to_texts" [self] {:sequences sequences }))
+  [ self sequences ]
+  (py/call-attr self "sequences_to_texts"  self sequences ))
 
 (defn sequences-to-texts-generator 
   "Transforms each sequence in `sequences` to a list of texts(strings).
@@ -161,8 +161,8 @@
         # Yields
             Yields individual texts.
         "
-  [self  & {:keys [sequences]} ]
-    (py/call-attr-kw text "sequences_to_texts_generator" [self] {:sequences sequences }))
+  [ self sequences ]
+  (py/call-attr self "sequences_to_texts_generator"  self sequences ))
 
 (defn texts-to-matrix 
   "Convert a list of texts to a Numpy matrix.
@@ -174,9 +174,9 @@
         # Returns
             A Numpy matrix.
         "
-  [self & {:keys [texts mode]
+  [self texts & {:keys [mode]
                        :or {mode "binary"}} ]
-    (py/call-attr-kw text "texts_to_matrix" [] {:texts texts :mode mode }))
+    (py/call-attr-kw self "texts_to_matrix" [texts] {:mode mode }))
 
 (defn texts-to-sequences 
   "Transforms each text in texts to a sequence of integers.
@@ -190,8 +190,8 @@
         # Returns
             A list of sequences.
         "
-  [self  & {:keys [texts]} ]
-    (py/call-attr-kw text "texts_to_sequences" [self] {:texts texts }))
+  [ self texts ]
+  (py/call-attr self "texts_to_sequences"  self texts ))
 
 (defn texts-to-sequences-generator 
   "Transforms each text in `texts` to a sequence of integers.
@@ -208,8 +208,8 @@
         # Yields
             Yields individual sequences.
         "
-  [self  & {:keys [texts]} ]
-    (py/call-attr-kw text "texts_to_sequences_generator" [self] {:texts texts }))
+  [ self texts ]
+  (py/call-attr self "texts_to_sequences_generator"  self texts ))
 
 (defn to-json 
   "Returns a JSON string containing the tokenizer configuration.
@@ -223,5 +223,5 @@
         # Returns
             A JSON string containing the tokenizer configuration.
         "
-  [ self ]
-  (py/call-attr text "to_json"  self ))
+  [ self  ]
+  (py/call-attr self "to_json"  self  ))

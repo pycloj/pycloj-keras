@@ -19,8 +19,8 @@
     # Arguments
         model: target model for the conversion.
     "
-  [ & {:keys [model]} ]
-   (py/call-attr-kw utils "convert_all_kernels_in_model" [] {:model model }))
+  [ model ]
+  (py/call-attr utils "convert_all_kernels_in_model"  model ))
 
 (defn custom-object-scope 
   "Provides a scope that changes to `_GLOBAL_CUSTOM_OBJECTS` cannot escape.
@@ -50,14 +50,13 @@
         Object of type `CustomObjectScope`.
     "
   [  ]
-  (py/call-attr utils "custom_object_scope"   ))
+  (py/call-attr utils "custom_object_scope"  ))
 
 (defn deserialize-keras-object 
   ""
-  [ & {:keys [identifier module_objects custom_objects printable_module_name]
-       :or {printable_module_name "object"}} ]
-  
-   (py/call-attr-kw utils "deserialize_keras_object" [] {:identifier identifier :module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
+  [identifier & {:keys [module_objects custom_objects printable_module_name]
+                       :or {printable_module_name "object"}} ]
+    (py/call-attr-kw utils "deserialize_keras_object" [identifier] {:module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
 
 (defn get-custom-objects 
   "Retrieves a live reference to the global dictionary of custom objects.
@@ -77,7 +76,7 @@
         Global dictionary of names to classes (`_GLOBAL_CUSTOM_OBJECTS`).
     "
   [  ]
-  (py/call-attr utils "get_custom_objects"   ))
+  (py/call-attr utils "get_custom_objects"  ))
 
 (defn get-file 
   "Downloads a file from a URL if it not already in the cache.
@@ -119,11 +118,9 @@
     # Returns
         Path to the downloaded file
     "
-  [ & {:keys [fname origin untar md5_hash file_hash cache_subdir hash_algorithm extract archive_format cache_dir]
-       :or {untar false cache_subdir "datasets" hash_algorithm "auto" extract false archive_format "auto"}} ]
-  
-   (py/call-attr-kw utils "get_file" [] {:fname fname :origin origin :untar untar :md5_hash md5_hash :file_hash file_hash :cache_subdir cache_subdir :hash_algorithm hash_algorithm :extract extract :archive_format archive_format :cache_dir cache_dir }))
-
+  [fname origin & {:keys [untar md5_hash file_hash cache_subdir hash_algorithm extract archive_format cache_dir]
+                       :or {untar false cache_subdir "datasets" hash_algorithm "auto" extract false archive_format "auto"}} ]
+    (py/call-attr-kw utils "get_file" [fname origin] {:untar untar :md5_hash md5_hash :file_hash file_hash :cache_subdir cache_subdir :hash_algorithm hash_algorithm :extract extract :archive_format archive_format :cache_dir cache_dir }))
 (defn get-source-inputs 
   "Returns the list of input tensors necessary to compute `tensor`.
 
@@ -139,8 +136,32 @@
     # Returns
         List of input tensors.
     "
-  [ & {:keys [tensor layer node_index]} ]
-   (py/call-attr-kw utils "get_source_inputs" [] {:tensor tensor :layer layer :node_index node_index }))
+  [tensor  & {:keys [layer node_index]} ]
+    (py/call-attr-kw utils "get_source_inputs" [tensor] {:layer layer :node_index node_index }))
+
+(defn model-to-dot 
+  "Convert a Keras model to dot format.
+
+    # Arguments
+        model: A Keras model instance.
+        show_shapes: whether to display shape information.
+        show_layer_names: whether to display layer names.
+        rankdir: `rankdir` argument passed to PyDot,
+            a string specifying the format of the plot:
+            'TB' creates a vertical plot;
+            'LR' creates a horizontal plot.
+        expand_nested: whether to expand nested models into clusters.
+        dpi: dot DPI.
+        subgraph: whether to return a pydot.Cluster instance.
+
+    # Returns
+        A `pydot.Dot` instance representing the Keras model or
+        a `pydot.Cluster` instance representing nested model if
+        `subgraph=True`.
+    "
+  [model & {:keys [show_shapes show_layer_names rankdir expand_nested dpi subgraph]
+                       :or {show_shapes false show_layer_names true rankdir "TB" expand_nested false dpi 96 subgraph false}} ]
+    (py/call-attr-kw utils "model_to_dot" [model] {:show_shapes show_shapes :show_layer_names show_layer_names :rankdir rankdir :expand_nested expand_nested :dpi dpi :subgraph subgraph }))
 
 (defn multi-gpu-model 
   "Replicates a model on different GPUs.
@@ -180,7 +201,9 @@
         A Keras `Model` instance which can be used just like the initial
         `model` argument, but which distributes its workload on multiple GPUs.
 
-    # Example 1 - Training models with weights merge on CPU
+    # Examples
+
+    Example 1 - Training models with weights merge on CPU
 
     ```python
         import tensorflow as tf
@@ -221,7 +244,7 @@
         model.save('my_model.h5')
     ```
 
-    # Example 2 - Training models with weights merge on CPU using cpu_relocation
+    Example 2 - Training models with weights merge on CPU using cpu_relocation
 
     ```python
          ..
@@ -229,16 +252,16 @@
          model = Xception(weights=None, ..)
 
          try:
-             model = multi_gpu_model(model, cpu_relocation=True)
+             parallel_model = multi_gpu_model(model, cpu_relocation=True)
              print(\"Training using multiple GPUs..\")
-         except:
+         except ValueError:
+             parallel_model = model
              print(\"Training using single GPU or CPU..\")
-
-         model.compile(..)
+         parallel_model.compile(..)
          ..
     ```
 
-    # Example 3 - Training models with weights merge on GPU (recommended for NV-link)
+    Example 3 - Training models with weights merge on GPU (recommended for NV-link)
 
     ```python
          ..
@@ -246,12 +269,13 @@
          model = Xception(weights=None, ..)
 
          try:
-             model = multi_gpu_model(model, cpu_merge=False)
+             parallel_model = multi_gpu_model(model, cpu_merge=False)
              print(\"Training using multiple GPUs..\")
          except:
+             parallel_model = model
              print(\"Training using single GPU or CPU..\")
 
-         model.compile(..)
+         parallel_model.compile(..)
          ..
     ```
 
@@ -261,10 +285,9 @@
     with the template model (the argument you passed to `multi_gpu_model`),
     rather than the model returned by `multi_gpu_model`.
     "
-  [ & {:keys [model gpus cpu_merge cpu_relocation]
-       :or {cpu_merge true cpu_relocation false}} ]
-  
-   (py/call-attr-kw utils "multi_gpu_model" [] {:model model :gpus gpus :cpu_merge cpu_merge :cpu_relocation cpu_relocation }))
+  [model & {:keys [gpus cpu_merge cpu_relocation]
+                       :or {cpu_merge true cpu_relocation false}} ]
+    (py/call-attr-kw utils "multi_gpu_model" [model] {:gpus gpus :cpu_merge cpu_merge :cpu_relocation cpu_relocation }))
 
 (defn normalize 
   "Normalizes a Numpy array.
@@ -277,10 +300,9 @@
     # Returns
         A normalized copy of the array.
     "
-  [ & {:keys [x axis order]
-       :or {axis -1 order 2}} ]
-  
-   (py/call-attr-kw utils "normalize" [] {:x x :axis axis :order order }))
+  [x & {:keys [axis order]
+                       :or {axis -1 order 2}} ]
+    (py/call-attr-kw utils "normalize" [x] {:axis axis :order order }))
 
 (defn plot-model 
   "Converts a Keras model to dot format and save to a file.
@@ -294,12 +316,16 @@
             a string specifying the format of the plot:
             'TB' creates a vertical plot;
             'LR' creates a horizontal plot.
-    "
-  [ & {:keys [model to_file show_shapes show_layer_names rankdir]
-       :or {to_file "model.png" show_shapes false show_layer_names true rankdir "TB"}} ]
-  
-   (py/call-attr-kw utils "plot_model" [] {:model model :to_file to_file :show_shapes show_shapes :show_layer_names show_layer_names :rankdir rankdir }))
+        expand_nested: whether to expand nested models into clusters.
+        dpi: dot DPI.
 
+    # Returns
+        A Jupyter notebook Image object if Jupyter is installed.
+        This enables in-line display of the model plots in notebooks.
+    "
+  [model & {:keys [to_file show_shapes show_layer_names rankdir expand_nested dpi]
+                       :or {to_file "model.png" show_shapes false show_layer_names true rankdir "TB" expand_nested false dpi 96}} ]
+    (py/call-attr-kw utils "plot_model" [model] {:to_file to_file :show_shapes show_shapes :show_layer_names show_layer_names :rankdir rankdir :expand_nested expand_nested :dpi dpi }))
 (defn print-summary 
   "Prints a summary of a model.
 
@@ -316,13 +342,13 @@
             in order to capture the string summary.
             It defaults to `print` (prints to stdout).
     "
-  [ & {:keys [model line_length positions print_fn]} ]
-   (py/call-attr-kw utils "print_summary" [] {:model model :line_length line_length :positions positions :print_fn print_fn }))
+  [model  & {:keys [line_length positions print_fn]} ]
+    (py/call-attr-kw utils "print_summary" [model] {:line_length line_length :positions positions :print_fn print_fn }))
 
 (defn serialize-keras-object 
   ""
-  [ & {:keys [instance]} ]
-   (py/call-attr-kw utils "serialize_keras_object" [] {:instance instance }))
+  [ instance ]
+  (py/call-attr utils "serialize_keras_object"  instance ))
 
 (defn to-categorical 
   "Converts a class vector (integers) to binary class matrix.
@@ -339,8 +365,24 @@
     # Returns
         A binary matrix representation of the input. The classes axis
         is placed last.
+
+    # Example
+
+    ```python
+    # Consider an array of 5 labels out of a set of 3 classes {0, 1, 2}:
+    > labels
+    array([0, 2, 1, 2, 0])
+    # `to_categorical` converts this into a matrix with as many
+    # columns as there are classes. The number of rows
+    # stays the same.
+    > to_categorical(labels)
+    array([[ 1.,  0.,  0.],
+           [ 0.,  0.,  1.],
+           [ 0.,  1.,  0.],
+           [ 0.,  0.,  1.],
+           [ 1.,  0.,  0.]], dtype=float32)
+    ```
     "
-  [ & {:keys [y num_classes dtype]
-       :or {dtype "float32"}} ]
-  
-   (py/call-attr-kw utils "to_categorical" [] {:y y :num_classes num_classes :dtype dtype }))
+  [y & {:keys [num_classes dtype]
+                       :or {dtype "float32"}} ]
+    (py/call-attr-kw utils "to_categorical" [y] {:num_classes num_classes :dtype dtype }))

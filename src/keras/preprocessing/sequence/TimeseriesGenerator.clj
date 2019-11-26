@@ -133,10 +133,9 @@
                           np.array([[10], [11]]))
     ```
     "
-  [ & {:keys [data targets length sampling_rate stride start_index end_index shuffle reverse batch_size]
-       :or {sampling_rate 1 stride 1 start_index 0 shuffle false reverse false batch_size 128}} ]
-  
-   (py/call-attr-kw sequence "TimeseriesGenerator" [] {:data data :targets targets :length length :sampling_rate sampling_rate :stride stride :start_index start_index :end_index end_index :shuffle shuffle :reverse reverse :batch_size batch_size }))
+  [data targets length & {:keys [sampling_rate stride start_index end_index shuffle reverse batch_size]
+                       :or {sampling_rate 1 stride 1 start_index 0 shuffle false reverse false batch_size 128}} ]
+    (py/call-attr-kw sequence "TimeseriesGenerator" [data targets length] {:sampling_rate sampling_rate :stride stride :start_index start_index :end_index end_index :shuffle shuffle :reverse reverse :batch_size batch_size }))
 
 (defn get-config 
   "Returns the TimeseriesGenerator configuration as Python dictionary.
@@ -144,14 +143,14 @@
         # Returns
             A Python dictionary with the TimeseriesGenerator configuration.
         "
-  [ self ]
-  (py/call-attr sequence "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))
 
 (defn on-epoch-end 
   "Method called at the end of every epoch.
         "
-  [ self ]
-  (py/call-attr sequence "on_epoch_end"  self ))
+  [ self  ]
+  (py/call-attr self "on_epoch_end"  self  ))
 
 (defn to-json 
   "Returns a JSON string containing the timeseries generator
@@ -165,5 +164,5 @@
         # Returns
             A JSON string containing the tokenizer configuration.
         "
-  [ self ]
-  (py/call-attr sequence "to_json"  self ))
+  [ self  ]
+  (py/call-attr self "to_json"  self  ))

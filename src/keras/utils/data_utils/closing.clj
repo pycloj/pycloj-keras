@@ -43,5 +43,5 @@
             f.close()
 
     "
-  [ & {:keys [thing]} ]
-   (py/call-attr-kw data-utils "closing" [] {:thing thing }))
+  [ thing ]
+  (py/call-attr data-utils "closing"  thing ))

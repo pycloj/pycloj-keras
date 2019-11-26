@@ -23,7 +23,6 @@
     # Returns
         A tuple `(data, labels)`.
     "
-  [ & {:keys [fpath label_key]
-       :or {label_key "labels"}} ]
-  
-   (py/call-attr-kw cifar "load_batch" [] {:fpath fpath :label_key label_key }))
+  [fpath & {:keys [label_key]
+                       :or {label_key "labels"}} ]
+    (py/call-attr-kw cifar "load_batch" [fpath] {:label_key label_key }))

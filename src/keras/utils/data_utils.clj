@@ -27,8 +27,8 @@
             def my_abstract_method(self, ...):
                 ...
     "
-  [ & {:keys [funcobj]} ]
-   (py/call-attr-kw data-utils "abstractmethod" [] {:funcobj funcobj }))
+  [ funcobj ]
+  (py/call-attr data-utils "abstractmethod"  funcobj ))
 
 (defn get-file 
   "Downloads a file from a URL if it not already in the cache.
@@ -70,10 +70,9 @@
     # Returns
         Path to the downloaded file
     "
-  [ & {:keys [fname origin untar md5_hash file_hash cache_subdir hash_algorithm extract archive_format cache_dir]
-       :or {untar false cache_subdir "datasets" hash_algorithm "auto" extract false archive_format "auto"}} ]
-  
-   (py/call-attr-kw data-utils "get_file" [] {:fname fname :origin origin :untar untar :md5_hash md5_hash :file_hash file_hash :cache_subdir cache_subdir :hash_algorithm hash_algorithm :extract extract :archive_format archive_format :cache_dir cache_dir }))
+  [fname origin & {:keys [untar md5_hash file_hash cache_subdir hash_algorithm extract archive_format cache_dir]
+                       :or {untar false cache_subdir "datasets" hash_algorithm "auto" extract false archive_format "auto"}} ]
+    (py/call-attr-kw data-utils "get_file" [fname origin] {:untar untar :md5_hash md5_hash :file_hash file_hash :cache_subdir cache_subdir :hash_algorithm hash_algorithm :extract extract :archive_format archive_format :cache_dir cache_dir }))
 
 (defn get-index 
   "Get the value from the Sequence `uid` at index `i`.
@@ -89,18 +88,17 @@
     # Returns
         The value at index `i`.
     "
-  [ & {:keys [uid i]} ]
-   (py/call-attr-kw data-utils "get_index" [] {:uid uid :i i }))
+  [ uid i ]
+  (py/call-attr data-utils "get_index"  uid i ))
 
 (defn init-pool 
   ""
-  [ & {:keys [seqs]} ]
-   (py/call-attr-kw data-utils "init_pool" [] {:seqs seqs }))
-
+  [ seqs ]
+  (py/call-attr data-utils "init_pool"  seqs ))
 (defn init-pool-generator 
   ""
-  [ & {:keys [gens random_seed]} ]
-   (py/call-attr-kw data-utils "init_pool_generator" [] {:gens gens :random_seed random_seed }))
+  [gens  & {:keys [random_seed]} ]
+    (py/call-attr-kw data-utils "init_pool_generator" [gens] {:random_seed random_seed }))
 
 (defn next-sample 
   "Get the next value from the generator `uid`.
@@ -115,8 +113,8 @@
     # Returns
         The next value of generator `uid`.
     "
-  [ & {:keys [uid]} ]
-   (py/call-attr-kw data-utils "next_sample" [] {:uid uid }))
+  [ uid ]
+  (py/call-attr data-utils "next_sample"  uid ))
 
 (defn urlopen 
   "Open the URL url, which can be either a string or a Request object.
@@ -176,11 +174,9 @@
     installed and makes sure the requests are handled through the proxy.
 
     "
-  [ & {:keys [url data timeout cafile capath cadefault context]
-       :or {timeout <object object at 0x106325b40> cadefault false}} ]
-  
-   (py/call-attr-kw data-utils "urlopen" [] {:url url :data data :timeout timeout :cafile cafile :capath capath :cadefault cadefault :context context }))
-
+  [url & {:keys [data timeout cafile capath cadefault context]
+                       :or {timeout <object object at 0x7f8b717c3350> cadefault false}} ]
+    (py/call-attr-kw data-utils "urlopen" [url] {:data data :timeout timeout :cafile cafile :capath capath :cadefault cadefault :context context }))
 (defn urlretrieve 
   "
     Retrieve a URL into a temporary location on disk.
@@ -197,8 +193,8 @@
     Returns a tuple containing the path to the newly created
     data file as well as the resulting HTTPMessage object.
     "
-  [ & {:keys [url filename reporthook data]} ]
-   (py/call-attr-kw data-utils "urlretrieve" [] {:url url :filename filename :reporthook reporthook :data data }))
+  [url  & {:keys [filename reporthook data]} ]
+    (py/call-attr-kw data-utils "urlretrieve" [url] {:filename filename :reporthook reporthook :data data }))
 
 (defn validate-file 
   "Validates a file against a sha256 or md5 hash.
@@ -214,7 +210,6 @@
     # Returns
         Whether the file is valid
     "
-  [ & {:keys [fpath file_hash algorithm chunk_size]
-       :or {algorithm "auto" chunk_size 65535}} ]
-  
-   (py/call-attr-kw data-utils "validate_file" [] {:fpath fpath :file_hash file_hash :algorithm algorithm :chunk_size chunk_size }))
+  [fpath file_hash & {:keys [algorithm chunk_size]
+                       :or {algorithm "auto" chunk_size 65535}} ]
+    (py/call-attr-kw data-utils "validate_file" [fpath file_hash] {:algorithm algorithm :chunk_size chunk_size }))

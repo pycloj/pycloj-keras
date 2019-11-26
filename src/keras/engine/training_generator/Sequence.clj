@@ -92,10 +92,10 @@
     ```
     "
   [  ]
-  (py/call-attr training-generator "Sequence"   ))
+  (py/call-attr training-generator "Sequence"  ))
 
 (defn on-epoch-end 
   "Method called at the end of every epoch.
         "
-  [ self ]
-  (py/call-attr training-generator "on_epoch_end"  self ))
+  [ self  ]
+  (py/call-attr self "on_epoch_end"  self  ))

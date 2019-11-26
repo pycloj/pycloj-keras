@@ -35,16 +35,13 @@
             by the progbar before display.
         interval: Minimum visual progress update interval (in seconds).
     "
-  [ & {:keys [target width verbose interval stateful_metrics]
-       :or {width 30 verbose 1 interval 0.05}} ]
-  
-   (py/call-attr-kw data-utils "Progbar" [] {:target target :width width :verbose verbose :interval interval :stateful_metrics stateful_metrics }))
-
+  [target & {:keys [width verbose interval stateful_metrics]
+                       :or {width 30 verbose 1 interval 0.05}} ]
+    (py/call-attr-kw data-utils "Progbar" [target] {:width width :verbose verbose :interval interval :stateful_metrics stateful_metrics }))
 (defn add 
   ""
-  [self  & {:keys [n values]} ]
-    (py/call-attr-kw data-utils "add" [self] {:n n :values values }))
-
+  [self n  & {:keys [values]} ]
+    (py/call-attr-kw self "add" [n] {:values values }))
 (defn update 
   "Updates the progress bar.
 
@@ -56,5 +53,5 @@
                 `value_for_last_step` will be displayed as-is.
                 Else, an average of the metric over time will be displayed.
         "
-  [self  & {:keys [current values]} ]
-    (py/call-attr-kw data-utils "update" [self] {:current current :values values }))
+  [self current  & {:keys [values]} ]
+    (py/call-attr-kw self "update" [current] {:values values }))

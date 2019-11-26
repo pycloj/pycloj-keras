@@ -14,19 +14,19 @@
 (defn InceptionResNetV2 
   ""
   [  ]
-  (py/call-attr inception-resnet-v2 "InceptionResNetV2"   ))
+  (py/call-attr inception-resnet-v2 "InceptionResNetV2"  ))
 
 (defn decode-predictions 
   ""
   [  ]
-  (py/call-attr inception-resnet-v2 "decode_predictions"   ))
+  (py/call-attr inception-resnet-v2 "decode_predictions"  ))
 
 (defn keras-modules-injection 
   ""
-  [ & {:keys [base_fun]} ]
-   (py/call-attr-kw inception-resnet-v2 "keras_modules_injection" [] {:base_fun base_fun }))
+  [ base_fun ]
+  (py/call-attr inception-resnet-v2 "keras_modules_injection"  base_fun ))
 
 (defn preprocess-input 
   ""
   [  ]
-  (py/call-attr inception-resnet-v2 "preprocess_input"   ))
+  (py/call-attr inception-resnet-v2 "preprocess_input"  ))

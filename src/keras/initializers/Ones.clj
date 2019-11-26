@@ -1,4 +1,4 @@
-(ns keras.initializers.ones
+(ns keras.initializers.Ones
   "Initializer that generates tensors initialized to 1.
     "
   (:require [libpython-clj.python
@@ -12,13 +12,13 @@
 (py/initialize!)
 (defonce initializers (import-module "keras.initializers"))
 
-(defn ones 
+(defn Ones 
   "Initializer that generates tensors initialized to 1.
     "
   [  ]
-  (py/call-attr initializers "ones"   ))
+  (py/call-attr initializers "Ones"  ))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr initializers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

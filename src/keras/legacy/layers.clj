@@ -14,12 +14,12 @@
 (defn AtrousConvolution1D 
   ""
   [  ]
-  (py/call-attr layers "AtrousConvolution1D"   ))
+  (py/call-attr layers "AtrousConvolution1D"  ))
 
 (defn AtrousConvolution2D 
   ""
   [  ]
-  (py/call-attr layers "AtrousConvolution2D"   ))
+  (py/call-attr layers "AtrousConvolution2D"  ))
 
 (defn to-list 
   "Normalizes a list/tensor into a list.
@@ -37,7 +37,6 @@
     # Returns
         A list.
     "
-  [ & {:keys [x allow_tuple]
-       :or {allow_tuple false}} ]
-  
-   (py/call-attr-kw layers "to_list" [] {:x x :allow_tuple allow_tuple }))
+  [x & {:keys [allow_tuple]
+                       :or {allow_tuple false}} ]
+    (py/call-attr-kw layers "to_list" [x] {:allow_tuple allow_tuple }))

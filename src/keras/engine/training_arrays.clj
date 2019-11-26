@@ -25,8 +25,8 @@
     # Returns
         The `index_array` array, shuffled in a batch-wise fashion.
     "
-  [ & {:keys [index_array batch_size]} ]
-   (py/call-attr-kw training-arrays "batch_shuffle" [] {:index_array index_array :batch_size batch_size }))
+  [ index_array batch_size ]
+  (py/call-attr training-arrays "batch_shuffle"  index_array batch_size ))
 
 (defn check-num-samples 
   "Checks the number of samples provided for training and evaluation.
@@ -49,41 +49,37 @@
         exclusive.
 
     # Returns
-        When steps is `None`, returns the number of samples to be
+        When `steps` is `None`, returns the number of samples to be
         processed based on the size of the first dimension of the
-        first input numpy array. When steps is not `None` and
+        first input Numpy array. When `steps` is not `None` and
         `batch_size` is `None`, returns `None`.
 
     # Raises
         ValueError: In case of invalid arguments.
     "
-  [ & {:keys [ins batch_size steps steps_name]
-       :or {steps_name "steps"}} ]
-  
-   (py/call-attr-kw training-arrays "check_num_samples" [] {:ins ins :batch_size batch_size :steps steps :steps_name steps_name }))
+  [ins & {:keys [batch_size steps steps_name]
+                       :or {steps_name "steps"}} ]
+    (py/call-attr-kw training-arrays "check_num_samples" [ins] {:batch_size batch_size :steps steps :steps_name steps_name }))
 
 (defn fit-loop 
-  "Abstract fit function for `f(ins)`.
+  "Abstract fit function for `fit_function(fit_inputs)`.
 
-    Assumes that f returns a list, labeled by out_labels.
+    Assumes that fit_function returns a list, labeled by out_labels.
 
     # Arguments
         model: Keras model instance.
-        f: Keras function returning a list of tensors
-        ins: List of tensors to be fed to `f`
+        fit_function: Keras function returning a list of tensors
+        fit_inputs: List of tensors to be fed to `fit_function`
         out_labels: List of strings, display names of
-            the outputs of `f`
+            the outputs of `fit_function`
         batch_size: Integer batch size or None if unknown.
         epochs: Number of times to iterate over the data
         verbose: Verbosity mode, 0, 1 or 2
-        callbacks: List of callbacks to be called during training
-        val_f: Keras function to call for validation
-        val_ins: List of tensors to be fed to `val_f`
+        callbacks: List of callbacks to be called during training and validation
+            (if `val_function` and `val_inputs` are not `None`).
+        val_function: Keras function to call for validation
+        val_inputs: List of tensors to be fed to `val_function`
         shuffle: Whether to shuffle the data at the beginning of each epoch
-        callback_metrics: List of strings, the display names of the metrics
-            passed to the callbacks. They should be the
-            concatenation of list the display names of the outputs of
-             `f` and the list of display names of the outputs of `f_val`.
         initial_epoch: Epoch at which to start training
             (useful for resuming a previous training run)
         steps_per_epoch: Total number of steps (batches of samples)
@@ -92,14 +88,20 @@
         validation_steps: Number of steps to run validation for
             (only if doing validation from data tensors).
             Ignored with the default value of `None`.
+        validation_freq: Only relevant if validation data is provided. Integer
+            or list/tuple/set. If an integer, specifies how many training
+            epochs to run before a new validation run is performed, e.g.
+            validation_freq=2` runs validation every 2 epochs. If a list,
+            tuple, or set, specifies the epochs on which to run validation,
+            e.g. `validation_freq=[1, 2, 10]` runs validation at the end
+            of the 1st, 2nd, and 10th epochs.
 
     # Returns
         `History` object.
     "
-  [ & {:keys [model f ins out_labels batch_size epochs verbose callbacks val_f val_ins shuffle callback_metrics initial_epoch steps_per_epoch validation_steps]
-       :or {epochs 100 verbose 1 shuffle true initial_epoch 0}} ]
-  
-   (py/call-attr-kw training-arrays "fit_loop" [] {:model model :f f :ins ins :out_labels out_labels :batch_size batch_size :epochs epochs :verbose verbose :callbacks callbacks :val_f val_f :val_ins val_ins :shuffle shuffle :callback_metrics callback_metrics :initial_epoch initial_epoch :steps_per_epoch steps_per_epoch :validation_steps validation_steps }))
+  [model fit_function fit_inputs & {:keys [out_labels batch_size epochs verbose callbacks val_function val_inputs shuffle initial_epoch steps_per_epoch validation_steps validation_freq]
+                       :or {epochs 100 verbose 1 shuffle true initial_epoch 0 validation_freq 1}} ]
+    (py/call-attr-kw training-arrays "fit_loop" [model fit_function fit_inputs] {:out_labels out_labels :batch_size batch_size :epochs epochs :verbose verbose :callbacks callbacks :val_function val_function :val_inputs val_inputs :shuffle shuffle :initial_epoch initial_epoch :steps_per_epoch steps_per_epoch :validation_steps validation_steps :validation_freq validation_freq }))
 
 (defn issparse 
   "Is x of a sparse matrix type?
@@ -128,8 +130,8 @@
     >>> isspmatrix(5)
     False
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw training-arrays "issparse" [] {:x x }))
+  [ x ]
+  (py/call-attr training-arrays "issparse"  x ))
 
 (defn make-batches 
   "Returns a list of batch indices (tuples of indices).
@@ -141,8 +143,8 @@
     # Returns
         A list of tuples of array indices.
     "
-  [ & {:keys [size batch_size]} ]
-   (py/call-attr-kw training-arrays "make_batches" [] {:size size :batch_size batch_size }))
+  [ size batch_size ]
+  (py/call-attr training-arrays "make_batches"  size batch_size ))
 
 (defn predict-loop 
   "Abstract method to loop over some data in batches.
@@ -156,17 +158,36 @@
         steps: Total number of steps (batches of samples)
             before declaring `predict_loop` finished.
             Ignored with the default value of `None`.
+        callbacks: List of callbacks or an instance of
+            `keras.callbacks.CallbackList` to be called during prediction.
 
     # Returns
         Array of predictions (if the model has a single output)
         or list of arrays of predictions
         (if the model has multiple outputs).
     "
-  [ & {:keys [model f ins batch_size verbose steps]
-       :or {batch_size 32 verbose 0}} ]
-  
-   (py/call-attr-kw training-arrays "predict_loop" [] {:model model :f f :ins ins :batch_size batch_size :verbose verbose :steps steps }))
+  [model f ins & {:keys [batch_size verbose steps callbacks]
+                       :or {batch_size 32 verbose 0}} ]
+    (py/call-attr-kw training-arrays "predict_loop" [model f ins] {:batch_size batch_size :verbose verbose :steps steps :callbacks callbacks }))
 
+(defn should-run-validation 
+  "Checks if validation should be run this epoch.
+
+    # Arguments
+        validation_freq: Integer or list. If an integer, specifies how many training
+          epochs to run before a new validation run is performed. If a list,
+          specifies the epochs on which to run validation.
+        epoch: Integer, the number of the training epoch just completed.
+
+    # Returns
+        Bool, True if validation should be run.
+
+    # Raises
+        ValueError: if `validation_freq` is an Integer and less than 1, or if
+        it is neither an Integer nor a Sequence.
+    "
+  [ validation_freq epoch ]
+  (py/call-attr training-arrays "should_run_validation"  validation_freq epoch ))
 (defn slice-arrays 
   "Slices an array or list of arrays.
 
@@ -187,8 +208,8 @@
     # Returns
         A slice of the array(s).
     "
-  [ & {:keys [arrays start stop]} ]
-   (py/call-attr-kw training-arrays "slice_arrays" [] {:arrays arrays :start start :stop stop }))
+  [arrays  & {:keys [start stop]} ]
+    (py/call-attr-kw training-arrays "slice_arrays" [arrays] {:start start :stop stop }))
 
 (defn test-loop 
   "Abstract method to loop over some data in batches.
@@ -202,6 +223,8 @@
         steps: Total number of steps (batches of samples)
             before declaring predictions finished.
             Ignored with the default value of `None`.
+        callbacks: List of callbacks or an instance of
+            `keras.callbacks.CallbackList` to be called during evaluation.
 
     # Returns
         Scalar loss (if the model has a single output and no metrics)
@@ -209,10 +232,9 @@
         and/or metrics). The attribute `model.metrics_names` will give you
         the display labels for the scalar outputs.
     "
-  [ & {:keys [model f ins batch_size verbose steps]
-       :or {verbose 0}} ]
-  
-   (py/call-attr-kw training-arrays "test_loop" [] {:model model :f f :ins ins :batch_size batch_size :verbose verbose :steps steps }))
+  [model f ins & {:keys [batch_size verbose steps callbacks]
+                       :or {verbose 0}} ]
+    (py/call-attr-kw training-arrays "test_loop" [model f ins] {:batch_size batch_size :verbose verbose :steps steps :callbacks callbacks }))
 
 (defn to-list 
   "Normalizes a list/tensor into a list.
@@ -230,21 +252,20 @@
     # Returns
         A list.
     "
-  [ & {:keys [x allow_tuple]
-       :or {allow_tuple false}} ]
-  
-   (py/call-attr-kw training-arrays "to_list" [] {:x x :allow_tuple allow_tuple }))
+  [x & {:keys [allow_tuple]
+                       :or {allow_tuple false}} ]
+    (py/call-attr-kw training-arrays "to_list" [x] {:allow_tuple allow_tuple }))
 
 (defn unpack-singleton 
   "Gets the first element if the iterable has only one value.
 
     Otherwise return the iterable.
 
-    # Argument:
+    # Argument
         x: A list or tuple.
 
-    # Returns:
+    # Returns
         The same iterable or the first element.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw training-arrays "unpack_singleton" [] {:x x }))
+  [ x ]
+  (py/call-attr training-arrays "unpack_singleton"  x ))

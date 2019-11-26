@@ -14,19 +14,19 @@
 (defn MobileNetV2 
   ""
   [  ]
-  (py/call-attr mobilenet-v2 "MobileNetV2"   ))
+  (py/call-attr mobilenet-v2 "MobileNetV2"  ))
 
 (defn decode-predictions 
   ""
   [  ]
-  (py/call-attr mobilenet-v2 "decode_predictions"   ))
+  (py/call-attr mobilenet-v2 "decode_predictions"  ))
 
 (defn keras-modules-injection 
   ""
-  [ & {:keys [base_fun]} ]
-   (py/call-attr-kw mobilenet-v2 "keras_modules_injection" [] {:base_fun base_fun }))
+  [ base_fun ]
+  (py/call-attr mobilenet-v2 "keras_modules_injection"  base_fun ))
 
 (defn preprocess-input 
   ""
   [  ]
-  (py/call-attr mobilenet-v2 "preprocess_input"   ))
+  (py/call-attr mobilenet-v2 "preprocess_input"  ))

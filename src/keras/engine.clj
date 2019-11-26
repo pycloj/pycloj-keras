@@ -65,7 +65,6 @@
        :or {sparse false}} ]
   
    (py/call-attr-kw engine "Input" [] {:shape shape :batch_shape batch_shape :name name :dtype dtype :sparse sparse :tensor tensor }))
-
 (defn get-source-inputs 
   "Returns the list of input tensors necessary to compute `tensor`.
 
@@ -81,5 +80,5 @@
     # Returns
         List of input tensors.
     "
-  [ & {:keys [tensor layer node_index]} ]
-   (py/call-attr-kw engine "get_source_inputs" [] {:tensor tensor :layer layer :node_index node_index }))
+  [tensor  & {:keys [layer node_index]} ]
+    (py/call-attr-kw engine "get_source_inputs" [tensor] {:layer layer :node_index node_index }))

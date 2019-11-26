@@ -42,10 +42,9 @@
         A 1D Numpy array of length `size` where the ith entry
         is the probability that a word of rank i should be sampled.
     "
-  [ & {:keys [size sampling_factor]
-       :or {sampling_factor 1e-05}} ]
-  
-   (py/call-attr-kw sequence "make_sampling_table" [] {:size size :sampling_factor sampling_factor }))
+  [size & {:keys [sampling_factor]
+                       :or {sampling_factor 1e-05}} ]
+    (py/call-attr-kw sequence "make_sampling_table" [size] {:sampling_factor sampling_factor }))
 
 (defn pad-sequences 
   "Pads sequences to the same length.
@@ -85,10 +84,9 @@
         ValueError: In case of invalid values for `truncating` or `padding`,
             or in case of invalid shape for a `sequences` entry.
     "
-  [ & {:keys [sequences maxlen dtype padding truncating value]
-       :or {dtype "int32" padding "pre" truncating "pre" value 0.0}} ]
-  
-   (py/call-attr-kw sequence "pad_sequences" [] {:sequences sequences :maxlen maxlen :dtype dtype :padding padding :truncating truncating :value value }))
+  [sequences & {:keys [maxlen dtype padding truncating value]
+                       :or {dtype "int32" padding "pre" truncating "pre" value 0.0}} ]
+    (py/call-attr-kw sequence "pad_sequences" [sequences] {:maxlen maxlen :dtype dtype :padding padding :truncating truncating :value value }))
 
 (defn skipgrams 
   "Generates skipgram word pairs.
@@ -133,7 +131,6 @@
         By convention, index 0 in the vocabulary is
         a non-word and will be skipped.
     "
-  [ & {:keys [sequence vocabulary_size window_size negative_samples shuffle categorical sampling_table seed]
-       :or {window_size 4 negative_samples 1.0 shuffle true categorical false}} ]
-  
-   (py/call-attr-kw sequence "skipgrams" [] {:sequence sequence :vocabulary_size vocabulary_size :window_size window_size :negative_samples negative_samples :shuffle shuffle :categorical categorical :sampling_table sampling_table :seed seed }))
+  [sequence vocabulary_size & {:keys [window_size negative_samples shuffle categorical sampling_table seed]
+                       :or {window_size 4 negative_samples 1.0 shuffle true categorical false}} ]
+    (py/call-attr-kw sequence "skipgrams" [sequence vocabulary_size] {:window_size window_size :negative_samples negative_samples :shuffle shuffle :categorical categorical :sampling_table sampling_table :seed seed }))

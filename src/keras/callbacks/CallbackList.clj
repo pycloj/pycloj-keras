@@ -32,73 +32,159 @@
 
 (defn append 
   ""
-  [self  & {:keys [callback]} ]
-    (py/call-attr-kw callbacks "append" [self] {:callback callback }))
-
+  [ self callback ]
+  (py/call-attr self "append"  self callback ))
 (defn on-batch-begin 
-  "Called right before processing a batch.
-
-        # Arguments
-            batch: integer, index of batch within the current epoch.
-            logs: dictionary of logs.
-        "
-  [self  & {:keys [batch logs]} ]
-    (py/call-attr-kw callbacks "on_batch_begin" [self] {:batch batch :logs logs }))
-
+  ""
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_batch_begin" [batch] {:logs logs }))
 (defn on-batch-end 
-  "Called at the end of a batch.
+  ""
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_batch_end" [batch] {:logs logs }))
+(defn on-epoch-begin 
+  "Calls the `on_epoch_begin` methods of its callbacks.
+
+        This function should only be called during train mode.
+
+        # Arguments
+            epoch: integer, index of epoch.
+            logs: dict, Currently no data is passed to this argument for this method
+                but that may change in the future.
+        "
+  [self epoch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_epoch_begin" [epoch] {:logs logs }))
+(defn on-epoch-end 
+  "Calls the `on_epoch_end` methods of its callbacks.
+
+        This function should only be called during train mode.
+
+        # Arguments
+            epoch: integer, index of epoch.
+            logs: dict, metric results for this training epoch, and for the
+                validation epoch if validation is performed. Validation result keys
+                are prefixed with `val_`.
+        "
+  [self epoch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_epoch_end" [epoch] {:logs logs }))
+(defn on-predict-batch-begin 
+  "Calls the `on_predict_batch_begin` methods of its callbacks.
 
         # Arguments
             batch: integer, index of batch within the current epoch.
-            logs: dictionary of logs.
+            logs: dict, has keys `batch` and `size` representing the current
+                batch number and the size of the batch.
         "
-  [self  & {:keys [batch logs]} ]
-    (py/call-attr-kw callbacks "on_batch_end" [self] {:batch batch :logs logs }))
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_batch_begin" [batch] {:logs logs }))
+(defn on-predict-batch-end 
+  "Calls the `on_predict_batch_end` methods of its callbacks.
 
-(defn on-epoch-begin 
-  "Called at the start of an epoch.
+        # Argument
+            batch: integer, index of batch within the current epoch.
+            logs: dict, metric results for this batch.
+        "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_batch_end" [batch] {:logs logs }))
+(defn on-predict-begin 
+  "Calls the `on_predict_begin` methods of its callbacks.
 
         # Arguments
-            epoch: integer, index of epoch.
-            logs: dictionary of logs.
+            logs: dict, currently no data is passed to this argument for this method
+                but that may change in the future.
         "
-  [self  & {:keys [epoch logs]} ]
-    (py/call-attr-kw callbacks "on_epoch_begin" [self] {:epoch epoch :logs logs }))
-
-(defn on-epoch-end 
-  "Called at the end of an epoch.
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_begin" [] {:logs logs }))
+(defn on-predict-end 
+  "Calls the `on_predict_end` methods of its callbacks.
 
         # Arguments
-            epoch: integer, index of epoch.
-            logs: dictionary of logs.
+            logs: dict, currently no data is passed to this argument for this method
+                but that may change in the future.
         "
-  [self  & {:keys [epoch logs]} ]
-    (py/call-attr-kw callbacks "on_epoch_end" [self] {:epoch epoch :logs logs }))
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_predict_end" [] {:logs logs }))
+(defn on-test-batch-begin 
+  "Calls the `on_test_batch_begin` methods of its callbacks.
 
+        # Arguments
+            batch: integer, index of batch within the current epoch.
+            logs: dict, has keys `batch` and `size` representing the current
+                batch number and the size of the batch.
+        "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_batch_begin" [batch] {:logs logs }))
+(defn on-test-batch-end 
+  "Calls the `on_test_batch_end` methods of its callbacks.
+
+        # Arguments
+            batch: integer, index of batch within the current epoch.
+            logs: dict, metric results for this batch.
+        "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_batch_end" [batch] {:logs logs }))
+(defn on-test-begin 
+  "Calls the `on_test_begin` methods of its callbacks.
+
+        # Arguments
+            logs: dict, currently no data is passed to this argument for this method
+                but that may change in the future.
+        "
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_begin" [] {:logs logs }))
+(defn on-test-end 
+  "Calls the `on_test_end` methods of its callbacks.
+
+        # Arguments
+            logs: dict, currently no data is passed to this argument for this method
+                but that may change in the future.
+        "
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_test_end" [] {:logs logs }))
+(defn on-train-batch-begin 
+  "Calls the `on_train_batch_begin` methods of its callbacks.
+
+        # Arguments
+            batch: integer, index of batch within the current epoch.
+            logs: dict, has keys `batch` and `size` representing the current
+                batch number and the size of the batch.
+        "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_batch_begin" [batch] {:logs logs }))
+(defn on-train-batch-end 
+  "Calls the `on_train_batch_end` methods of its callbacks.
+
+        # Arguments
+            batch: integer, index of batch within the current epoch.
+            logs: dict, metric results for this batch.
+        "
+  [self batch  & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_batch_end" [batch] {:logs logs }))
 (defn on-train-begin 
-  "Called at the beginning of training.
+  "Calls the `on_train_begin` methods of its callbacks.
 
         # Arguments
-            logs: dictionary of logs.
+            logs: dict, currently no data is passed to this argument for this method
+                but that may change in the future.
         "
-  [self  & {:keys [logs]} ]
-    (py/call-attr-kw callbacks "on_train_begin" [self] {:logs logs }))
-
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_begin" [] {:logs logs }))
 (defn on-train-end 
-  "Called at the end of training.
+  "Calls the `on_train_end` methods of its callbacks.
 
         # Arguments
-            logs: dictionary of logs.
+            logs: dict, currently no data is passed to this argument for this method
+                but that may change in the future.
         "
-  [self  & {:keys [logs]} ]
-    (py/call-attr-kw callbacks "on_train_end" [self] {:logs logs }))
+  [self   & {:keys [logs]} ]
+    (py/call-attr-kw self "on_train_end" [] {:logs logs }))
 
 (defn set-model 
   ""
-  [self  & {:keys [model]} ]
-    (py/call-attr-kw callbacks "set_model" [self] {:model model }))
+  [ self model ]
+  (py/call-attr self "set_model"  self model ))
 
 (defn set-params 
   ""
-  [self  & {:keys [params]} ]
-    (py/call-attr-kw callbacks "set_params" [self] {:params params }))
+  [ self params ]
+  (py/call-attr self "set_params"  self params ))

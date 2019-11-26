@@ -21,9 +21,8 @@
     # Returns
         True if we can proceed with overwrite, False otherwise.
     "
-  [ & {:keys [filepath]} ]
-   (py/call-attr-kw network "ask_to_proceed_with_overwrite" [] {:filepath filepath }))
-
+  [ filepath ]
+  (py/call-attr network "ask_to_proceed_with_overwrite"  filepath ))
 (defn get-source-inputs 
   "Returns the list of input tensors necessary to compute `tensor`.
 
@@ -39,8 +38,8 @@
     # Returns
         List of input tensors.
     "
-  [ & {:keys [tensor layer node_index]} ]
-   (py/call-attr-kw network "get_source_inputs" [] {:tensor tensor :layer layer :node_index node_index }))
+  [tensor  & {:keys [layer node_index]} ]
+    (py/call-attr-kw network "get_source_inputs" [tensor] {:layer layer :node_index node_index }))
 
 (defn has-arg 
   "Checks if a callable accepts a given keyword argument.
@@ -60,16 +59,14 @@
     # Returns
         bool, whether `fn` accepts a `name` keyword argument.
     "
-  [ & {:keys [fn name accept_all]
-       :or {accept_all false}} ]
-  
-   (py/call-attr-kw network "has_arg" [] {:fn fn :name name :accept_all accept_all }))
+  [fn name & {:keys [accept_all]
+                       :or {accept_all false}} ]
+    (py/call-attr-kw network "has_arg" [fn name] {:accept_all accept_all }))
 
 (defn object-list-uid 
   ""
-  [ & {:keys [object_list]} ]
-   (py/call-attr-kw network "object_list_uid" [] {:object_list object_list }))
-
+  [ object_list ]
+  (py/call-attr network "object_list_uid"  object_list ))
 (defn print-layer-summary 
   "Prints a summary of a model.
 
@@ -86,8 +83,8 @@
             in order to capture the string summary.
             It defaults to `print` (prints to stdout).
     "
-  [ & {:keys [model line_length positions print_fn]} ]
-   (py/call-attr-kw network "print_layer_summary" [] {:model model :line_length line_length :positions positions :print_fn print_fn }))
+  [model  & {:keys [line_length positions print_fn]} ]
+    (py/call-attr-kw network "print_layer_summary" [model] {:line_length line_length :positions positions :print_fn print_fn }))
 
 (defn to-list 
   "Normalizes a list/tensor into a list.
@@ -105,21 +102,20 @@
     # Returns
         A list.
     "
-  [ & {:keys [x allow_tuple]
-       :or {allow_tuple false}} ]
-  
-   (py/call-attr-kw network "to_list" [] {:x x :allow_tuple allow_tuple }))
+  [x & {:keys [allow_tuple]
+                       :or {allow_tuple false}} ]
+    (py/call-attr-kw network "to_list" [x] {:allow_tuple allow_tuple }))
 
 (defn unpack-singleton 
   "Gets the first element if the iterable has only one value.
 
     Otherwise return the iterable.
 
-    # Argument:
+    # Argument
         x: A list or tuple.
 
-    # Returns:
+    # Returns
         The same iterable or the first element.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw network "unpack_singleton" [] {:x x }))
+  [ x ]
+  (py/call-attr network "unpack_singleton"  x ))

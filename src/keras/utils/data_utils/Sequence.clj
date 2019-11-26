@@ -92,10 +92,10 @@
     ```
     "
   [  ]
-  (py/call-attr data-utils "Sequence"   ))
+  (py/call-attr data-utils "Sequence"  ))
 
 (defn on-epoch-end 
   "Method called at the end of every epoch.
         "
-  [ self ]
-  (py/call-attr data-utils "on_epoch_end"  self ))
+  [ self  ]
+  (py/call-attr self "on_epoch_end"  self  ))

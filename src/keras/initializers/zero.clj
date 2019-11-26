@@ -16,9 +16,9 @@
   "Initializer that generates tensors initialized to 0.
     "
   [  ]
-  (py/call-attr initializers "zero"   ))
+  (py/call-attr initializers "zero"  ))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr initializers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

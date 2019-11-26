@@ -12,6 +12,11 @@
 (py/initialize!)
 (defonce wrappers (import-module "keras.layers.wrappers"))
 
+(defn disable-tracking 
+  ""
+  [ func ]
+  (py/call-attr wrappers "disable_tracking"  func ))
+
 (defn has-arg 
   "Checks if a callable accepts a given keyword argument.
 
@@ -30,12 +35,11 @@
     # Returns
         bool, whether `fn` accepts a `name` keyword argument.
     "
-  [ & {:keys [fn name accept_all]
-       :or {accept_all false}} ]
-  
-   (py/call-attr-kw wrappers "has_arg" [] {:fn fn :name name :accept_all accept_all }))
+  [fn name & {:keys [accept_all]
+                       :or {accept_all false}} ]
+    (py/call-attr-kw wrappers "has_arg" [fn name] {:accept_all accept_all }))
 
 (defn object-list-uid 
   ""
-  [ & {:keys [object_list]} ]
-   (py/call-attr-kw wrappers "object_list_uid" [] {:object_list object_list }))
+  [ object_list ]
+  (py/call-attr wrappers "object_list_uid"  object_list ))

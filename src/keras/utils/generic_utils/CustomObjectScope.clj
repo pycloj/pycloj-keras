@@ -48,4 +48,4 @@
     ```
     "
   [  ]
-  (py/call-attr generic-utils "CustomObjectScope"   ))
+  (py/call-attr generic-utils "CustomObjectScope"  ))

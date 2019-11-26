@@ -35,7 +35,6 @@
     Point(x=100, y=22)
 
     "
-  [ & {:keys [typename field_names rename defaults module]
-       :or {rename false}} ]
-  
-   (py/call-attr-kw cudnn-recurrent "namedtuple" [] {:typename typename :field_names field_names :rename rename :defaults defaults :module module }))
+  [typename field_names & {:keys [verbose rename module]
+                       :or {verbose false rename false}} ]
+    (py/call-attr-kw cudnn-recurrent "namedtuple" [typename field_names] {:verbose verbose :rename rename :module module }))

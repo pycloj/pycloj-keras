@@ -16,8 +16,7 @@
   "The `Model` class adds training & evaluation routines to a `Network`.
     "
   [  ]
-  (py/call-attr models "Model"   ))
-
+  (py/call-attr models "Model"  ))
 (defn add-loss 
   "Adds losses to the layer.
 
@@ -33,9 +32,17 @@
                 (e.g. L2 weight regularization, which only depends
                 on the layer's weights variables, not on any inputs tensors).
         "
-  [self  & {:keys [losses inputs]} ]
-    (py/call-attr-kw models "add_loss" [self] {:losses losses :inputs inputs }))
+  [self losses  & {:keys [inputs]} ]
+    (py/call-attr-kw self "add_loss" [losses] {:inputs inputs }))
+(defn add-metric 
+  "Adds metric tensor to the layer.
 
+        # Arguments
+            value: Metric tensor.
+            name: String metric name.
+        "
+  [self value  & {:keys [name]} ]
+    (py/call-attr-kw self "add_metric" [value] {:name name }))
 (defn add-update 
   "Adds updates to the layer.
 
@@ -49,8 +56,8 @@
                 the updates as conditional on these inputs.
                 If None is passed, the updates are assumed unconditional.
         "
-  [self  & {:keys [updates inputs]} ]
-    (py/call-attr-kw models "add_update" [self] {:updates updates :inputs inputs }))
+  [self updates  & {:keys [inputs]} ]
+    (py/call-attr-kw self "add_update" [updates] {:inputs inputs }))
 
 (defn add-weight 
   "Adds a weight variable to the layer.
@@ -69,9 +76,9 @@
         # Returns
             The created weight variable.
         "
-  [self & {:keys [name shape dtype initializer regularizer trainable constraint]
+  [self  & {:keys [name shape dtype initializer regularizer trainable constraint]
                        :or {trainable true}} ]
-    (py/call-attr-kw models "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
+    (py/call-attr-kw self "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
 
 (defn assert-input-compatibility 
   "Checks compatibility between the layer and provided inputs.
@@ -87,8 +94,8 @@
             ValueError: in case of mismatch between
                 the provided inputs and the expectations of the layer.
         "
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw models "assert_input_compatibility" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "assert_input_compatibility"  self inputs ))
 
 (defn build 
   "Creates the layer weights.
@@ -100,14 +107,13 @@
                 or list/tuple of Keras tensors to reference
                 for weight shape computations.
         "
-  [self  & {:keys [input_shape]} ]
-    (py/call-attr-kw models "build" [self] {:input_shape input_shape }))
+  [ self input_shape ]
+  (py/call-attr self "build"  self input_shape ))
 
 (defn built 
   ""
   [ self ]
-    (py/call-attr models "built"  self))
-
+    (py/call-attr self "built"))
 (defn call 
   "Calls the model on new inputs.
 
@@ -126,27 +132,29 @@
             A tensor if there is a single output, or
             a list of tensors if there are more than one outputs.
         "
-  [self  & {:keys [inputs mask]} ]
-    (py/call-attr-kw models "call" [self] {:inputs inputs :mask mask }))
-
+  [self inputs  & {:keys [mask]} ]
+    (py/call-attr-kw self "call" [inputs] {:mask mask }))
 (defn compile 
   "Configures the model for training.
 
         # Arguments
             optimizer: String (name of optimizer) or optimizer instance.
                 See [optimizers](/optimizers).
-            loss: String (name of objective function) or objective function.
-                See [losses](/losses).
+            loss: String (name of objective function) or objective function or
+                `Loss` instance. See [losses](/losses).
                 If the model has multiple outputs, you can use a different loss
                 on each output by passing a dictionary or a list of losses.
                 The loss value that will be minimized by the model
                 will then be the sum of all individual losses.
             metrics: List of metrics to be evaluated by the model
-                during training and testing.
-                Typically you will use `metrics=['accuracy']`.
-                To specify different metrics for different outputs of a
-                multi-output model, you could also pass a dictionary,
-                such as `metrics={'output_a': 'accuracy'}`.
+                during training and testing. Typically you will use
+                `metrics=['accuracy']`. To specify different metrics for different
+                outputs of a multi-output model, you could also pass a dictionary,
+                such as
+                `metrics={'output_a': 'accuracy', 'output_b': ['accuracy', 'mse']}`.
+                You can also pass a list (len = len(outputs)) of lists of metrics
+                such as `metrics=[['accuracy'], ['accuracy', 'mse']]` or
+                `metrics=['accuracy', ['accuracy', 'mse']]`.
             loss_weights: Optional list or dictionary specifying scalar
                 coefficients (Python floats) to weight the loss contributions
                 of different model outputs.
@@ -154,7 +162,7 @@
                 will then be the *weighted sum* of all individual losses,
                 weighted by the `loss_weights` coefficients.
                 If a list, it is expected to have a 1:1 mapping
-                to the model's outputs. If a tensor, it is expected to map
+                to the model's outputs. If a dict, it is expected to map
                 output names (strings) to scalar coefficients.
             sample_weight_mode: If you need to do timestep-wise
                 sample weighting (2D weights), set this to `\"temporal\"`.
@@ -181,18 +189,18 @@
             ValueError: In case of invalid arguments for
                 `optimizer`, `loss`, `metrics` or `sample_weight_mode`.
         "
-  [self  & {:keys [optimizer loss metrics loss_weights sample_weight_mode weighted_metrics target_tensors]} ]
-    (py/call-attr-kw models "compile" [self] {:optimizer optimizer :loss loss :metrics metrics :loss_weights loss_weights :sample_weight_mode sample_weight_mode :weighted_metrics weighted_metrics :target_tensors target_tensors }))
+  [self optimizer  & {:keys [loss metrics loss_weights sample_weight_mode weighted_metrics target_tensors]} ]
+    (py/call-attr-kw self "compile" [optimizer] {:loss loss :metrics metrics :loss_weights loss_weights :sample_weight_mode sample_weight_mode :weighted_metrics weighted_metrics :target_tensors target_tensors }))
 
 (defn compute-mask 
   ""
-  [self  & {:keys [inputs mask]} ]
-    (py/call-attr-kw models "compute_mask" [self] {:inputs inputs :mask mask }))
+  [ self inputs mask ]
+  (py/call-attr self "compute_mask"  self inputs mask ))
 
 (defn compute-output-shape 
   ""
-  [self  & {:keys [input_shape]} ]
-    (py/call-attr-kw models "compute_output_shape" [self] {:input_shape input_shape }))
+  [ self input_shape ]
+  (py/call-attr self "compute_output_shape"  self input_shape ))
 
 (defn count-params 
   "Counts the total number of scalars composing the weights.
@@ -204,8 +212,8 @@
             RuntimeError: if the layer isn't yet built
                 (in which case its weights aren't yet defined).
         "
-  [ self ]
-  (py/call-attr models "count_params"  self ))
+  [ self  ]
+  (py/call-attr self "count_params"  self  ))
 
 (defn evaluate 
   "Returns the loss value & metrics values for the model in test mode.
@@ -213,22 +221,31 @@
         Computation is done in batches.
 
         # Arguments
-            x: Numpy array of test data (if the model has a single input),
-                or list of Numpy arrays (if the model has multiple inputs).
-                If input layers in the model are named, you can also pass a
-                dictionary mapping input names to Numpy arrays.
-                `x` can be `None` (default) if feeding from
-                framework-native tensors (e.g. TensorFlow data tensors).
-            y: Numpy array of target (label) data
-                (if the model has a single output),
-                or list of Numpy arrays (if the model has multiple outputs).
+            x: Input data. It could be:
+                - A Numpy array (or array-like), or a list of arrays
+                  (in case the model has multiple inputs).
+                - A dict mapping input names to the corresponding
+                  array/tensors, if the model has named inputs.
+                - A generator or `keras.utils.Sequence` returning
+                  `(inputs, targets)` or `(inputs, targets, sample weights)`.
+                - None (default) if feeding from framework-native
+                  tensors (e.g. TensorFlow data tensors).
+            y: Target data. Like the input data `x`,
+                it could be either Numpy array(s), framework-native tensor(s),
+                list of Numpy arrays (if the model has multiple outputs) or
+                None (default) if feeding from framework-native tensors
+                (e.g. TensorFlow data tensors).
                 If output layers in the model are named, you can also pass a
                 dictionary mapping output names to Numpy arrays.
-                `y` can be `None` (default) if feeding from
-                framework-native tensors (e.g. TensorFlow data tensors).
+                If `x` is a generator, or `keras.utils.Sequence` instance,
+                `y` should not be specified (since targets will be obtained
+                from `x`).
             batch_size: Integer or `None`.
-                Number of samples per evaluation step.
+                Number of samples per gradient update.
                 If unspecified, `batch_size` will default to 32.
+                Do not specify the `batch_size` if your data is in the
+                form of symbolic tensors, generators, or
+                `keras.utils.Sequence` instances (since they generate batches).
             verbose: 0 or 1. Verbosity mode.
                 0 = silent, 1 = progress bar.
             sample_weight: Optional Numpy array of weights for
@@ -246,6 +263,25 @@
                 Total number of steps (batches of samples)
                 before declaring the evaluation round finished.
                 Ignored with the default value of `None`.
+            callbacks: List of `keras.callbacks.Callback` instances.
+                List of callbacks to apply during evaluation.
+                See [callbacks](/callbacks).
+            max_queue_size: Integer. Used for generator or `keras.utils.Sequence`
+                input only. Maximum size for the generator queue.
+                If unspecified, `max_queue_size` will default to 10.
+            workers: Integer. Used for generator or `keras.utils.Sequence` input
+                only. Maximum number of processes to spin up when using
+                process-based threading. If unspecified, `workers` will default
+                to 1. If 0, will execute the generator on the main thread.
+            use_multiprocessing: Boolean. Used for generator or
+                `keras.utils.Sequence` input only. If `True`, use process-based
+                threading. If unspecified, `use_multiprocessing` will default to
+                `False`. Note that because this implementation relies on
+                multiprocessing, you should not pass non-picklable arguments to
+                the generator as they can't be passed easily to children processes.
+
+        # Raises
+            ValueError: in case of invalid arguments.
 
         # Returns
             Scalar test loss (if the model has a single output and no metrics)
@@ -253,9 +289,9 @@
             and/or metrics). The attribute `model.metrics_names` will give you
             the display labels for the scalar outputs.
         "
-  [self & {:keys [x y batch_size verbose sample_weight steps]
-                       :or {verbose 1}} ]
-    (py/call-attr-kw models "evaluate" [] {:x x :y y :batch_size batch_size :verbose verbose :sample_weight sample_weight :steps steps }))
+  [self  & {:keys [x y batch_size verbose sample_weight steps callbacks max_queue_size workers use_multiprocessing]
+                       :or {verbose 1 max_queue_size 10 workers 1 use_multiprocessing false}} ]
+    (py/call-attr-kw self "evaluate" [] {:x x :y y :batch_size batch_size :verbose verbose :sample_weight sample_weight :steps steps :callbacks callbacks :max_queue_size max_queue_size :workers workers :use_multiprocessing use_multiprocessing }))
 
 (defn evaluate-generator 
   "Evaluates the model on a data generator.
@@ -273,6 +309,9 @@
                 to yield from `generator` before stopping.
                 Optional for `Sequence`: if unspecified, will use
                 the `len(generator)` as a number of steps.
+            callbacks: List of `keras.callbacks.Callback` instances.
+                List of callbacks to apply during training.
+                See [callbacks](/callbacks).
             max_queue_size: maximum size for the generator queue
             workers: Integer. Maximum number of processes to spin up
                 when using process based threading.
@@ -297,30 +336,39 @@
             ValueError: In case the generator yields
                 data in an invalid format.
         "
-  [self & {:keys [generator steps max_queue_size workers use_multiprocessing verbose]
+  [self generator & {:keys [steps callbacks max_queue_size workers use_multiprocessing verbose]
                        :or {max_queue_size 10 workers 1 use_multiprocessing false verbose 0}} ]
-    (py/call-attr-kw models "evaluate_generator" [] {:generator generator :steps steps :max_queue_size max_queue_size :workers workers :use_multiprocessing use_multiprocessing :verbose verbose }))
+    (py/call-attr-kw self "evaluate_generator" [generator] {:steps steps :callbacks callbacks :max_queue_size max_queue_size :workers workers :use_multiprocessing use_multiprocessing :verbose verbose }))
 
 (defn fit 
-  "Trains the model for a given number of epochs (iterations on a dataset).
+  "Trains the model for a fixed number of epochs (iterations on a dataset).
 
         # Arguments
-            x: Numpy array of training data (if the model has a single input),
-                or list of Numpy arrays (if the model has multiple inputs).
-                If input layers in the model are named, you can also pass a
-                dictionary mapping input names to Numpy arrays.
-                `x` can be `None` (default) if feeding from
-                framework-native tensors (e.g. TensorFlow data tensors).
-            y: Numpy array of target (label) data
-                (if the model has a single output),
-                or list of Numpy arrays (if the model has multiple outputs).
+            x: Input data. It could be:
+                - A Numpy array (or array-like), or a list of arrays
+                  (in case the model has multiple inputs).
+                - A dict mapping input names to the corresponding
+                  array/tensors, if the model has named inputs.
+                - A generator or `keras.utils.Sequence` returning
+                  `(inputs, targets)` or `(inputs, targets, sample weights)`.
+                - None (default) if feeding from framework-native
+                  tensors (e.g. TensorFlow data tensors).
+            y: Target data. Like the input data `x`,
+                it could be either Numpy array(s), framework-native tensor(s),
+                list of Numpy arrays (if the model has multiple outputs) or
+                None (default) if feeding from framework-native tensors
+                (e.g. TensorFlow data tensors).
                 If output layers in the model are named, you can also pass a
                 dictionary mapping output names to Numpy arrays.
-                `y` can be `None` (default) if feeding from
-                framework-native tensors (e.g. TensorFlow data tensors).
+                If `x` is a generator, or `keras.utils.Sequence` instance,
+                `y` should not be specified (since targets will be obtained
+                from `x`).
             batch_size: Integer or `None`.
                 Number of samples per gradient update.
                 If unspecified, `batch_size` will default to 32.
+                Do not specify the `batch_size` if your data is in the
+                form of symbolic tensors, generators, or `Sequence` instances
+                (since they generate batches).
             epochs: Integer. Number of epochs to train the model.
                 An epoch is an iteration over the entire `x` and `y`
                 data provided.
@@ -332,7 +380,8 @@
             verbose: Integer. 0, 1, or 2. Verbosity mode.
                 0 = silent, 1 = progress bar, 2 = one line per epoch.
             callbacks: List of `keras.callbacks.Callback` instances.
-                List of callbacks to apply during training.
+                List of callbacks to apply during training and validation
+                (if ).
                 See [callbacks](/callbacks).
             validation_split: Float between 0 and 1.
                 Fraction of the training data to be used as validation data.
@@ -342,11 +391,18 @@
                 on this data at the end of each epoch.
                 The validation data is selected from the last samples
                 in the `x` and `y` data provided, before shuffling.
-            validation_data: tuple `(x_val, y_val)` or tuple
-                `(x_val, y_val, val_sample_weights)` on which to evaluate
+                This argument is not supported when `x` is a generator or
+                `Sequence` instance.
+            validation_data: Data on which to evaluate
                 the loss and any model metrics at the end of each epoch.
                 The model will not be trained on this data.
                 `validation_data` will override `validation_split`.
+                `validation_data` could be:
+                    - tuple `(x_val, y_val)` of Numpy arrays or tensors
+                    - tuple `(x_val, y_val, val_sample_weights)` of Numpy arrays
+                    - dataset or a dataset iterator
+                For the first two cases, `batch_size` must be provided.
+                For the last case, `validation_steps` must be provided.
             shuffle: Boolean (whether to shuffle the training data
                 before each epoch) or str (for 'batch').
                 'batch' is a special option for dealing with the
@@ -368,7 +424,9 @@
                 `(samples, sequence_length)`,
                 to apply a different weight to every timestep of every sample.
                 In this case you should make sure to specify
-                `sample_weight_mode=\"temporal\"` in `compile()`.
+                `sample_weight_mode=\"temporal\"` in `compile()`. This argument
+                is not supported when `x` generator, or `Sequence` instance,
+                instead provide the sample_weights as the third element of `x`.
             initial_epoch: Integer.
                 Epoch at which to start training
                 (useful for resuming a previous training run).
@@ -382,6 +440,32 @@
             validation_steps: Only relevant if `steps_per_epoch`
                 is specified. Total number of steps (batches of samples)
                 to validate before stopping.
+            validation_steps: Only relevant if `validation_data` is provided
+                and is a generator. Total number of steps (batches of samples)
+                to draw before stopping when performing validation at the end
+                of every epoch.
+            validation_freq: Only relevant if validation data is provided. Integer
+                or list/tuple/set. If an integer, specifies how many training
+                epochs to run before a new validation run is performed, e.g.
+                `validation_freq=2` runs validation every 2 epochs. If a list,
+                tuple, or set, specifies the epochs on which to run validation,
+                e.g. `validation_freq=[1, 2, 10]` runs validation at the end
+                of the 1st, 2nd, and 10th epochs.
+            max_queue_size: Integer. Used for generator or `keras.utils.Sequence`
+                input only. Maximum size for the generator queue.
+                If unspecified, `max_queue_size` will default to 10.
+            workers: Integer. Used for generator or `keras.utils.Sequence` input
+                only. Maximum number of processes to spin up
+                when using process-based threading. If unspecified, `workers`
+                will default to 1. If 0, will execute the generator on the main
+                thread.
+            use_multiprocessing: Boolean. Used for generator or
+                `keras.utils.Sequence` input only. If `True`, use process-based
+                threading. If unspecified, `use_multiprocessing` will default to
+                `False`. Note that because this implementation relies on
+                multiprocessing, you should not pass non-picklable arguments to
+                the generator as they can't be passed easily to children processes.
+            **kwargs: Used for backwards compatibility.
 
         # Returns
             A `History` object. Its `History.history` attribute is
@@ -394,9 +478,9 @@
             ValueError: In case of mismatch between the provided input data
                 and what the model expects.
         "
-  [self & {:keys [x y batch_size epochs verbose callbacks validation_split validation_data shuffle class_weight sample_weight initial_epoch steps_per_epoch validation_steps]
-                       :or {epochs 1 verbose 1 validation_split 0.0 shuffle true initial_epoch 0}} ]
-    (py/call-attr-kw models "fit" [] {:x x :y y :batch_size batch_size :epochs epochs :verbose verbose :callbacks callbacks :validation_split validation_split :validation_data validation_data :shuffle shuffle :class_weight class_weight :sample_weight sample_weight :initial_epoch initial_epoch :steps_per_epoch steps_per_epoch :validation_steps validation_steps }))
+  [self  & {:keys [x y batch_size epochs verbose callbacks validation_split validation_data shuffle class_weight sample_weight initial_epoch steps_per_epoch validation_steps validation_freq max_queue_size workers use_multiprocessing]
+                       :or {epochs 1 verbose 1 validation_split 0.0 shuffle true initial_epoch 0 validation_freq 1 max_queue_size 10 workers 1 use_multiprocessing false}} ]
+    (py/call-attr-kw self "fit" [] {:x x :y y :batch_size batch_size :epochs epochs :verbose verbose :callbacks callbacks :validation_split validation_split :validation_data validation_data :shuffle shuffle :class_weight class_weight :sample_weight sample_weight :initial_epoch initial_epoch :steps_per_epoch steps_per_epoch :validation_steps validation_steps :validation_freq validation_freq :max_queue_size max_queue_size :workers workers :use_multiprocessing use_multiprocessing }))
 
 (defn fit-generator 
   "Trains the model on data generated batch-by-batch by a Python generator
@@ -430,8 +514,7 @@
                 Total number of steps (batches of samples)
                 to yield from `generator` before declaring one epoch
                 finished and starting the next epoch. It should typically
-                be equal to the number of samples of your dataset
-                divided by the batch size.
+                be equal to `ceil(num_samples / batch_size)`
                 Optional for `Sequence`: if unspecified, will use
                 the `len(generator)` as a number of steps.
             epochs: Integer. Number of epochs to train the model.
@@ -462,6 +545,13 @@
                 validation dataset divided by the batch size.
                 Optional for `Sequence`: if unspecified, will use
                 the `len(validation_data)` as a number of steps.
+            validation_freq: Only relevant if validation data is provided. Integer
+                or `collections.Container` instance (e.g. list, tuple, etc.). If an
+                integer, specifies how many training epochs to run before a new
+                validation run is performed, e.g. `validation_freq=2` runs
+                validation every 2 epochs. If a Container, specifies the epochs on
+                which to run validation, e.g. `validation_freq=[1, 2, 10]` runs
+                validation at the end of the 1st, 2nd, and 10th epochs.
             class_weight: Optional dictionary mapping class indices (integers)
                 to a weight (float) value, used for weighting the loss function
                 (during training only). This can be useful to tell the model to
@@ -513,14 +603,14 @@
                             steps_per_epoch=10000, epochs=10)
         ```
         "
-  [self & {:keys [generator steps_per_epoch epochs verbose callbacks validation_data validation_steps class_weight max_queue_size workers use_multiprocessing shuffle initial_epoch]
-                       :or {epochs 1 verbose 1 max_queue_size 10 workers 1 use_multiprocessing false shuffle true initial_epoch 0}} ]
-    (py/call-attr-kw models "fit_generator" [] {:generator generator :steps_per_epoch steps_per_epoch :epochs epochs :verbose verbose :callbacks callbacks :validation_data validation_data :validation_steps validation_steps :class_weight class_weight :max_queue_size max_queue_size :workers workers :use_multiprocessing use_multiprocessing :shuffle shuffle :initial_epoch initial_epoch }))
+  [self generator & {:keys [steps_per_epoch epochs verbose callbacks validation_data validation_steps validation_freq class_weight max_queue_size workers use_multiprocessing shuffle initial_epoch]
+                       :or {epochs 1 verbose 1 validation_freq 1 max_queue_size 10 workers 1 use_multiprocessing false shuffle true initial_epoch 0}} ]
+    (py/call-attr-kw self "fit_generator" [generator] {:steps_per_epoch steps_per_epoch :epochs epochs :verbose verbose :callbacks callbacks :validation_data validation_data :validation_steps validation_steps :validation_freq validation_freq :class_weight class_weight :max_queue_size max_queue_size :workers workers :use_multiprocessing use_multiprocessing :shuffle shuffle :initial_epoch initial_epoch }))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr models "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))
 
 (defn get-input-at 
   "Retrieves the input tensor(s) of a layer at a given node.
@@ -534,8 +624,8 @@
         # Returns
             A tensor (or list of tensors if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw models "get_input_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_input_at"  self node_index ))
 
 (defn get-input-mask-at 
   "Retrieves the input mask tensor(s) of a layer at a given node.
@@ -550,8 +640,8 @@
             A mask tensor
             (or list of tensors if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw models "get_input_mask_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_input_mask_at"  self node_index ))
 
 (defn get-input-shape-at 
   "Retrieves the input shape(s) of a layer at a given node.
@@ -566,9 +656,8 @@
             A shape tuple
             (or list of shape tuples if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw models "get_input_shape_at" [self] {:node_index node_index }))
-
+  [ self node_index ]
+  (py/call-attr self "get_input_shape_at"  self node_index ))
 (defn get-layer 
   "Retrieves a layer based on either its name (unique) or index.
 
@@ -586,13 +675,13 @@
         # Raises
             ValueError: In case of invalid layer name or index.
         "
-  [self  & {:keys [name index]} ]
-    (py/call-attr-kw models "get_layer" [self] {:name name :index index }))
+  [self   & {:keys [name index]} ]
+    (py/call-attr-kw self "get_layer" [] {:name name :index index }))
 
 (defn get-losses-for 
   ""
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw models "get_losses_for" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "get_losses_for"  self inputs ))
 
 (defn get-output-at 
   "Retrieves the output tensor(s) of a layer at a given node.
@@ -606,8 +695,8 @@
         # Returns
             A tensor (or list of tensors if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw models "get_output_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_at"  self node_index ))
 
 (defn get-output-mask-at 
   "Retrieves the output mask tensor(s) of a layer at a given node.
@@ -622,8 +711,8 @@
             A mask tensor
             (or list of tensors if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw models "get_output_mask_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_mask_at"  self node_index ))
 
 (defn get-output-shape-at 
   "Retrieves the output shape(s) of a layer at a given node.
@@ -638,13 +727,13 @@
             A shape tuple
             (or list of shape tuples if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw models "get_output_shape_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_shape_at"  self node_index ))
 
 (defn get-updates-for 
   ""
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw models "get_updates_for" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "get_updates_for"  self inputs ))
 
 (defn get-weights 
   "Retrieves the weights of the model.
@@ -652,8 +741,8 @@
         # Returns
             A flat list of Numpy arrays.
         "
-  [ self ]
-  (py/call-attr models "get_weights"  self ))
+  [ self  ]
+  (py/call-attr self "get_weights"  self  ))
 
 (defn input 
   "Retrieves the input tensor(s) of a layer.
@@ -669,7 +758,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr models "input"  self))
+    (py/call-attr self "input"))
 
 (defn input-mask 
   "Retrieves the input mask tensor(s) of a layer.
@@ -686,7 +775,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr models "input_mask"  self))
+    (py/call-attr self "input_mask"))
 
 (defn input-shape 
   "Retrieves the input shape tuple(s) of a layer.
@@ -703,7 +792,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr models "input_shape"  self))
+    (py/call-attr self "input_shape"))
 
 (defn input-spec 
   "Gets the model's input specs.
@@ -713,12 +802,12 @@
                 or a single instance if the model has only one input.
         "
   [ self ]
-    (py/call-attr models "input_spec"  self))
+    (py/call-attr self "input_spec"))
 
 (defn layers 
   ""
   [ self ]
-    (py/call-attr models "layers"  self))
+    (py/call-attr self "layers"))
 
 (defn load-weights 
   "Loads all layer weights from a HDF5 save file.
@@ -750,9 +839,9 @@
         # Raises
             ImportError: If h5py is not available.
         "
-  [self & {:keys [filepath by_name skip_mismatch reshape]
+  [self filepath & {:keys [by_name skip_mismatch reshape]
                        :or {by_name false skip_mismatch false reshape false}} ]
-    (py/call-attr-kw models "load_weights" [] {:filepath filepath :by_name by_name :skip_mismatch skip_mismatch :reshape reshape }))
+    (py/call-attr-kw self "load_weights" [filepath] {:by_name by_name :skip_mismatch skip_mismatch :reshape reshape }))
 
 (defn losses 
   "Retrieves the model's losses.
@@ -766,12 +855,22 @@
             A list of loss tensors.
         "
   [ self ]
-    (py/call-attr models "losses"  self))
+    (py/call-attr self "losses"))
+
+(defn metrics 
+  "Returns the model's metrics added using `compile`, `add_metric` APIs."
+  [ self ]
+    (py/call-attr self "metrics"))
+
+(defn metrics-names 
+  "Returns the model's display labels for all outputs."
+  [ self ]
+    (py/call-attr self "metrics_names"))
 
 (defn non-trainable-weights 
   ""
   [ self ]
-    (py/call-attr models "non_trainable_weights"  self))
+    (py/call-attr self "non_trainable_weights"))
 
 (defn output 
   "Retrieves the output tensor(s) of a layer.
@@ -787,7 +886,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr models "output"  self))
+    (py/call-attr self "output"))
 
 (defn output-mask 
   "Retrieves the output mask tensor(s) of a layer.
@@ -804,7 +903,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr models "output_mask"  self))
+    (py/call-attr self "output_mask"))
 
 (defn output-shape 
   "Retrieves the output shape tuple(s) of a layer.
@@ -821,7 +920,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr models "output_shape"  self))
+    (py/call-attr self "output_shape"))
 
 (defn predict 
   "Generates output predictions for the input samples.
@@ -829,13 +928,41 @@
         Computation is done in batches.
 
         # Arguments
-            x: The input data, as a Numpy array
-                (or list of Numpy arrays if the model has multiple inputs).
-            batch_size: Integer. If unspecified, it will default to 32.
+            x: Input data. It could be:
+                - A Numpy array (or array-like), or a list of arrays
+                  (in case the model has multiple inputs).
+                - A dict mapping input names to the corresponding
+                  array/tensors, if the model has named inputs.
+                - A generator or `keras.utils.Sequence` returning
+                  `(inputs, targets)` or `(inputs, targets, sample weights)`.
+                - None (default) if feeding from framework-native
+                  tensors (e.g. TensorFlow data tensors).
+            batch_size: Integer or `None`.
+                Number of samples per gradient update.
+                If unspecified, `batch_size` will default to 32.
+                Do not specify the `batch_size` if your data is in the
+                form of symbolic tensors, generators, or
+                `keras.utils.Sequence` instances (since they generate batches).
             verbose: Verbosity mode, 0 or 1.
             steps: Total number of steps (batches of samples)
                 before declaring the prediction round finished.
                 Ignored with the default value of `None`.
+            callbacks: List of `keras.callbacks.Callback` instances.
+                List of callbacks to apply during prediction.
+                See [callbacks](/callbacks).
+            max_queue_size: Integer. Used for generator or `keras.utils.Sequence`
+                input only. Maximum size for the generator queue.
+                If unspecified, `max_queue_size` will default to 10.
+            workers: Integer. Used for generator or `keras.utils.Sequence` input
+                only. Maximum number of processes to spin up when using
+                process-based threading. If unspecified, `workers` will default
+                to 1. If 0, will execute the generator on the main thread.
+            use_multiprocessing: Boolean. Used for generator or
+                `keras.utils.Sequence` input only. If `True`, use process-based
+                threading. If unspecified, `use_multiprocessing` will default to
+                `False`. Note that because this implementation relies on
+                multiprocessing, you should not pass non-picklable arguments to
+                the generator as they can't be passed easily to children processes.
 
         # Returns
             Numpy array(s) of predictions.
@@ -846,9 +973,9 @@
                 or in case a stateful model receives a number of samples
                 that is not a multiple of the batch size.
         "
-  [self & {:keys [x batch_size verbose steps]
-                       :or {verbose 0}} ]
-    (py/call-attr-kw models "predict" [] {:x x :batch_size batch_size :verbose verbose :steps steps }))
+  [self x & {:keys [batch_size verbose steps callbacks max_queue_size workers use_multiprocessing]
+                       :or {verbose 0 max_queue_size 10 workers 1 use_multiprocessing false}} ]
+    (py/call-attr-kw self "predict" [x] {:batch_size batch_size :verbose verbose :steps steps :callbacks callbacks :max_queue_size max_queue_size :workers workers :use_multiprocessing use_multiprocessing }))
 
 (defn predict-generator 
   "Generates predictions for the input samples from a data generator.
@@ -865,6 +992,9 @@
                 to yield from `generator` before stopping.
                 Optional for `Sequence`: if unspecified, will use
                 the `len(generator)` as a number of steps.
+            callbacks: List of `keras.callbacks.Callback` instances.
+                List of callbacks to apply during training.
+                See [callbacks](/callbacks).
             max_queue_size: Maximum size for the generator queue.
             workers: Integer. Maximum number of processes to spin up
                 when using process based threading.
@@ -886,9 +1016,9 @@
             ValueError: In case the generator yields
                 data in an invalid format.
         "
-  [self & {:keys [generator steps max_queue_size workers use_multiprocessing verbose]
+  [self generator & {:keys [steps callbacks max_queue_size workers use_multiprocessing verbose]
                        :or {max_queue_size 10 workers 1 use_multiprocessing false verbose 0}} ]
-    (py/call-attr-kw models "predict_generator" [] {:generator generator :steps steps :max_queue_size max_queue_size :workers workers :use_multiprocessing use_multiprocessing :verbose verbose }))
+    (py/call-attr-kw self "predict_generator" [generator] {:steps steps :callbacks callbacks :max_queue_size max_queue_size :workers workers :use_multiprocessing use_multiprocessing :verbose verbose }))
 
 (defn predict-on-batch 
   "Returns predictions for a single batch of samples.
@@ -899,14 +1029,18 @@
         # Returns
             Numpy array(s) of predictions.
         "
-  [self  & {:keys [x]} ]
-    (py/call-attr-kw models "predict_on_batch" [self] {:x x }))
+  [ self x ]
+  (py/call-attr self "predict_on_batch"  self x ))
+
+(defn reset-metrics 
+  "Resets the state of metrics."
+  [ self  ]
+  (py/call-attr self "reset_metrics"  self  ))
 
 (defn reset-states 
   ""
-  [ self ]
-  (py/call-attr models "reset_states"  self ))
-
+  [ self  ]
+  (py/call-attr self "reset_states"  self  ))
 (defn run-internal-graph 
   "Computes output tensors for new inputs.
 
@@ -921,8 +1055,8 @@
         # Returns
             Three lists: output_tensors, output_masks, output_shapes
         "
-  [self  & {:keys [inputs masks]} ]
-    (py/call-attr-kw models "run_internal_graph" [self] {:inputs inputs :masks masks }))
+  [self inputs  & {:keys [masks]} ]
+    (py/call-attr-kw self "run_internal_graph" [inputs] {:masks masks }))
 
 (defn save 
   "Saves the model to a single HDF5 file.
@@ -942,7 +1076,11 @@
         was never compiled in the first place).
 
         # Arguments
-            filepath: String, path to the file to save the weights to.
+            filepath: one of the following:
+                - string, path to the file to save the model to
+                - h5py.File or h5py.Group object where to save the model
+                - any file-like object implementing the method `write` that accepts
+                    `bytes` data (e.g. `io.BytesIO`).
             overwrite: Whether to silently overwrite any existing file at the
                 target location, or provide the user with a manual prompt.
             include_optimizer: If True, save optimizer's state together.
@@ -960,9 +1098,9 @@
         model = load_model('my_model.h5')
         ```
         "
-  [self & {:keys [filepath overwrite include_optimizer]
+  [self filepath & {:keys [overwrite include_optimizer]
                        :or {overwrite true include_optimizer true}} ]
-    (py/call-attr-kw models "save" [] {:filepath filepath :overwrite overwrite :include_optimizer include_optimizer }))
+    (py/call-attr-kw self "save" [filepath] {:overwrite overwrite :include_optimizer include_optimizer }))
 
 (defn save-weights 
   "Dumps all layer weights to a HDF5 file.
@@ -985,9 +1123,9 @@
         # Raises
             ImportError: If h5py is not available.
         "
-  [self & {:keys [filepath overwrite]
+  [self filepath & {:keys [overwrite]
                        :or {overwrite true}} ]
-    (py/call-attr-kw models "save_weights" [] {:filepath filepath :overwrite overwrite }))
+    (py/call-attr-kw self "save_weights" [filepath] {:overwrite overwrite }))
 
 (defn set-weights 
   "Sets the weights of the model.
@@ -996,8 +1134,8 @@
             weights: A list of Numpy arrays with shapes and types matching
                 the output of `model.get_weights()`.
         "
-  [self  & {:keys [weights]} ]
-    (py/call-attr-kw models "set_weights" [self] {:weights weights }))
+  [ self weights ]
+  (py/call-attr self "set_weights"  self weights ))
 
 (defn state-updates 
   "Returns the `updates` from all layers that are stateful.
@@ -1010,13 +1148,12 @@
             A list of update ops.
         "
   [ self ]
-    (py/call-attr models "state_updates"  self))
+    (py/call-attr self "state_updates"))
 
 (defn stateful 
   ""
   [ self ]
-    (py/call-attr models "stateful"  self))
-
+    (py/call-attr self "stateful"))
 (defn summary 
   "Prints a string summary of the network.
 
@@ -1033,8 +1170,8 @@
                 in order to capture the string summary.
                 It defaults to `print` (prints to stdout).
         "
-  [self  & {:keys [line_length positions print_fn]} ]
-    (py/call-attr-kw models "summary" [self] {:line_length line_length :positions positions :print_fn print_fn }))
+  [self   & {:keys [line_length positions print_fn]} ]
+    (py/call-attr-kw self "summary" [] {:line_length line_length :positions positions :print_fn print_fn }))
 
 (defn test-on-batch 
   "Test the model on a single batch of samples.
@@ -1057,6 +1194,9 @@
                 to apply a different weight to every timestep of every sample.
                 In this case you should make sure to specify
                 sample_weight_mode=\"temporal\" in compile().
+            reset_metrics: If `True`, the metrics returned will be only for this
+                batch. If `False`, the metrics will be statefully accumulated across
+                batches.
 
         # Returns
             Scalar test loss (if the model has a single output and no metrics)
@@ -1064,8 +1204,9 @@
             and/or metrics). The attribute `model.metrics_names` will give you
             the display labels for the scalar outputs.
         "
-  [self  & {:keys [x y sample_weight]} ]
-    (py/call-attr-kw models "test_on_batch" [self] {:x x :y y :sample_weight sample_weight }))
+  [self x y & {:keys [sample_weight reset_metrics]
+                       :or {reset_metrics true}} ]
+    (py/call-attr-kw self "test_on_batch" [x y] {:sample_weight sample_weight :reset_metrics reset_metrics }))
 
 (defn to-json 
   "Returns a JSON string containing the network configuration.
@@ -1080,8 +1221,8 @@
         # Returns
             A JSON string.
         "
-  [ self ]
-  (py/call-attr models "to_json"  self ))
+  [ self  ]
+  (py/call-attr self "to_json"  self  ))
 
 (defn to-yaml 
   "Returns a yaml string containing the network configuration.
@@ -1100,8 +1241,8 @@
         # Returns
             A YAML string.
         "
-  [ self ]
-  (py/call-attr models "to_yaml"  self ))
+  [ self  ]
+  (py/call-attr self "to_yaml"  self  ))
 
 (defn train-on-batch 
   "Runs a single gradient update on a single batch of data.
@@ -1130,6 +1271,9 @@
                 from this class during training.
                 This can be useful to tell the model to \"pay more attention\" to
                 samples from an under-represented class.
+            reset_metrics: If `True`, the metrics returned will be only for this
+                batch. If `False`, the metrics will be statefully accumulated across
+                batches.
 
         # Returns
             Scalar training loss
@@ -1138,13 +1282,14 @@
             and/or metrics). The attribute `model.metrics_names` will give you
             the display labels for the scalar outputs.
         "
-  [self  & {:keys [x y sample_weight class_weight]} ]
-    (py/call-attr-kw models "train_on_batch" [self] {:x x :y y :sample_weight sample_weight :class_weight class_weight }))
+  [self x y & {:keys [sample_weight class_weight reset_metrics]
+                       :or {reset_metrics true}} ]
+    (py/call-attr-kw self "train_on_batch" [x y] {:sample_weight sample_weight :class_weight class_weight :reset_metrics reset_metrics }))
 
 (defn trainable-weights 
   ""
   [ self ]
-    (py/call-attr models "trainable_weights"  self))
+    (py/call-attr self "trainable_weights"))
 
 (defn updates 
   "Retrieves the model's updates.
@@ -1158,14 +1303,14 @@
             A list of update ops.
         "
   [ self ]
-    (py/call-attr models "updates"  self))
+    (py/call-attr self "updates"))
 
 (defn uses-learning-phase 
   ""
   [ self ]
-    (py/call-attr models "uses_learning_phase"  self))
+    (py/call-attr self "uses_learning_phase"))
 
 (defn weights 
   ""
   [ self ]
-    (py/call-attr models "weights"  self))
+    (py/call-attr self "weights"))

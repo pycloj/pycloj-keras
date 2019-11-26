@@ -14,19 +14,19 @@
 (defn InceptionV3 
   ""
   [  ]
-  (py/call-attr inception-v3 "InceptionV3"   ))
+  (py/call-attr inception-v3 "InceptionV3"  ))
 
 (defn decode-predictions 
   ""
   [  ]
-  (py/call-attr inception-v3 "decode_predictions"   ))
+  (py/call-attr inception-v3 "decode_predictions"  ))
 
 (defn keras-modules-injection 
   ""
-  [ & {:keys [base_fun]} ]
-   (py/call-attr-kw inception-v3 "keras_modules_injection" [] {:base_fun base_fun }))
+  [ base_fun ]
+  (py/call-attr inception-v3 "keras_modules_injection"  base_fun ))
 
 (defn preprocess-input 
   ""
   [  ]
-  (py/call-attr inception-v3 "preprocess_input"   ))
+  (py/call-attr inception-v3 "preprocess_input"  ))

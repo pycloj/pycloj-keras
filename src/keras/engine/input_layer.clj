@@ -72,11 +72,11 @@
 
     Otherwise return the iterable.
 
-    # Argument:
+    # Argument
         x: A list or tuple.
 
-    # Returns:
+    # Returns
         The same iterable or the first element.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw input-layer "unpack_singleton" [] {:x x }))
+  [ x ]
+  (py/call-attr input-layer "unpack_singleton"  x ))

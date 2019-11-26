@@ -52,10 +52,9 @@
     # Returns
         Path to the downloaded file
     "
-  [ & {:keys [fname origin untar md5_hash file_hash cache_subdir hash_algorithm extract archive_format cache_dir]
-       :or {untar false cache_subdir "datasets" hash_algorithm "auto" extract false archive_format "auto"}} ]
-  
-   (py/call-attr-kw cifar10 "get_file" [] {:fname fname :origin origin :untar untar :md5_hash md5_hash :file_hash file_hash :cache_subdir cache_subdir :hash_algorithm hash_algorithm :extract extract :archive_format archive_format :cache_dir cache_dir }))
+  [fname origin & {:keys [untar md5_hash file_hash cache_subdir hash_algorithm extract archive_format cache_dir]
+                       :or {untar false cache_subdir "datasets" hash_algorithm "auto" extract false archive_format "auto"}} ]
+    (py/call-attr-kw cifar10 "get_file" [fname origin] {:untar untar :md5_hash md5_hash :file_hash file_hash :cache_subdir cache_subdir :hash_algorithm hash_algorithm :extract extract :archive_format archive_format :cache_dir cache_dir }))
 
 (defn load-batch 
   "Internal utility for parsing CIFAR data.
@@ -68,10 +67,9 @@
     # Returns
         A tuple `(data, labels)`.
     "
-  [ & {:keys [fpath label_key]
-       :or {label_key "labels"}} ]
-  
-   (py/call-attr-kw cifar10 "load_batch" [] {:fpath fpath :label_key label_key }))
+  [fpath & {:keys [label_key]
+                       :or {label_key "labels"}} ]
+    (py/call-attr-kw cifar10 "load_batch" [fpath] {:label_key label_key }))
 
 (defn load-data 
   "Loads CIFAR10 dataset.
@@ -80,4 +78,4 @@
         Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)`.
     "
   [  ]
-  (py/call-attr cifar10 "load_data"   ))
+  (py/call-attr cifar10 "load_data"  ))

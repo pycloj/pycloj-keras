@@ -29,10 +29,9 @@
         use_multiprocessing: use multiprocessing if True, otherwise threading
         shuffle: whether to shuffle the data at the beginning of each epoch
     "
-  [ & {:keys [sequence use_multiprocessing shuffle]
-       :or {use_multiprocessing false shuffle false}} ]
-  
-   (py/call-attr-kw data-utils "OrderedEnqueuer" [] {:sequence sequence :use_multiprocessing use_multiprocessing :shuffle shuffle }))
+  [sequence & {:keys [use_multiprocessing shuffle]
+                       :or {use_multiprocessing false shuffle false}} ]
+    (py/call-attr-kw data-utils "OrderedEnqueuer" [sequence] {:use_multiprocessing use_multiprocessing :shuffle shuffle }))
 
 (defn get 
   "Creates a generator to extract data from the queue.
@@ -44,13 +43,18 @@
             `(inputs, targets)` or
             `(inputs, targets, sample_weights)`.
         "
-  [ self ]
-  (py/call-attr data-utils "get"  self ))
+  [ self  ]
+  (py/call-attr self "get"  self  ))
 
 (defn is-running 
   ""
-  [ self ]
-  (py/call-attr data-utils "is_running"  self ))
+  [ self  ]
+  (py/call-attr self "is_running"  self  ))
+
+(defn join-end-of-epoch 
+  ""
+  [ self  ]
+  (py/call-attr self "join_end_of_epoch"  self  ))
 
 (defn start 
   "Start the handler's workers.
@@ -60,10 +64,9 @@
             max_queue_size: queue size
                 (when full, workers could block on `put()`)
         "
-  [self & {:keys [workers max_queue_size]
+  [self  & {:keys [workers max_queue_size]
                        :or {workers 1 max_queue_size 10}} ]
-    (py/call-attr-kw data-utils "start" [] {:workers workers :max_queue_size max_queue_size }))
-
+    (py/call-attr-kw self "start" [] {:workers workers :max_queue_size max_queue_size }))
 (defn stop 
   "Stops running threads and wait for them to exit, if necessary.
 
@@ -72,5 +75,5 @@
         # Arguments
             timeout: maximum time to wait on `thread.join()`
         "
-  [self  & {:keys [timeout]} ]
-    (py/call-attr-kw data-utils "stop" [self] {:timeout timeout }))
+  [self   & {:keys [timeout]} ]
+    (py/call-attr-kw self "stop" [] {:timeout timeout }))

@@ -16,9 +16,9 @@
   "Initializer base class: all initializers inherit from this class.
     "
   [  ]
-  (py/call-attr initializers "Initializer"   ))
+  (py/call-attr initializers "Initializer"  ))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr initializers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

@@ -2,7 +2,7 @@
   "Iterator capable of reading images from a directory on disk.
 
     # Arguments
-        directory: Path to the directory to read images from.
+        directory: string, path to the directory to read images from.
             Each subdirectory in this directory will be
             considered to contain images from one class,
             or alternatively you could specify class subdirectories
@@ -24,6 +24,7 @@
             `None`: no targets get yielded (only input images are yielded).
         batch_size: Integer, size of a batch.
         shuffle: Boolean, whether to shuffle the data between epochs.
+            If set to False, sorts the data in alphanumeric order.
         seed: Random seed for data shuffling.
         data_format: String, one of `channels_first`, `channels_last`.
         save_to_dir: Optional directory where to save the pictures
@@ -34,6 +35,7 @@
             images (if `save_to_dir` is set).
         save_format: Format to use for saving sample images
             (if `save_to_dir` is set).
+        follow_links: boolean,follow symbolic links to subdirectories
         subset: Subset of data (`\"training\"` or `\"validation\"`) if
             validation_split is set in ImageDataGenerator.
         interpolation: Interpolation method used to resample the image if the
@@ -59,7 +61,7 @@
   "Iterator capable of reading images from a directory on disk.
 
     # Arguments
-        directory: Path to the directory to read images from.
+        directory: string, path to the directory to read images from.
             Each subdirectory in this directory will be
             considered to contain images from one class,
             or alternatively you could specify class subdirectories
@@ -81,6 +83,7 @@
             `None`: no targets get yielded (only input images are yielded).
         batch_size: Integer, size of a batch.
         shuffle: Boolean, whether to shuffle the data between epochs.
+            If set to False, sorts the data in alphanumeric order.
         seed: Random seed for data shuffling.
         data_format: String, one of `channels_first`, `channels_last`.
         save_to_dir: Optional directory where to save the pictures
@@ -91,6 +94,7 @@
             images (if `save_to_dir` is set).
         save_format: Format to use for saving sample images
             (if `save_to_dir` is set).
+        follow_links: boolean,follow symbolic links to subdirectories
         subset: Subset of data (`\"training\"` or `\"validation\"`) if
             validation_split is set in ImageDataGenerator.
         interpolation: Interpolation method used to resample the image if the
@@ -101,20 +105,19 @@
             \"hamming\" are also supported. By default, \"nearest\" is used.
         dtype: Dtype to use for generated arrays.
     "
-  [ & {:keys [directory image_data_generator target_size color_mode classes class_mode batch_size shuffle seed data_format save_to_dir save_prefix save_format follow_links subset interpolation dtype]
-       :or {target_size (256, 256) color_mode "rgb" class_mode "categorical" batch_size 32 shuffle true save_prefix "" save_format "png" follow_links false interpolation "nearest"}} ]
-  
-   (py/call-attr-kw image "DirectoryIterator" [] {:directory directory :image_data_generator image_data_generator :target_size target_size :color_mode color_mode :classes classes :class_mode class_mode :batch_size batch_size :shuffle shuffle :seed seed :data_format data_format :save_to_dir save_to_dir :save_prefix save_prefix :save_format save_format :follow_links follow_links :subset subset :interpolation interpolation :dtype dtype }))
+  [directory image_data_generator & {:keys [target_size color_mode classes class_mode batch_size shuffle seed data_format save_to_dir save_prefix save_format follow_links subset interpolation dtype]
+                       :or {target_size (256, 256) color_mode "rgb" class_mode "categorical" batch_size 32 shuffle true save_prefix "" save_format "png" follow_links false interpolation "nearest"}} ]
+    (py/call-attr-kw image "DirectoryIterator" [directory image_data_generator] {:target_size target_size :color_mode color_mode :classes classes :class_mode class_mode :batch_size batch_size :shuffle shuffle :seed seed :data_format data_format :save_to_dir save_to_dir :save_prefix save_prefix :save_format save_format :follow_links follow_links :subset subset :interpolation interpolation :dtype dtype }))
 
 (defn filepaths 
   ""
   [ self ]
-    (py/call-attr image "filepaths"  self))
+    (py/call-attr self "filepaths"))
 
 (defn labels 
   ""
   [ self ]
-    (py/call-attr image "labels"  self))
+    (py/call-attr self "labels"))
 
 (defn next 
   "For python 2.x.
@@ -122,23 +125,23 @@
         # Returns
             The next batch.
         "
-  [ self ]
-  (py/call-attr image "next"  self ))
+  [ self  ]
+  (py/call-attr self "next"  self  ))
 
 (defn on-epoch-end 
   ""
-  [ self ]
-  (py/call-attr image "on_epoch_end"  self ))
+  [ self  ]
+  (py/call-attr self "on_epoch_end"  self  ))
 
 (defn reset 
   ""
-  [ self ]
-  (py/call-attr image "reset"  self ))
+  [ self  ]
+  (py/call-attr self "reset"  self  ))
 
 (defn sample-weight 
   ""
   [ self ]
-    (py/call-attr image "sample_weight"  self))
+    (py/call-attr self "sample_weight"))
 
 (defn set-processing-attrs 
   "Sets attributes to use later for processing files into a batch.
@@ -167,5 +170,5 @@
                 supported. If PIL version 3.4.0 or newer is installed, \"box\" and
                 \"hamming\" are also supported. By default, \"nearest\" is used.
         "
-  [self  & {:keys [image_data_generator target_size color_mode data_format save_to_dir save_prefix save_format subset interpolation]} ]
-    (py/call-attr-kw image "set_processing_attrs" [self] {:image_data_generator image_data_generator :target_size target_size :color_mode color_mode :data_format data_format :save_to_dir save_to_dir :save_prefix save_prefix :save_format save_format :subset subset :interpolation interpolation }))
+  [ self image_data_generator target_size color_mode data_format save_to_dir save_prefix save_format subset interpolation ]
+  (py/call-attr self "set_processing_attrs"  self image_data_generator target_size color_mode data_format save_to_dir save_prefix save_format subset interpolation ))

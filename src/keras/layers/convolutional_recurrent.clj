@@ -30,10 +30,9 @@
     # Returns
         bool, whether `fn` accepts a `name` keyword argument.
     "
-  [ & {:keys [fn name accept_all]
-       :or {accept_all false}} ]
-  
-   (py/call-attr-kw convolutional-recurrent "has_arg" [] {:fn fn :name name :accept_all accept_all }))
+  [fn name & {:keys [accept_all]
+                       :or {accept_all false}} ]
+    (py/call-attr-kw convolutional-recurrent "has_arg" [fn name] {:accept_all accept_all }))
 
 (defn to-list 
   "Normalizes a list/tensor into a list.
@@ -51,10 +50,9 @@
     # Returns
         A list.
     "
-  [ & {:keys [x allow_tuple]
-       :or {allow_tuple false}} ]
-  
-   (py/call-attr-kw convolutional-recurrent "to_list" [] {:x x :allow_tuple allow_tuple }))
+  [x & {:keys [allow_tuple]
+                       :or {allow_tuple false}} ]
+    (py/call-attr-kw convolutional-recurrent "to_list" [x] {:allow_tuple allow_tuple }))
 
 (defn transpose-shape 
   "Converts a tuple or a list to the correct `data_format`.
@@ -89,5 +87,5 @@
     # Raises
         ValueError: if `value` or the global `data_format` invalid.
     "
-  [ & {:keys [shape target_format spatial_axes]} ]
-   (py/call-attr-kw convolutional-recurrent "transpose_shape" [] {:shape shape :target_format target_format :spatial_axes spatial_axes }))
+  [ shape target_format spatial_axes ]
+  (py/call-attr convolutional-recurrent "transpose_shape"  shape target_format spatial_axes ))

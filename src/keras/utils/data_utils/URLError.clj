@@ -10,8 +10,7 @@
 
 (py/initialize!)
 (defonce data-utils (import-module "keras.utils.data_utils"))
-
 (defn URLError 
   ""
-  [ & {:keys [reason filename]} ]
-   (py/call-attr-kw data-utils "URLError" [] {:reason reason :filename filename }))
+  [reason  & {:keys [filename]} ]
+    (py/call-attr-kw data-utils "URLError" [reason] {:filename filename }))

@@ -36,22 +36,22 @@
             when their absolute value exceeds this value.
     "
   [  ]
-  (py/call-attr optimizers "Optimizer"   ))
+  (py/call-attr optimizers "Optimizer"  ))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr optimizers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))
 
 (defn get-gradients 
   ""
-  [self  & {:keys [loss params]} ]
-    (py/call-attr-kw optimizers "get_gradients" [self] {:loss loss :params params }))
+  [ self loss params ]
+  (py/call-attr self "get_gradients"  self loss params ))
 
 (defn get-updates 
   ""
-  [self  & {:keys [loss params]} ]
-    (py/call-attr-kw optimizers "get_updates" [self] {:loss loss :params params }))
+  [ self loss params ]
+  (py/call-attr self "get_updates"  self loss params ))
 
 (defn get-weights 
   "Returns the current value of the weights of the optimizer.
@@ -59,8 +59,13 @@
         # Returns
             A list of numpy arrays.
         "
+  [ self  ]
+  (py/call-attr self "get_weights"  self  ))
+
+(defn lr 
+  ""
   [ self ]
-  (py/call-attr optimizers "get_weights"  self ))
+    (py/call-attr self "lr"))
 
 (defn set-weights 
   "Sets the weights of the optimizer, from Numpy arrays.
@@ -78,5 +83,5 @@
         # Raises
             ValueError: in case of incompatible weight shapes.
         "
-  [self  & {:keys [weights]} ]
-    (py/call-attr-kw optimizers "set_weights" [self] {:weights weights }))
+  [ self weights ]
+  (py/call-attr self "set_weights"  self weights ))

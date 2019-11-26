@@ -9,8 +9,8 @@
         featurewise_std_normalization: Boolean.
             Divide inputs by std of the dataset, feature-wise.
         samplewise_std_normalization: Boolean. Divide each input by its std.
-        zca_epsilon: epsilon for ZCA whitening. Default is 1e-6.
         zca_whitening: Boolean. Apply ZCA whitening.
+        zca_epsilon: epsilon for ZCA whitening. Default is 1e-6.
         rotation_range: Int. Degree range for random rotations.
         width_shift_range: Float, 1-D array-like or int
             - float: fraction of total width, if < 1, or pixels if >= 1.
@@ -56,7 +56,7 @@
             If None or 0, no rescaling is applied,
             otherwise we multiply the data by the value provided
             (after applying all other transformations).
-        preprocessing_function: function that will be implied on each input.
+        preprocessing_function: function that will be applied on each input.
             The function will run after the image is resized and augmented.
             The function should take one argument:
             one image (Numpy tensor with rank 3),
@@ -72,6 +72,8 @@
             If you never set it, then it will be \"channels_last\".
         validation_split: Float. Fraction of images reserved for validation
             (strictly between 0 and 1).
+        interpolation_order: int, order to use for
+            the spline interpolation. Higher is slower.
         dtype: Dtype to use for the generated arrays.
 
     # Examples
@@ -176,6 +178,48 @@
         train_generator,
         steps_per_epoch=2000,
         epochs=50)
+    ```
+
+    Example of using ```.flow_from_dataframe(dataframe, directory,
+                                            x_col, y_col)```:
+
+    ```python
+
+    train_df = pandas.read_csv(\"./train.csv\")
+    valid_df = pandas.read_csv(\"./valid.csv\")
+
+    train_datagen = ImageDataGenerator(
+            rescale=1./255,
+            shear_range=0.2,
+            zoom_range=0.2,
+            horizontal_flip=True)
+
+    test_datagen = ImageDataGenerator(rescale=1./255)
+
+    train_generator = train_datagen.flow_from_dataframe(
+            dataframe=train_df,
+            directory='data/train',
+            x_col=\"filename\",
+            y_col=\"class\",
+            target_size=(150, 150),
+            batch_size=32,
+            class_mode='binary')
+
+    validation_generator = test_datagen.flow_from_dataframe(
+            dataframe=valid_df,
+            directory='data/validation',
+            x_col=\"filename\",
+            y_col=\"class\",
+            target_size=(150, 150),
+            batch_size=32,
+            class_mode='binary')
+
+    model.fit_generator(
+            train_generator,
+            steps_per_epoch=2000,
+            epochs=50,
+            validation_data=validation_generator,
+            validation_steps=800)
     ```
     "
   (:require [libpython-clj.python
@@ -200,8 +244,8 @@
         featurewise_std_normalization: Boolean.
             Divide inputs by std of the dataset, feature-wise.
         samplewise_std_normalization: Boolean. Divide each input by its std.
-        zca_epsilon: epsilon for ZCA whitening. Default is 1e-6.
         zca_whitening: Boolean. Apply ZCA whitening.
+        zca_epsilon: epsilon for ZCA whitening. Default is 1e-6.
         rotation_range: Int. Degree range for random rotations.
         width_shift_range: Float, 1-D array-like or int
             - float: fraction of total width, if < 1, or pixels if >= 1.
@@ -247,7 +291,7 @@
             If None or 0, no rescaling is applied,
             otherwise we multiply the data by the value provided
             (after applying all other transformations).
-        preprocessing_function: function that will be implied on each input.
+        preprocessing_function: function that will be applied on each input.
             The function will run after the image is resized and augmented.
             The function should take one argument:
             one image (Numpy tensor with rank 3),
@@ -263,6 +307,8 @@
             If you never set it, then it will be \"channels_last\".
         validation_split: Float. Fraction of images reserved for validation
             (strictly between 0 and 1).
+        interpolation_order: int, order to use for
+            the spline interpolation. Higher is slower.
         dtype: Dtype to use for the generated arrays.
 
     # Examples
@@ -368,11 +414,53 @@
         steps_per_epoch=2000,
         epochs=50)
     ```
+
+    Example of using ```.flow_from_dataframe(dataframe, directory,
+                                            x_col, y_col)```:
+
+    ```python
+
+    train_df = pandas.read_csv(\"./train.csv\")
+    valid_df = pandas.read_csv(\"./valid.csv\")
+
+    train_datagen = ImageDataGenerator(
+            rescale=1./255,
+            shear_range=0.2,
+            zoom_range=0.2,
+            horizontal_flip=True)
+
+    test_datagen = ImageDataGenerator(rescale=1./255)
+
+    train_generator = train_datagen.flow_from_dataframe(
+            dataframe=train_df,
+            directory='data/train',
+            x_col=\"filename\",
+            y_col=\"class\",
+            target_size=(150, 150),
+            batch_size=32,
+            class_mode='binary')
+
+    validation_generator = test_datagen.flow_from_dataframe(
+            dataframe=valid_df,
+            directory='data/validation',
+            x_col=\"filename\",
+            y_col=\"class\",
+            target_size=(150, 150),
+            batch_size=32,
+            class_mode='binary')
+
+    model.fit_generator(
+            train_generator,
+            steps_per_epoch=2000,
+            epochs=50,
+            validation_data=validation_generator,
+            validation_steps=800)
+    ```
     "
-  [ & {:keys [featurewise_center samplewise_center featurewise_std_normalization samplewise_std_normalization zca_whitening zca_epsilon rotation_range width_shift_range height_shift_range brightness_range shear_range zoom_range channel_shift_range fill_mode cval horizontal_flip vertical_flip rescale preprocessing_function data_format validation_split dtype]
-       :or {featurewise_center false samplewise_center false featurewise_std_normalization false samplewise_std_normalization false zca_whitening false zca_epsilon 1e-06 rotation_range 0 width_shift_range 0.0 height_shift_range 0.0 shear_range 0.0 zoom_range 0.0 channel_shift_range 0.0 fill_mode "nearest" cval 0.0 horizontal_flip false vertical_flip false validation_split 0.0}} ]
+  [ & {:keys [featurewise_center samplewise_center featurewise_std_normalization samplewise_std_normalization zca_whitening zca_epsilon rotation_range width_shift_range height_shift_range brightness_range shear_range zoom_range channel_shift_range fill_mode cval horizontal_flip vertical_flip rescale preprocessing_function data_format validation_split interpolation_order dtype]
+       :or {featurewise_center false samplewise_center false featurewise_std_normalization false samplewise_std_normalization false zca_whitening false zca_epsilon 1e-06 rotation_range 0 width_shift_range 0.0 height_shift_range 0.0 shear_range 0.0 zoom_range 0.0 channel_shift_range 0.0 fill_mode "nearest" cval 0.0 horizontal_flip false vertical_flip false data_format "channels_last" validation_split 0.0 interpolation_order 1 dtype "float32"}} ]
   
-   (py/call-attr-kw image "ImageDataGenerator" [] {:featurewise_center featurewise_center :samplewise_center samplewise_center :featurewise_std_normalization featurewise_std_normalization :samplewise_std_normalization samplewise_std_normalization :zca_whitening zca_whitening :zca_epsilon zca_epsilon :rotation_range rotation_range :width_shift_range width_shift_range :height_shift_range height_shift_range :brightness_range brightness_range :shear_range shear_range :zoom_range zoom_range :channel_shift_range channel_shift_range :fill_mode fill_mode :cval cval :horizontal_flip horizontal_flip :vertical_flip vertical_flip :rescale rescale :preprocessing_function preprocessing_function :data_format data_format :validation_split validation_split :dtype dtype }))
+   (py/call-attr-kw image "ImageDataGenerator" [] {:featurewise_center featurewise_center :samplewise_center samplewise_center :featurewise_std_normalization featurewise_std_normalization :samplewise_std_normalization samplewise_std_normalization :zca_whitening zca_whitening :zca_epsilon zca_epsilon :rotation_range rotation_range :width_shift_range width_shift_range :height_shift_range height_shift_range :brightness_range brightness_range :shear_range shear_range :zoom_range zoom_range :channel_shift_range channel_shift_range :fill_mode fill_mode :cval cval :horizontal_flip horizontal_flip :vertical_flip vertical_flip :rescale rescale :preprocessing_function preprocessing_function :data_format data_format :validation_split validation_split :interpolation_order interpolation_order :dtype dtype }))
 
 (defn apply-transform 
   "Applies a transformation to an image according to given parameters.
@@ -397,8 +485,8 @@
         # Returns
             A transformed version of the input (same shape).
         "
-  [self  & {:keys [x transform_parameters]} ]
-    (py/call-attr-kw image "apply_transform" [self] {:x x :transform_parameters transform_parameters }))
+  [ self x transform_parameters ]
+  (py/call-attr self "apply_transform"  self x transform_parameters ))
 
 (defn fit 
   "Fits the data generator to some sample data.
@@ -422,9 +510,9 @@
                 this is how many augmentation passes over the data to use.
             seed: Int (default: None). Random seed.
        "
-  [self & {:keys [x augment rounds seed]
+  [self x & {:keys [augment rounds seed]
                        :or {augment false rounds 1}} ]
-    (py/call-attr-kw image "fit" [] {:x x :augment augment :rounds rounds :seed seed }))
+    (py/call-attr-kw self "fit" [x] {:augment augment :rounds rounds :seed seed }))
 
 (defn flow 
   "Takes data & label arrays, generates batches of augmented data.
@@ -469,9 +557,9 @@
                 the yielded tuples are of the form `(x, y, sample_weight)`.
                 If `y` is None, only the numpy array `x` is returned.
         "
-  [self & {:keys [x y batch_size shuffle sample_weight seed save_to_dir save_prefix save_format subset]
+  [self x & {:keys [y batch_size shuffle sample_weight seed save_to_dir save_prefix save_format subset]
                        :or {batch_size 32 shuffle true save_prefix "" save_format "png"}} ]
-    (py/call-attr-kw image "flow" [] {:x x :y y :batch_size batch_size :shuffle shuffle :sample_weight sample_weight :seed seed :save_to_dir save_to_dir :save_prefix save_prefix :save_format save_format :subset subset }))
+    (py/call-attr-kw self "flow" [x] {:y y :batch_size batch_size :shuffle shuffle :sample_weight sample_weight :seed seed :save_to_dir save_to_dir :save_prefix save_prefix :save_format save_format :subset subset }))
 
 (defn flow-from-dataframe 
   "Takes the dataframe and the path to a directory
@@ -557,9 +645,9 @@
             of images with shape `(batch_size, *target_size, channels)`
             and `y` is a numpy array of corresponding labels.
         "
-  [self & {:keys [dataframe directory x_col y_col weight_col target_size color_mode classes class_mode batch_size shuffle seed save_to_dir save_prefix save_format subset interpolation validate_filenames]
+  [self dataframe & {:keys [directory x_col y_col weight_col target_size color_mode classes class_mode batch_size shuffle seed save_to_dir save_prefix save_format subset interpolation validate_filenames]
                        :or {x_col "filename" y_col "class" target_size (256, 256) color_mode "rgb" class_mode "categorical" batch_size 32 shuffle true save_prefix "" save_format "png" interpolation "nearest" validate_filenames true}} ]
-    (py/call-attr-kw image "flow_from_dataframe" [] {:dataframe dataframe :directory directory :x_col x_col :y_col y_col :weight_col weight_col :target_size target_size :color_mode color_mode :classes classes :class_mode class_mode :batch_size batch_size :shuffle shuffle :seed seed :save_to_dir save_to_dir :save_prefix save_prefix :save_format save_format :subset subset :interpolation interpolation :validate_filenames validate_filenames }))
+    (py/call-attr-kw self "flow_from_dataframe" [dataframe] {:directory directory :x_col x_col :y_col y_col :weight_col weight_col :target_size target_size :color_mode color_mode :classes classes :class_mode class_mode :batch_size batch_size :shuffle shuffle :seed seed :save_to_dir save_to_dir :save_prefix save_prefix :save_format save_format :subset subset :interpolation interpolation :validate_filenames validate_filenames }))
 
 (defn flow-from-directory 
   "Takes the path to a directory & generates batches of augmented data.
@@ -636,10 +724,9 @@
                 of images with shape `(batch_size, *target_size, channels)`
                 and `y` is a numpy array of corresponding labels.
         "
-  [self & {:keys [directory target_size color_mode classes class_mode batch_size shuffle seed save_to_dir save_prefix save_format follow_links subset interpolation]
+  [self directory & {:keys [target_size color_mode classes class_mode batch_size shuffle seed save_to_dir save_prefix save_format follow_links subset interpolation]
                        :or {target_size (256, 256) color_mode "rgb" class_mode "categorical" batch_size 32 shuffle true save_prefix "" save_format "png" follow_links false interpolation "nearest"}} ]
-    (py/call-attr-kw image "flow_from_directory" [] {:directory directory :target_size target_size :color_mode color_mode :classes classes :class_mode class_mode :batch_size batch_size :shuffle shuffle :seed seed :save_to_dir save_to_dir :save_prefix save_prefix :save_format save_format :follow_links follow_links :subset subset :interpolation interpolation }))
-
+    (py/call-attr-kw self "flow_from_directory" [directory] {:target_size target_size :color_mode color_mode :classes classes :class_mode class_mode :batch_size batch_size :shuffle shuffle :seed seed :save_to_dir save_to_dir :save_prefix save_prefix :save_format save_format :follow_links follow_links :subset subset :interpolation interpolation }))
 (defn get-random-transform 
   "Generates random parameters for a transformation.
 
@@ -652,9 +739,8 @@
             A dictionary containing randomly chosen parameters describing the
             transformation.
         "
-  [self  & {:keys [img_shape seed]} ]
-    (py/call-attr-kw image "get_random_transform" [self] {:img_shape img_shape :seed seed }))
-
+  [self img_shape  & {:keys [seed]} ]
+    (py/call-attr-kw self "get_random_transform" [img_shape] {:seed seed }))
 (defn random-transform 
   "Applies a random transformation to an image.
 
@@ -665,8 +751,8 @@
         # Returns
             A randomly transformed version of the input (same shape).
         "
-  [self  & {:keys [x seed]} ]
-    (py/call-attr-kw image "random_transform" [self] {:x x :seed seed }))
+  [self x  & {:keys [seed]} ]
+    (py/call-attr-kw self "random_transform" [x] {:seed seed }))
 
 (defn standardize 
   "Applies the normalization configuration in-place to a batch of inputs.
@@ -685,5 +771,5 @@
         # Returns
             The inputs, normalized.
         "
-  [self  & {:keys [x]} ]
-    (py/call-attr-kw image "standardize" [self] {:x x }))
+  [ self x ]
+  (py/call-attr self "standardize"  self x ))

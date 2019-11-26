@@ -20,8 +20,8 @@
     # Arguments
         model: target model for the conversion.
     "
-  [ & {:keys [model]} ]
-   (py/call-attr-kw layer-utils "convert_all_kernels_in_model" [] {:model model }))
+  [ model ]
+  (py/call-attr layer-utils "convert_all_kernels_in_model"  model ))
 
 (defn convert-dense-weights-data-format 
   "Utility useful when changing a convnet's `data_format`.
@@ -43,10 +43,9 @@
             if converting a \"channels_first\" model to \"channels_last\",
             or reciprocally.
     "
-  [ & {:keys [dense previous_feature_map_shape target_data_format]
-       :or {target_data_format "channels_first"}} ]
-  
-   (py/call-attr-kw layer-utils "convert_dense_weights_data_format" [] {:dense dense :previous_feature_map_shape previous_feature_map_shape :target_data_format target_data_format }))
+  [dense previous_feature_map_shape & {:keys [target_data_format]
+                       :or {target_data_format "channels_first"}} ]
+    (py/call-attr-kw layer-utils "convert_dense_weights_data_format" [dense previous_feature_map_shape] {:target_data_format target_data_format }))
 
 (defn convert-kernel 
   "Converts a Numpy kernel matrix from Theano format to TensorFlow format.
@@ -62,8 +61,8 @@
     # Raises
         ValueError: in case of invalid kernel shape or invalid data_format.
     "
-  [ & {:keys [kernel]} ]
-   (py/call-attr-kw layer-utils "convert_kernel" [] {:kernel kernel }))
+  [ kernel ]
+  (py/call-attr layer-utils "convert_kernel"  kernel ))
 
 (defn count-params 
   "Count the total number of scalars composing the weights.
@@ -74,9 +73,8 @@
     # Returns
         The total number of scalars composing the weights
     "
-  [ & {:keys [weights]} ]
-   (py/call-attr-kw layer-utils "count_params" [] {:weights weights }))
-
+  [ weights ]
+  (py/call-attr layer-utils "count_params"  weights ))
 (defn get-source-inputs 
   "Returns the list of input tensors necessary to compute `tensor`.
 
@@ -92,9 +90,8 @@
     # Returns
         List of input tensors.
     "
-  [ & {:keys [tensor layer node_index]} ]
-   (py/call-attr-kw layer-utils "get_source_inputs" [] {:tensor tensor :layer layer :node_index node_index }))
-
+  [tensor  & {:keys [layer node_index]} ]
+    (py/call-attr-kw layer-utils "get_source_inputs" [tensor] {:layer layer :node_index node_index }))
 (defn print-summary 
   "Prints a summary of a model.
 
@@ -111,5 +108,5 @@
             in order to capture the string summary.
             It defaults to `print` (prints to stdout).
     "
-  [ & {:keys [model line_length positions print_fn]} ]
-   (py/call-attr-kw layer-utils "print_summary" [] {:model model :line_length line_length :positions positions :print_fn print_fn }))
+  [model  & {:keys [line_length positions print_fn]} ]
+    (py/call-attr-kw layer-utils "print_summary" [model] {:line_length line_length :positions positions :print_fn print_fn }))

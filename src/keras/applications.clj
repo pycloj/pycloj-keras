@@ -14,69 +14,94 @@
 (defn DenseNet121 
   ""
   [  ]
-  (py/call-attr applications "DenseNet121"   ))
+  (py/call-attr applications "DenseNet121"  ))
 
 (defn DenseNet169 
   ""
   [  ]
-  (py/call-attr applications "DenseNet169"   ))
+  (py/call-attr applications "DenseNet169"  ))
 
 (defn DenseNet201 
   ""
   [  ]
-  (py/call-attr applications "DenseNet201"   ))
+  (py/call-attr applications "DenseNet201"  ))
 
 (defn InceptionResNetV2 
   ""
   [  ]
-  (py/call-attr applications "InceptionResNetV2"   ))
+  (py/call-attr applications "InceptionResNetV2"  ))
 
 (defn InceptionV3 
   ""
   [  ]
-  (py/call-attr applications "InceptionV3"   ))
+  (py/call-attr applications "InceptionV3"  ))
 
 (defn MobileNet 
   ""
   [  ]
-  (py/call-attr applications "MobileNet"   ))
+  (py/call-attr applications "MobileNet"  ))
 
 (defn MobileNetV2 
   ""
   [  ]
-  (py/call-attr applications "MobileNetV2"   ))
+  (py/call-attr applications "MobileNetV2"  ))
 
 (defn NASNetLarge 
   ""
   [  ]
-  (py/call-attr applications "NASNetLarge"   ))
+  (py/call-attr applications "NASNetLarge"  ))
 
 (defn NASNetMobile 
   ""
   [  ]
-  (py/call-attr applications "NASNetMobile"   ))
+  (py/call-attr applications "NASNetMobile"  ))
+
+(defn ResNet101 
+  ""
+  [  ]
+  (py/call-attr applications "ResNet101"  ))
+
+(defn ResNet101V2 
+  ""
+  [  ]
+  (py/call-attr applications "ResNet101V2"  ))
+
+(defn ResNet152 
+  ""
+  [  ]
+  (py/call-attr applications "ResNet152"  ))
+
+(defn ResNet152V2 
+  ""
+  [  ]
+  (py/call-attr applications "ResNet152V2"  ))
 
 (defn ResNet50 
   ""
   [  ]
-  (py/call-attr applications "ResNet50"   ))
+  (py/call-attr applications "ResNet50"  ))
+
+(defn ResNet50V2 
+  ""
+  [  ]
+  (py/call-attr applications "ResNet50V2"  ))
 
 (defn VGG16 
   ""
   [  ]
-  (py/call-attr applications "VGG16"   ))
+  (py/call-attr applications "VGG16"  ))
 
 (defn VGG19 
   ""
   [  ]
-  (py/call-attr applications "VGG19"   ))
+  (py/call-attr applications "VGG19"  ))
 
 (defn Xception 
   ""
   [  ]
-  (py/call-attr applications "Xception"   ))
+  (py/call-attr applications "Xception"  ))
 
 (defn keras-modules-injection 
   ""
-  [ & {:keys [base_fun]} ]
-   (py/call-attr-kw applications "keras_modules_injection" [] {:base_fun base_fun }))
+  [ base_fun ]
+  (py/call-attr applications "keras_modules_injection"  base_fun ))

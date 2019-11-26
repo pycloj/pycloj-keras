@@ -7,7 +7,7 @@
     Used in `fit_generator`, `evaluate_generator`, `predict_generator`.
 
     # Arguments
-        generator: a generator function which yields data
+        sequence: a sequence function which yields data
         use_multiprocessing: use multiprocessing if True, otherwise threading
         wait_time: time to sleep in-between calls to `put()`
         random_seed: Initial seed for workers,
@@ -33,16 +33,15 @@
     Used in `fit_generator`, `evaluate_generator`, `predict_generator`.
 
     # Arguments
-        generator: a generator function which yields data
+        sequence: a sequence function which yields data
         use_multiprocessing: use multiprocessing if True, otherwise threading
         wait_time: time to sleep in-between calls to `put()`
         random_seed: Initial seed for workers,
             will be incremented by one for each worker.
     "
-  [ & {:keys [sequence use_multiprocessing wait_time random_seed]
-       :or {use_multiprocessing false}} ]
-  
-   (py/call-attr-kw training-generator "GeneratorEnqueuer" [] {:sequence sequence :use_multiprocessing use_multiprocessing :wait_time wait_time :random_seed random_seed }))
+  [sequence & {:keys [use_multiprocessing wait_time random_seed]
+                       :or {use_multiprocessing false}} ]
+    (py/call-attr-kw training-generator "GeneratorEnqueuer" [sequence] {:use_multiprocessing use_multiprocessing :wait_time wait_time :random_seed random_seed }))
 
 (defn get 
   "Creates a generator to extract data from the queue.
@@ -54,13 +53,13 @@
             `(inputs, targets)` or
             `(inputs, targets, sample_weights)`.
         "
-  [ self ]
-  (py/call-attr training-generator "get"  self ))
+  [ self  ]
+  (py/call-attr self "get"  self  ))
 
 (defn is-running 
   ""
-  [ self ]
-  (py/call-attr training-generator "is_running"  self ))
+  [ self  ]
+  (py/call-attr self "is_running"  self  ))
 
 (defn start 
   "Start the handler's workers.
@@ -70,10 +69,9 @@
             max_queue_size: queue size
                 (when full, workers could block on `put()`)
         "
-  [self & {:keys [workers max_queue_size]
+  [self  & {:keys [workers max_queue_size]
                        :or {workers 1 max_queue_size 10}} ]
-    (py/call-attr-kw training-generator "start" [] {:workers workers :max_queue_size max_queue_size }))
-
+    (py/call-attr-kw self "start" [] {:workers workers :max_queue_size max_queue_size }))
 (defn stop 
   "Stops running threads and wait for them to exit, if necessary.
 
@@ -82,5 +80,5 @@
         # Arguments
             timeout: maximum time to wait on `thread.join()`
         "
-  [self  & {:keys [timeout]} ]
-    (py/call-attr-kw training-generator "stop" [self] {:timeout timeout }))
+  [self   & {:keys [timeout]} ]
+    (py/call-attr-kw self "stop" [] {:timeout timeout }))

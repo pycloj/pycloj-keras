@@ -11,6 +11,11 @@
 (py/initialize!)
 (defonce generic-utils (import-module "keras.utils.generic_utils"))
 
+(defn check-for-unexpected-keys 
+  ""
+  [ name input_dict expected_values ]
+  (py/call-attr generic-utils "check_for_unexpected_keys"  name input_dict expected_values ))
+
 (defn custom-object-scope 
   "Provides a scope that changes to `_GLOBAL_CUSTOM_OBJECTS` cannot escape.
 
@@ -39,14 +44,13 @@
         Object of type `CustomObjectScope`.
     "
   [  ]
-  (py/call-attr generic-utils "custom_object_scope"   ))
+  (py/call-attr generic-utils "custom_object_scope"  ))
 
 (defn deserialize-keras-object 
   ""
-  [ & {:keys [identifier module_objects custom_objects printable_module_name]
-       :or {printable_module_name "object"}} ]
-  
-   (py/call-attr-kw generic-utils "deserialize_keras_object" [] {:identifier identifier :module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
+  [identifier & {:keys [module_objects custom_objects printable_module_name]
+                       :or {printable_module_name "object"}} ]
+    (py/call-attr-kw generic-utils "deserialize_keras_object" [identifier] {:module_objects module_objects :custom_objects custom_objects :printable_module_name printable_module_name }))
 
 (defn func-dump 
   "Serializes a user defined function.
@@ -57,9 +61,8 @@
     # Returns
         A tuple `(code, defaults, closure)`.
     "
-  [ & {:keys [func]} ]
-   (py/call-attr-kw generic-utils "func_dump" [] {:func func }))
-
+  [ func ]
+  (py/call-attr generic-utils "func_dump"  func ))
 (defn func-load 
   "Deserializes a user defined function.
 
@@ -72,8 +75,8 @@
     # Returns
         A function object.
     "
-  [ & {:keys [code defaults closure globs]} ]
-   (py/call-attr-kw generic-utils "func_load" [] {:code code :defaults defaults :closure closure :globs globs }))
+  [code  & {:keys [defaults closure globs]} ]
+    (py/call-attr-kw generic-utils "func_load" [code] {:defaults defaults :closure closure :globs globs }))
 
 (defn get-custom-objects 
   "Retrieves a live reference to the global dictionary of custom objects.
@@ -93,7 +96,25 @@
         Global dictionary of names to classes (`_GLOBAL_CUSTOM_OBJECTS`).
     "
   [  ]
-  (py/call-attr generic-utils "get_custom_objects"   ))
+  (py/call-attr generic-utils "get_custom_objects"  ))
+
+(defn getargspec 
+  "Python 2/3 compatible `getargspec`.
+
+    Calls `getfullargspec` and assigns args, varargs,
+    varkw, and defaults to a python 2/3 compatible `ArgSpec`.
+    The parameter name 'varkw' is changed to 'keywords' to fit the
+    `ArgSpec` struct.
+
+    # Arguments
+        fn: the target function to inspect.
+
+    # Returns
+        An ArgSpec with args, varargs, keywords, and defaults parameters
+        from FullArgSpec.
+    "
+  [ fn ]
+  (py/call-attr generic-utils "getargspec"  fn ))
 
 (defn has-arg 
   "Checks if a callable accepts a given keyword argument.
@@ -113,26 +134,24 @@
     # Returns
         bool, whether `fn` accepts a `name` keyword argument.
     "
-  [ & {:keys [fn name accept_all]
-       :or {accept_all false}} ]
-  
-   (py/call-attr-kw generic-utils "has_arg" [] {:fn fn :name name :accept_all accept_all }))
+  [fn name & {:keys [accept_all]
+                       :or {accept_all false}} ]
+    (py/call-attr-kw generic-utils "has_arg" [fn name] {:accept_all accept_all }))
 
 (defn is-all-none 
   ""
-  [ & {:keys [iterable_or_element]} ]
-   (py/call-attr-kw generic-utils "is_all_none" [] {:iterable_or_element iterable_or_element }))
+  [ iterable_or_element ]
+  (py/call-attr generic-utils "is_all_none"  iterable_or_element ))
 
 (defn object-list-uid 
   ""
-  [ & {:keys [object_list]} ]
-   (py/call-attr-kw generic-utils "object_list_uid" [] {:object_list object_list }))
+  [ object_list ]
+  (py/call-attr generic-utils "object_list_uid"  object_list ))
 
 (defn serialize-keras-object 
   ""
-  [ & {:keys [instance]} ]
-   (py/call-attr-kw generic-utils "serialize_keras_object" [] {:instance instance }))
-
+  [ instance ]
+  (py/call-attr generic-utils "serialize_keras_object"  instance ))
 (defn slice-arrays 
   "Slices an array or list of arrays.
 
@@ -153,8 +172,8 @@
     # Returns
         A slice of the array(s).
     "
-  [ & {:keys [arrays start stop]} ]
-   (py/call-attr-kw generic-utils "slice_arrays" [] {:arrays arrays :start start :stop stop }))
+  [arrays  & {:keys [start stop]} ]
+    (py/call-attr-kw generic-utils "slice_arrays" [arrays] {:start start :stop stop }))
 
 (defn to-list 
   "Normalizes a list/tensor into a list.
@@ -172,10 +191,9 @@
     # Returns
         A list.
     "
-  [ & {:keys [x allow_tuple]
-       :or {allow_tuple false}} ]
-  
-   (py/call-attr-kw generic-utils "to_list" [] {:x x :allow_tuple allow_tuple }))
+  [x & {:keys [allow_tuple]
+                       :or {allow_tuple false}} ]
+    (py/call-attr-kw generic-utils "to_list" [x] {:allow_tuple allow_tuple }))
 
 (defn transpose-shape 
   "Converts a tuple or a list to the correct `data_format`.
@@ -210,19 +228,19 @@
     # Raises
         ValueError: if `value` or the global `data_format` invalid.
     "
-  [ & {:keys [shape target_format spatial_axes]} ]
-   (py/call-attr-kw generic-utils "transpose_shape" [] {:shape shape :target_format target_format :spatial_axes spatial_axes }))
+  [ shape target_format spatial_axes ]
+  (py/call-attr generic-utils "transpose_shape"  shape target_format spatial_axes ))
 
 (defn unpack-singleton 
   "Gets the first element if the iterable has only one value.
 
     Otherwise return the iterable.
 
-    # Argument:
+    # Argument
         x: A list or tuple.
 
-    # Returns:
+    # Returns
         The same iterable or the first element.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw generic-utils "unpack_singleton" [] {:x x }))
+  [ x ]
+  (py/call-attr generic-utils "unpack_singleton"  x ))

@@ -1,18 +1,16 @@
-(ns keras.optimizers.adagrad
+(ns keras.optimizers.Adagrad
   "Adagrad optimizer.
 
     Adagrad is an optimizer with parameter-specific learning rates,
     which are adapted relative to how frequently a parameter gets
     updated during training. The more updates a parameter receives,
-    the smaller the updates.
+    the smaller the learning rate.
 
     It is recommended to leave the parameters of this optimizer
     at their default values.
 
     # Arguments
-        lr: float >= 0. Initial learning rate.
-        epsilon: float >= 0. If `None`, defaults to `K.epsilon()`.
-        decay: float >= 0. Learning rate decay over each update.
+        learning_rate: float >= 0. Initial learning rate.
 
     # References
         - [Adaptive Subgradient Methods for Online Learning and Stochastic
@@ -29,45 +27,43 @@
 (py/initialize!)
 (defonce optimizers (import-module "keras.optimizers"))
 
-(defn adagrad 
+(defn Adagrad 
   "Adagrad optimizer.
 
     Adagrad is an optimizer with parameter-specific learning rates,
     which are adapted relative to how frequently a parameter gets
     updated during training. The more updates a parameter receives,
-    the smaller the updates.
+    the smaller the learning rate.
 
     It is recommended to leave the parameters of this optimizer
     at their default values.
 
     # Arguments
-        lr: float >= 0. Initial learning rate.
-        epsilon: float >= 0. If `None`, defaults to `K.epsilon()`.
-        decay: float >= 0. Learning rate decay over each update.
+        learning_rate: float >= 0. Initial learning rate.
 
     # References
         - [Adaptive Subgradient Methods for Online Learning and Stochastic
            Optimization](http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf)
     "
-  [ & {:keys [lr epsilon decay]
-       :or {lr 0.01 decay 0.0}} ]
+  [ & {:keys [learning_rate]
+       :or {learning_rate 0.01}} ]
   
-   (py/call-attr-kw optimizers "adagrad" [] {:lr lr :epsilon epsilon :decay decay }))
+   (py/call-attr-kw optimizers "Adagrad" [] {:learning_rate learning_rate }))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr optimizers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))
 
 (defn get-gradients 
   ""
-  [self  & {:keys [loss params]} ]
-    (py/call-attr-kw optimizers "get_gradients" [self] {:loss loss :params params }))
+  [ self loss params ]
+  (py/call-attr self "get_gradients"  self loss params ))
 
 (defn get-updates 
   ""
-  [self  & {:keys [loss params]} ]
-    (py/call-attr-kw optimizers "get_updates" [self] {:loss loss :params params }))
+  [ self loss params ]
+  (py/call-attr self "get_updates"  self loss params ))
 
 (defn get-weights 
   "Returns the current value of the weights of the optimizer.
@@ -75,24 +71,15 @@
         # Returns
             A list of numpy arrays.
         "
+  [ self  ]
+  (py/call-attr self "get_weights"  self  ))
+
+(defn lr 
+  ""
   [ self ]
-  (py/call-attr optimizers "get_weights"  self ))
+    (py/call-attr self "lr"))
 
 (defn set-weights 
-  "Sets the weights of the optimizer, from Numpy arrays.
-
-        Should only be called after computing the gradients
-        (otherwise the optimizer has no weights).
-
-        # Arguments
-            weights: a list of Numpy arrays. The number
-                of arrays and their shape must match
-                number of the dimensions of the weights
-                of the optimizer (i.e. it should match the
-                output of `get_weights`).
-
-        # Raises
-            ValueError: in case of incompatible weight shapes.
-        "
-  [self  & {:keys [weights]} ]
-    (py/call-attr-kw optimizers "set_weights" [self] {:weights weights }))
+  ""
+  [ self weights ]
+  (py/call-attr self "set_weights"  self weights ))

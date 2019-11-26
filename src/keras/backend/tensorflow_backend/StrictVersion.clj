@@ -84,5 +84,5 @@
 
 (defn parse 
   ""
-  [self  & {:keys [vstring]} ]
-    (py/call-attr-kw tensorflow-backend "parse" [self] {:vstring vstring }))
+  [ self vstring ]
+  (py/call-attr self "parse"  self vstring ))

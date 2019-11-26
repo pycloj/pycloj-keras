@@ -1,4 +1,4 @@
-(ns keras.initializers.constant
+(ns keras.initializers.Constant
   "Initializer that generates tensors initialized to a constant value.
 
     # Arguments
@@ -15,7 +15,7 @@
 (py/initialize!)
 (defonce initializers (import-module "keras.initializers"))
 
-(defn constant 
+(defn Constant 
   "Initializer that generates tensors initialized to a constant value.
 
     # Arguments
@@ -24,9 +24,9 @@
   [ & {:keys [value]
        :or {value 0}} ]
   
-   (py/call-attr-kw initializers "constant" [] {:value value }))
+   (py/call-attr-kw initializers "Constant" [] {:value value }))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr initializers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

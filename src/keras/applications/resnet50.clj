@@ -14,19 +14,19 @@
 (defn ResNet50 
   ""
   [  ]
-  (py/call-attr resnet50 "ResNet50"   ))
+  (py/call-attr resnet50 "ResNet50"  ))
 
 (defn decode-predictions 
   ""
   [  ]
-  (py/call-attr resnet50 "decode_predictions"   ))
+  (py/call-attr resnet50 "decode_predictions"  ))
 
 (defn keras-modules-injection 
   ""
-  [ & {:keys [base_fun]} ]
-   (py/call-attr-kw resnet50 "keras_modules_injection" [] {:base_fun base_fun }))
+  [ base_fun ]
+  (py/call-attr resnet50 "keras_modules_injection"  base_fun ))
 
 (defn preprocess-input 
   ""
   [  ]
-  (py/call-attr resnet50 "preprocess_input"   ))
+  (py/call-attr resnet50 "preprocess_input"  ))

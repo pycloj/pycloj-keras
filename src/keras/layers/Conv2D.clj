@@ -9,7 +9,7 @@
 
     When using this layer as the first layer in a model,
     provide the keyword argument `input_shape`
-    (tuple of integers, does not include the sample axis),
+    (tuple of integers, does not include the batch axis),
     e.g. `input_shape=(128, 128, 3)` for 128x128 RGB pictures
     in `data_format=\"channels_last\"`.
 
@@ -108,7 +108,7 @@
 
     When using this layer as the first layer in a model,
     provide the keyword argument `input_shape`
-    (tuple of integers, does not include the sample axis),
+    (tuple of integers, does not include the batch axis),
     e.g. `input_shape=(128, 128, 3)` for 128x128 RGB pictures
     in `data_format=\"channels_last\"`.
 
@@ -185,11 +185,9 @@
         if `data_format` is `\"channels_last\"`.
         `rows` and `cols` values might have changed due to padding.
     "
-  [ & {:keys [filters kernel_size strides padding data_format dilation_rate activation use_bias kernel_initializer bias_initializer kernel_regularizer bias_regularizer activity_regularizer kernel_constraint bias_constraint]
-       :or {strides (1, 1) padding "valid" dilation_rate (1, 1) use_bias true kernel_initializer "glorot_uniform" bias_initializer "zeros"}} ]
-  
-   (py/call-attr-kw layers "Conv2D" [] {:filters filters :kernel_size kernel_size :strides strides :padding padding :data_format data_format :dilation_rate dilation_rate :activation activation :use_bias use_bias :kernel_initializer kernel_initializer :bias_initializer bias_initializer :kernel_regularizer kernel_regularizer :bias_regularizer bias_regularizer :activity_regularizer activity_regularizer :kernel_constraint kernel_constraint :bias_constraint bias_constraint }))
-
+  [filters kernel_size & {:keys [strides padding data_format dilation_rate activation use_bias kernel_initializer bias_initializer kernel_regularizer bias_regularizer activity_regularizer kernel_constraint bias_constraint]
+                       :or {strides (1, 1) padding "valid" dilation_rate (1, 1) use_bias true kernel_initializer "glorot_uniform" bias_initializer "zeros"}} ]
+    (py/call-attr-kw layers "Conv2D" [filters kernel_size] {:strides strides :padding padding :data_format data_format :dilation_rate dilation_rate :activation activation :use_bias use_bias :kernel_initializer kernel_initializer :bias_initializer bias_initializer :kernel_regularizer kernel_regularizer :bias_regularizer bias_regularizer :activity_regularizer activity_regularizer :kernel_constraint kernel_constraint :bias_constraint bias_constraint }))
 (defn add-loss 
   "Adds losses to the layer.
 
@@ -205,9 +203,17 @@
                 (e.g. L2 weight regularization, which only depends
                 on the layer's weights variables, not on any inputs tensors).
         "
-  [self  & {:keys [losses inputs]} ]
-    (py/call-attr-kw layers "add_loss" [self] {:losses losses :inputs inputs }))
+  [self losses  & {:keys [inputs]} ]
+    (py/call-attr-kw self "add_loss" [losses] {:inputs inputs }))
+(defn add-metric 
+  "Adds metric tensor to the layer.
 
+        # Arguments
+            value: Metric tensor.
+            name: String metric name.
+        "
+  [self value  & {:keys [name]} ]
+    (py/call-attr-kw self "add_metric" [value] {:name name }))
 (defn add-update 
   "Adds updates to the layer.
 
@@ -221,8 +227,8 @@
                 the updates as conditional on these inputs.
                 If None is passed, the updates are assumed unconditional.
         "
-  [self  & {:keys [updates inputs]} ]
-    (py/call-attr-kw layers "add_update" [self] {:updates updates :inputs inputs }))
+  [self updates  & {:keys [inputs]} ]
+    (py/call-attr-kw self "add_update" [updates] {:inputs inputs }))
 
 (defn add-weight 
   "Adds a weight variable to the layer.
@@ -241,9 +247,9 @@
         # Returns
             The created weight variable.
         "
-  [self & {:keys [name shape dtype initializer regularizer trainable constraint]
+  [self  & {:keys [name shape dtype initializer regularizer trainable constraint]
                        :or {trainable true}} ]
-    (py/call-attr-kw layers "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
+    (py/call-attr-kw self "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
 
 (defn assert-input-compatibility 
   "Checks compatibility between the layer and provided inputs.
@@ -259,24 +265,23 @@
             ValueError: in case of mismatch between
                 the provided inputs and the expectations of the layer.
         "
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw layers "assert_input_compatibility" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "assert_input_compatibility"  self inputs ))
 
 (defn build 
   ""
-  [self  & {:keys [input_shape]} ]
-    (py/call-attr-kw layers "build" [self] {:input_shape input_shape }))
+  [ self input_shape ]
+  (py/call-attr self "build"  self input_shape ))
 
 (defn built 
   ""
   [ self ]
-    (py/call-attr layers "built"  self))
+    (py/call-attr self "built"))
 
 (defn call 
   ""
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw layers "call" [self] {:inputs inputs }))
-
+  [ self inputs ]
+  (py/call-attr self "call"  self inputs ))
 (defn compute-mask 
   "Computes an output mask tensor.
 
@@ -288,13 +293,13 @@
             None or a tensor (or list of tensors,
                 one per output tensor of the layer).
         "
-  [self  & {:keys [inputs mask]} ]
-    (py/call-attr-kw layers "compute_mask" [self] {:inputs inputs :mask mask }))
+  [self inputs  & {:keys [mask]} ]
+    (py/call-attr-kw self "compute_mask" [inputs] {:mask mask }))
 
 (defn compute-output-shape 
   ""
-  [self  & {:keys [input_shape]} ]
-    (py/call-attr-kw layers "compute_output_shape" [self] {:input_shape input_shape }))
+  [ self input_shape ]
+  (py/call-attr self "compute_output_shape"  self input_shape ))
 
 (defn count-params 
   "Counts the total number of scalars composing the weights.
@@ -306,13 +311,13 @@
             RuntimeError: if the layer isn't yet built
                 (in which case its weights aren't yet defined).
         "
-  [ self ]
-  (py/call-attr layers "count_params"  self ))
+  [ self  ]
+  (py/call-attr self "count_params"  self  ))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr layers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))
 
 (defn get-input-at 
   "Retrieves the input tensor(s) of a layer at a given node.
@@ -326,8 +331,8 @@
         # Returns
             A tensor (or list of tensors if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw layers "get_input_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_input_at"  self node_index ))
 
 (defn get-input-mask-at 
   "Retrieves the input mask tensor(s) of a layer at a given node.
@@ -342,8 +347,8 @@
             A mask tensor
             (or list of tensors if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw layers "get_input_mask_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_input_mask_at"  self node_index ))
 
 (defn get-input-shape-at 
   "Retrieves the input shape(s) of a layer at a given node.
@@ -358,13 +363,13 @@
             A shape tuple
             (or list of shape tuples if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw layers "get_input_shape_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_input_shape_at"  self node_index ))
 
 (defn get-losses-for 
   ""
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw layers "get_losses_for" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "get_losses_for"  self inputs ))
 
 (defn get-output-at 
   "Retrieves the output tensor(s) of a layer at a given node.
@@ -378,8 +383,8 @@
         # Returns
             A tensor (or list of tensors if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw layers "get_output_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_at"  self node_index ))
 
 (defn get-output-mask-at 
   "Retrieves the output mask tensor(s) of a layer at a given node.
@@ -394,8 +399,8 @@
             A mask tensor
             (or list of tensors if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw layers "get_output_mask_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_mask_at"  self node_index ))
 
 (defn get-output-shape-at 
   "Retrieves the output shape(s) of a layer at a given node.
@@ -410,13 +415,13 @@
             A shape tuple
             (or list of shape tuples if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw layers "get_output_shape_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_shape_at"  self node_index ))
 
 (defn get-updates-for 
   ""
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw layers "get_updates_for" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "get_updates_for"  self inputs ))
 
 (defn get-weights 
   "Returns the current weights of the layer.
@@ -424,8 +429,8 @@
         # Returns
             Weights values as a list of numpy arrays.
         "
-  [ self ]
-  (py/call-attr layers "get_weights"  self ))
+  [ self  ]
+  (py/call-attr self "get_weights"  self  ))
 
 (defn input 
   "Retrieves the input tensor(s) of a layer.
@@ -441,7 +446,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr layers "input"  self))
+    (py/call-attr self "input"))
 
 (defn input-mask 
   "Retrieves the input mask tensor(s) of a layer.
@@ -458,7 +463,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr layers "input_mask"  self))
+    (py/call-attr self "input_mask"))
 
 (defn input-shape 
   "Retrieves the input shape tuple(s) of a layer.
@@ -475,17 +480,22 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr layers "input_shape"  self))
+    (py/call-attr self "input_shape"))
 
 (defn losses 
   ""
   [ self ]
-    (py/call-attr layers "losses"  self))
+    (py/call-attr self "losses"))
+
+(defn metrics 
+  ""
+  [ self ]
+    (py/call-attr self "metrics"))
 
 (defn non-trainable-weights 
   ""
   [ self ]
-    (py/call-attr layers "non_trainable_weights"  self))
+    (py/call-attr self "non_trainable_weights"))
 
 (defn output 
   "Retrieves the output tensor(s) of a layer.
@@ -501,7 +511,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr layers "output"  self))
+    (py/call-attr self "output"))
 
 (defn output-mask 
   "Retrieves the output mask tensor(s) of a layer.
@@ -518,7 +528,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr layers "output_mask"  self))
+    (py/call-attr self "output_mask"))
 
 (defn output-shape 
   "Retrieves the output shape tuple(s) of a layer.
@@ -535,7 +545,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr layers "output_shape"  self))
+    (py/call-attr self "output_shape"))
 
 (defn set-weights 
   "Sets the weights of the layer, from Numpy arrays.
@@ -551,20 +561,20 @@
             ValueError: If the provided weights list does not match the
                 layer's specifications.
         "
-  [self  & {:keys [weights]} ]
-    (py/call-attr-kw layers "set_weights" [self] {:weights weights }))
+  [ self weights ]
+  (py/call-attr self "set_weights"  self weights ))
 
 (defn trainable-weights 
   ""
   [ self ]
-    (py/call-attr layers "trainable_weights"  self))
+    (py/call-attr self "trainable_weights"))
 
 (defn updates 
   ""
   [ self ]
-    (py/call-attr layers "updates"  self))
+    (py/call-attr self "updates"))
 
 (defn weights 
   ""
   [ self ]
-    (py/call-attr layers "weights"  self))
+    (py/call-attr self "weights"))

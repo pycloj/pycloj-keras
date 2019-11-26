@@ -16,9 +16,9 @@
   "Constrains the weights to be non-negative.
     "
   [  ]
-  (py/call-attr constraints "non_neg"   ))
+  (py/call-attr constraints "non_neg"  ))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr constraints "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

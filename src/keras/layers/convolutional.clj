@@ -15,22 +15,22 @@
 (defn AtrousConv1D 
   ""
   [  ]
-  (py/call-attr convolutional "AtrousConv1D"   ))
+  (py/call-attr convolutional "AtrousConv1D"  ))
 
 (defn AtrousConv2D 
   ""
   [  ]
-  (py/call-attr convolutional "AtrousConv2D"   ))
+  (py/call-attr convolutional "AtrousConv2D"  ))
 
 (defn AtrousConvolution1D 
   ""
   [  ]
-  (py/call-attr convolutional "AtrousConvolution1D"   ))
+  (py/call-attr convolutional "AtrousConvolution1D"  ))
 
 (defn AtrousConvolution2D 
   ""
   [  ]
-  (py/call-attr convolutional "AtrousConvolution2D"   ))
+  (py/call-attr convolutional "AtrousConvolution2D"  ))
 
 (defn transpose-shape 
   "Converts a tuple or a list to the correct `data_format`.
@@ -65,5 +65,5 @@
     # Raises
         ValueError: if `value` or the global `data_format` invalid.
     "
-  [ & {:keys [shape target_format spatial_axes]} ]
-   (py/call-attr-kw convolutional "transpose_shape" [] {:shape shape :target_format target_format :spatial_axes spatial_axes }))
+  [ shape target_format spatial_axes ]
+  (py/call-attr convolutional "transpose_shape"  shape target_format spatial_axes ))

@@ -14,19 +14,19 @@
 (defn VGG16 
   ""
   [  ]
-  (py/call-attr vgg16 "VGG16"   ))
+  (py/call-attr vgg16 "VGG16"  ))
 
 (defn decode-predictions 
   ""
   [  ]
-  (py/call-attr vgg16 "decode_predictions"   ))
+  (py/call-attr vgg16 "decode_predictions"  ))
 
 (defn keras-modules-injection 
   ""
-  [ & {:keys [base_fun]} ]
-   (py/call-attr-kw vgg16 "keras_modules_injection" [] {:base_fun base_fun }))
+  [ base_fun ]
+  (py/call-attr vgg16 "keras_modules_injection"  base_fun ))
 
 (defn preprocess-input 
   ""
   [  ]
-  (py/call-attr vgg16 "preprocess_input"   ))
+  (py/call-attr vgg16 "preprocess_input"  ))

@@ -22,10 +22,9 @@
     # Returns
         A normalized copy of the array.
     "
-  [ & {:keys [x axis order]
-       :or {axis -1 order 2}} ]
-  
-   (py/call-attr-kw np-utils "normalize" [] {:x x :axis axis :order order }))
+  [x & {:keys [axis order]
+                       :or {axis -1 order 2}} ]
+    (py/call-attr-kw np-utils "normalize" [x] {:axis axis :order order }))
 
 (defn to-categorical 
   "Converts a class vector (integers) to binary class matrix.
@@ -42,8 +41,24 @@
     # Returns
         A binary matrix representation of the input. The classes axis
         is placed last.
+
+    # Example
+
+    ```python
+    # Consider an array of 5 labels out of a set of 3 classes {0, 1, 2}:
+    > labels
+    array([0, 2, 1, 2, 0])
+    # `to_categorical` converts this into a matrix with as many
+    # columns as there are classes. The number of rows
+    # stays the same.
+    > to_categorical(labels)
+    array([[ 1.,  0.,  0.],
+           [ 0.,  0.,  1.],
+           [ 0.,  1.,  0.],
+           [ 0.,  0.,  1.],
+           [ 1.,  0.,  0.]], dtype=float32)
+    ```
     "
-  [ & {:keys [y num_classes dtype]
-       :or {dtype "float32"}} ]
-  
-   (py/call-attr-kw np-utils "to_categorical" [] {:y y :num_classes num_classes :dtype dtype }))
+  [y & {:keys [num_classes dtype]
+                       :or {dtype "float32"}} ]
+    (py/call-attr-kw np-utils "to_categorical" [y] {:num_classes num_classes :dtype dtype }))

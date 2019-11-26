@@ -133,16 +133,14 @@
             although it tends to be more memory-intensive.
             Unrolling is only suitable for short sequences.
     "
-  [ & {:keys [units activation use_bias kernel_initializer recurrent_initializer bias_initializer kernel_regularizer recurrent_regularizer bias_regularizer activity_regularizer kernel_constraint recurrent_constraint bias_constraint dropout recurrent_dropout return_sequences return_state go_backwards stateful unroll]
-       :or {activation "tanh" use_bias true kernel_initializer "glorot_uniform" recurrent_initializer "orthogonal" bias_initializer "zeros" dropout 0.0 recurrent_dropout 0.0 return_sequences false return_state false go_backwards false stateful false unroll false}} ]
-  
-   (py/call-attr-kw recurrent "SimpleRNN" [] {:units units :activation activation :use_bias use_bias :kernel_initializer kernel_initializer :recurrent_initializer recurrent_initializer :bias_initializer bias_initializer :kernel_regularizer kernel_regularizer :recurrent_regularizer recurrent_regularizer :bias_regularizer bias_regularizer :activity_regularizer activity_regularizer :kernel_constraint kernel_constraint :recurrent_constraint recurrent_constraint :bias_constraint bias_constraint :dropout dropout :recurrent_dropout recurrent_dropout :return_sequences return_sequences :return_state return_state :go_backwards go_backwards :stateful stateful :unroll unroll }))
+  [units & {:keys [activation use_bias kernel_initializer recurrent_initializer bias_initializer kernel_regularizer recurrent_regularizer bias_regularizer activity_regularizer kernel_constraint recurrent_constraint bias_constraint dropout recurrent_dropout return_sequences return_state go_backwards stateful unroll]
+                       :or {activation "tanh" use_bias true kernel_initializer "glorot_uniform" recurrent_initializer "orthogonal" bias_initializer "zeros" dropout 0.0 recurrent_dropout 0.0 return_sequences false return_state false go_backwards false stateful false unroll false}} ]
+    (py/call-attr-kw recurrent "SimpleRNN" [units] {:activation activation :use_bias use_bias :kernel_initializer kernel_initializer :recurrent_initializer recurrent_initializer :bias_initializer bias_initializer :kernel_regularizer kernel_regularizer :recurrent_regularizer recurrent_regularizer :bias_regularizer bias_regularizer :activity_regularizer activity_regularizer :kernel_constraint kernel_constraint :recurrent_constraint recurrent_constraint :bias_constraint bias_constraint :dropout dropout :recurrent_dropout recurrent_dropout :return_sequences return_sequences :return_state return_state :go_backwards go_backwards :stateful stateful :unroll unroll }))
 
 (defn activation 
   ""
   [ self ]
-    (py/call-attr recurrent "activation"  self))
-
+    (py/call-attr self "activation"))
 (defn add-loss 
   "Adds losses to the layer.
 
@@ -158,9 +156,17 @@
                 (e.g. L2 weight regularization, which only depends
                 on the layer's weights variables, not on any inputs tensors).
         "
-  [self  & {:keys [losses inputs]} ]
-    (py/call-attr-kw recurrent "add_loss" [self] {:losses losses :inputs inputs }))
+  [self losses  & {:keys [inputs]} ]
+    (py/call-attr-kw self "add_loss" [losses] {:inputs inputs }))
+(defn add-metric 
+  "Adds metric tensor to the layer.
 
+        # Arguments
+            value: Metric tensor.
+            name: String metric name.
+        "
+  [self value  & {:keys [name]} ]
+    (py/call-attr-kw self "add_metric" [value] {:name name }))
 (defn add-update 
   "Adds updates to the layer.
 
@@ -174,8 +180,8 @@
                 the updates as conditional on these inputs.
                 If None is passed, the updates are assumed unconditional.
         "
-  [self  & {:keys [updates inputs]} ]
-    (py/call-attr-kw recurrent "add_update" [self] {:updates updates :inputs inputs }))
+  [self updates  & {:keys [inputs]} ]
+    (py/call-attr-kw self "add_update" [updates] {:inputs inputs }))
 
 (defn add-weight 
   "Adds a weight variable to the layer.
@@ -194,9 +200,9 @@
         # Returns
             The created weight variable.
         "
-  [self & {:keys [name shape dtype initializer regularizer trainable constraint]
+  [self  & {:keys [name shape dtype initializer regularizer trainable constraint]
                        :or {trainable true}} ]
-    (py/call-attr-kw recurrent "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
+    (py/call-attr-kw self "add_weight" [] {:name name :shape shape :dtype dtype :initializer initializer :regularizer regularizer :trainable trainable :constraint constraint }))
 
 (defn assert-input-compatibility 
   "Checks compatibility between the layer and provided inputs.
@@ -212,48 +218,47 @@
             ValueError: in case of mismatch between
                 the provided inputs and the expectations of the layer.
         "
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw recurrent "assert_input_compatibility" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "assert_input_compatibility"  self inputs ))
 
 (defn bias-constraint 
   ""
   [ self ]
-    (py/call-attr recurrent "bias_constraint"  self))
+    (py/call-attr self "bias_constraint"))
 
 (defn bias-initializer 
   ""
   [ self ]
-    (py/call-attr recurrent "bias_initializer"  self))
+    (py/call-attr self "bias_initializer"))
 
 (defn bias-regularizer 
   ""
   [ self ]
-    (py/call-attr recurrent "bias_regularizer"  self))
+    (py/call-attr self "bias_regularizer"))
 
 (defn build 
   ""
-  [self  & {:keys [input_shape]} ]
-    (py/call-attr-kw recurrent "build" [self] {:input_shape input_shape }))
+  [ self input_shape ]
+  (py/call-attr self "build"  self input_shape ))
 
 (defn built 
   ""
   [ self ]
-    (py/call-attr recurrent "built"  self))
-
+    (py/call-attr self "built"))
 (defn call 
   ""
-  [self  & {:keys [inputs mask training initial_state]} ]
-    (py/call-attr-kw recurrent "call" [self] {:inputs inputs :mask mask :training training :initial_state initial_state }))
+  [self inputs  & {:keys [mask training initial_state]} ]
+    (py/call-attr-kw self "call" [inputs] {:mask mask :training training :initial_state initial_state }))
 
 (defn compute-mask 
   ""
-  [self  & {:keys [inputs mask]} ]
-    (py/call-attr-kw recurrent "compute_mask" [self] {:inputs inputs :mask mask }))
+  [ self inputs mask ]
+  (py/call-attr self "compute_mask"  self inputs mask ))
 
 (defn compute-output-shape 
   ""
-  [self  & {:keys [input_shape]} ]
-    (py/call-attr-kw recurrent "compute_output_shape" [self] {:input_shape input_shape }))
+  [ self input_shape ]
+  (py/call-attr self "compute_output_shape"  self input_shape ))
 
 (defn count-params 
   "Counts the total number of scalars composing the weights.
@@ -265,23 +270,23 @@
             RuntimeError: if the layer isn't yet built
                 (in which case its weights aren't yet defined).
         "
-  [ self ]
-  (py/call-attr recurrent "count_params"  self ))
+  [ self  ]
+  (py/call-attr self "count_params"  self  ))
 
 (defn dropout 
   ""
   [ self ]
-    (py/call-attr recurrent "dropout"  self))
+    (py/call-attr self "dropout"))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr recurrent "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))
 
 (defn get-initial-state 
   ""
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw recurrent "get_initial_state" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "get_initial_state"  self inputs ))
 
 (defn get-input-at 
   "Retrieves the input tensor(s) of a layer at a given node.
@@ -295,8 +300,8 @@
         # Returns
             A tensor (or list of tensors if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw recurrent "get_input_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_input_at"  self node_index ))
 
 (defn get-input-mask-at 
   "Retrieves the input mask tensor(s) of a layer at a given node.
@@ -311,8 +316,8 @@
             A mask tensor
             (or list of tensors if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw recurrent "get_input_mask_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_input_mask_at"  self node_index ))
 
 (defn get-input-shape-at 
   "Retrieves the input shape(s) of a layer at a given node.
@@ -327,13 +332,12 @@
             A shape tuple
             (or list of shape tuples if the layer has multiple inputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw recurrent "get_input_shape_at" [self] {:node_index node_index }))
-
+  [ self node_index ]
+  (py/call-attr self "get_input_shape_at"  self node_index ))
 (defn get-losses-for 
   ""
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw recurrent "get_losses_for" [self] {:inputs inputs }))
+  [self   & {:keys [inputs]} ]
+    (py/call-attr-kw self "get_losses_for" [] {:inputs inputs }))
 
 (defn get-output-at 
   "Retrieves the output tensor(s) of a layer at a given node.
@@ -347,8 +351,8 @@
         # Returns
             A tensor (or list of tensors if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw recurrent "get_output_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_at"  self node_index ))
 
 (defn get-output-mask-at 
   "Retrieves the output mask tensor(s) of a layer at a given node.
@@ -363,8 +367,8 @@
             A mask tensor
             (or list of tensors if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw recurrent "get_output_mask_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_mask_at"  self node_index ))
 
 (defn get-output-shape-at 
   "Retrieves the output shape(s) of a layer at a given node.
@@ -379,13 +383,13 @@
             A shape tuple
             (or list of shape tuples if the layer has multiple outputs).
         "
-  [self  & {:keys [node_index]} ]
-    (py/call-attr-kw recurrent "get_output_shape_at" [self] {:node_index node_index }))
+  [ self node_index ]
+  (py/call-attr self "get_output_shape_at"  self node_index ))
 
 (defn get-updates-for 
   ""
-  [self  & {:keys [inputs]} ]
-    (py/call-attr-kw recurrent "get_updates_for" [self] {:inputs inputs }))
+  [ self inputs ]
+  (py/call-attr self "get_updates_for"  self inputs ))
 
 (defn get-weights 
   "Returns the current weights of the layer.
@@ -393,8 +397,8 @@
         # Returns
             Weights values as a list of numpy arrays.
         "
-  [ self ]
-  (py/call-attr recurrent "get_weights"  self ))
+  [ self  ]
+  (py/call-attr self "get_weights"  self  ))
 
 (defn input 
   "Retrieves the input tensor(s) of a layer.
@@ -410,7 +414,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr recurrent "input"  self))
+    (py/call-attr self "input"))
 
 (defn input-mask 
   "Retrieves the input mask tensor(s) of a layer.
@@ -427,7 +431,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr recurrent "input_mask"  self))
+    (py/call-attr self "input_mask"))
 
 (defn input-shape 
   "Retrieves the input shape tuple(s) of a layer.
@@ -444,32 +448,37 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr recurrent "input_shape"  self))
+    (py/call-attr self "input_shape"))
 
 (defn kernel-constraint 
   ""
   [ self ]
-    (py/call-attr recurrent "kernel_constraint"  self))
+    (py/call-attr self "kernel_constraint"))
 
 (defn kernel-initializer 
   ""
   [ self ]
-    (py/call-attr recurrent "kernel_initializer"  self))
+    (py/call-attr self "kernel_initializer"))
 
 (defn kernel-regularizer 
   ""
   [ self ]
-    (py/call-attr recurrent "kernel_regularizer"  self))
+    (py/call-attr self "kernel_regularizer"))
 
 (defn losses 
   ""
   [ self ]
-    (py/call-attr recurrent "losses"  self))
+    (py/call-attr self "losses"))
+
+(defn metrics 
+  ""
+  [ self ]
+    (py/call-attr self "metrics"))
 
 (defn non-trainable-weights 
   ""
   [ self ]
-    (py/call-attr recurrent "non_trainable_weights"  self))
+    (py/call-attr self "non_trainable_weights"))
 
 (defn output 
   "Retrieves the output tensor(s) of a layer.
@@ -485,7 +494,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr recurrent "output"  self))
+    (py/call-attr self "output"))
 
 (defn output-mask 
   "Retrieves the output mask tensor(s) of a layer.
@@ -502,7 +511,7 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr recurrent "output_mask"  self))
+    (py/call-attr self "output_mask"))
 
 (defn output-shape 
   "Retrieves the output shape tuple(s) of a layer.
@@ -519,32 +528,31 @@
             more than one incoming layers.
         "
   [ self ]
-    (py/call-attr recurrent "output_shape"  self))
+    (py/call-attr self "output_shape"))
 
 (defn recurrent-constraint 
   ""
   [ self ]
-    (py/call-attr recurrent "recurrent_constraint"  self))
+    (py/call-attr self "recurrent_constraint"))
 
 (defn recurrent-dropout 
   ""
   [ self ]
-    (py/call-attr recurrent "recurrent_dropout"  self))
+    (py/call-attr self "recurrent_dropout"))
 
 (defn recurrent-initializer 
   ""
   [ self ]
-    (py/call-attr recurrent "recurrent_initializer"  self))
+    (py/call-attr self "recurrent_initializer"))
 
 (defn recurrent-regularizer 
   ""
   [ self ]
-    (py/call-attr recurrent "recurrent_regularizer"  self))
-
+    (py/call-attr self "recurrent_regularizer"))
 (defn reset-states 
   ""
-  [self  & {:keys [states]} ]
-    (py/call-attr-kw recurrent "reset_states" [self] {:states states }))
+  [self   & {:keys [states]} ]
+    (py/call-attr-kw self "reset_states" [] {:states states }))
 
 (defn set-weights 
   "Sets the weights of the layer, from Numpy arrays.
@@ -560,35 +568,35 @@
             ValueError: If the provided weights list does not match the
                 layer's specifications.
         "
-  [self  & {:keys [weights]} ]
-    (py/call-attr-kw recurrent "set_weights" [self] {:weights weights }))
+  [ self weights ]
+  (py/call-attr self "set_weights"  self weights ))
 
 (defn states 
   ""
   [ self ]
-    (py/call-attr recurrent "states"  self))
+    (py/call-attr self "states"))
 
 (defn trainable-weights 
   ""
   [ self ]
-    (py/call-attr recurrent "trainable_weights"  self))
+    (py/call-attr self "trainable_weights"))
 
 (defn units 
   ""
   [ self ]
-    (py/call-attr recurrent "units"  self))
+    (py/call-attr self "units"))
 
 (defn updates 
   ""
   [ self ]
-    (py/call-attr recurrent "updates"  self))
+    (py/call-attr self "updates"))
 
 (defn use-bias 
   ""
   [ self ]
-    (py/call-attr recurrent "use_bias"  self))
+    (py/call-attr self "use_bias"))
 
 (defn weights 
   ""
   [ self ]
-    (py/call-attr recurrent "weights"  self))
+    (py/call-attr self "weights"))

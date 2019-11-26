@@ -5,7 +5,7 @@
     to have a norm less than or equal to a desired value.
 
     # Arguments
-        m: the maximum norm for the incoming weights.
+        max_value: the maximum norm for the incoming weights.
         axis: integer, axis along which to calculate weight norms.
             For instance, in a `Dense` layer the weight matrix
             has shape `(input_dim, output_dim)`,
@@ -19,8 +19,8 @@
             `(rows, cols, input_depth)`.
 
     # References
-        - [Dropout: A Simple Way to Prevent Neural Networks from Overfitting]
-          (http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
+        - [Dropout: A Simple Way to Prevent Neural Networks from Overfitting](
+           http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
     "
   (:require [libpython-clj.python
              :refer [import-module
@@ -40,7 +40,7 @@
     to have a norm less than or equal to a desired value.
 
     # Arguments
-        m: the maximum norm for the incoming weights.
+        max_value: the maximum norm for the incoming weights.
         axis: integer, axis along which to calculate weight norms.
             For instance, in a `Dense` layer the weight matrix
             has shape `(input_dim, output_dim)`,
@@ -54,8 +54,8 @@
             `(rows, cols, input_depth)`.
 
     # References
-        - [Dropout: A Simple Way to Prevent Neural Networks from Overfitting]
-          (http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
+        - [Dropout: A Simple Way to Prevent Neural Networks from Overfitting](
+           http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
     "
   [ & {:keys [max_value axis]
        :or {max_value 2 axis 0}} ]
@@ -64,5 +64,5 @@
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr constraints "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

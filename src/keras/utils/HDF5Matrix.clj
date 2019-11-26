@@ -61,10 +61,9 @@
     # Returns
         An array-like HDF5 dataset.
     "
-  [ & {:keys [datapath dataset start end normalizer]
-       :or {start 0}} ]
-  
-   (py/call-attr-kw utils "HDF5Matrix" [] {:datapath datapath :dataset dataset :start start :end end :normalizer normalizer }))
+  [datapath dataset & {:keys [start end normalizer]
+                       :or {start 0}} ]
+    (py/call-attr-kw utils "HDF5Matrix" [datapath dataset] {:start start :end end :normalizer normalizer }))
 
 (defn dtype 
   "Gets the datatype of the dataset.
@@ -73,7 +72,7 @@
             A numpy dtype string.
         "
   [ self ]
-    (py/call-attr utils "dtype"  self))
+    (py/call-attr self "dtype"))
 
 (defn ndim 
   "Gets the number of dimensions (rank) of the dataset.
@@ -82,7 +81,7 @@
             An integer denoting the number of dimensions (rank) of the dataset.
         "
   [ self ]
-    (py/call-attr utils "ndim"  self))
+    (py/call-attr self "ndim"))
 
 (defn shape 
   "Gets a numpy-style shape tuple giving the dataset dimensions.
@@ -91,7 +90,7 @@
             A numpy-style shape tuple.
         "
   [ self ]
-    (py/call-attr utils "shape"  self))
+    (py/call-attr self "shape"))
 
 (defn size 
   "Gets the total dataset size (number of elements).
@@ -100,4 +99,4 @@
             An integer denoting the number of elements in the dataset.
         "
   [ self ]
-    (py/call-attr utils "size"  self))
+    (py/call-attr self "size"))

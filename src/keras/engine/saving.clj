@@ -12,6 +12,40 @@
 (py/initialize!)
 (defonce saving (import-module "keras.engine.saving"))
 
+(defn allow-read-from-gcs 
+  "Function decorator to support loading from Google Cloud Storage (GCS).
+
+    This decorator parses the `filepath` argument of the `load_function` and
+    fetches the required object from GCS if `filepath` starts with \"gs://\".
+
+    Note: the file is temporarily copied to local filesystem from GCS before loaded.
+
+    # Arguments
+        load_function: The function to wrap, with requirements:
+            - should have one _named_ argument `filepath` indicating the location to
+            load from.
+    "
+  [ load_function ]
+  (py/call-attr saving "allow_read_from_gcs"  load_function ))
+
+(defn allow-write-to-gcs 
+  "Function decorator to support saving to Google Cloud Storage (GCS).
+
+    This decorator parses the `filepath` argument of the `save_function` and
+    transfers the file to GCS if `filepath` starts with \"gs://\".
+
+    Note: the file is temporarily writen to local filesystem before copied to GSC.
+
+    # Arguments
+        save_function: The function to wrap, with requirements:
+            - second positional argument should indicate the location to save to.
+            - third positional argument should be the `overwrite` option indicating
+            whether we should overwrite an existing file/object at the target
+            location, or instead ask the user with a manual prompt.
+    "
+  [ save_function ]
+  (py/call-attr saving "allow_write_to_gcs"  save_function ))
+
 (defn ask-to-proceed-with-overwrite 
   "Produces a prompt asking about overwriting a file.
 
@@ -21,8 +55,27 @@
     # Returns
         True if we can proceed with overwrite, False otherwise.
     "
-  [ & {:keys [filepath]} ]
-   (py/call-attr-kw saving "ask_to_proceed_with_overwrite" [] {:filepath filepath }))
+  [ filepath ]
+  (py/call-attr saving "ask_to_proceed_with_overwrite"  filepath ))
+
+(defn getargspec 
+  "Get the names and default values of a callable object's parameters.
+
+    A tuple of seven things is returned:
+    (args, varargs, varkw, defaults, kwonlyargs, kwonlydefaults, annotations).
+    'args' is a list of the parameter names.
+    'varargs' and 'varkw' are the names of the * and ** parameters or None.
+    'defaults' is an n-tuple of the default values of the last n parameters.
+    'kwonlyargs' is a list of keyword-only parameter names.
+    'kwonlydefaults' is a dictionary mapping names from kwonlyargs to defaults.
+    'annotations' is a dictionary mapping parameter names to annotations.
+
+    Notable differences from inspect.signature():
+      - the \"self\" parameter is always reported, even for bound methods
+      - wrapper chains defined by __wrapped__ *not* unwrapped automatically
+    "
+  [ func ]
+  (py/call-attr saving "getargspec"  func ))
 
 (defn load-attributes-from-hdf5-group 
   "Loads attributes of the specified name from the HDF5 group.
@@ -38,16 +91,33 @@
     # Returns
         data: Attributes data.
     "
-  [ & {:keys [group name]} ]
-   (py/call-attr-kw saving "load_attributes_from_hdf5_group" [] {:group group :name name }))
+  [ group name ]
+  (py/call-attr saving "load_attributes_from_hdf5_group"  group name ))
+
+(defn load-from-binary-h5py 
+  "Calls `load_function` on a `h5py.File` read from the binary `stream`.
+
+    # Arguments
+        load_function: A function that takes a `h5py.File`, reads from it, and
+            returns any object.
+        stream: Any file-like object implementing the method `read` that returns
+            `bytes` data (e.g. `io.BytesIO`) that represents a valid h5py file image.
+
+    # Returns
+        The object returned by `load_function`.
+    "
+  [ load_function stream ]
+  (py/call-attr saving "load_from_binary_h5py"  load_function stream ))
 
 (defn load-model 
   "Loads a model saved via `save_model`.
 
     # Arguments
         filepath: one of the following:
-            - string, path to the saved model, or
+            - string, path to the saved model
             - h5py.File or h5py.Group object from which to load the model
+            - any file-like object implementing the method `read` that returns
+            `bytes` data (e.g. `io.BytesIO`) that represents a valid h5py file image.
         custom_objects: Optional dictionary mapping names
             (strings) to custom classes or functions to be
             considered during deserialization.
@@ -66,10 +136,9 @@
         ImportError: if h5py is not available.
         ValueError: In case of an invalid savefile.
     "
-  [ & {:keys [filepath custom_objects compile]
-       :or {compile true}} ]
-  
-   (py/call-attr-kw saving "load_model" [] {:filepath filepath :custom_objects custom_objects :compile compile }))
+  [filepath & {:keys [custom_objects compile]
+                       :or {compile true}} ]
+    (py/call-attr-kw saving "load_model" [filepath] {:custom_objects custom_objects :compile compile }))
 
 (defn load-weights-from-hdf5-group 
   "Implements topological (order-based) weight loading.
@@ -84,10 +153,9 @@
         ValueError: in case of mismatch between provided layers
             and weights file.
     "
-  [ & {:keys [f layers reshape]
-       :or {reshape false}} ]
-  
-   (py/call-attr-kw saving "load_weights_from_hdf5_group" [] {:f f :layers layers :reshape reshape }))
+  [f layers & {:keys [reshape]
+                       :or {reshape false}} ]
+    (py/call-attr-kw saving "load_weights_from_hdf5_group" [f layers] {:reshape reshape }))
 
 (defn load-weights-from-hdf5-group-by-name 
   "Implements name-based weight loading.
@@ -109,11 +177,9 @@
         ValueError: in case of mismatch between provided layers
             and weights file and skip_mismatch=False.
     "
-  [ & {:keys [f layers skip_mismatch reshape]
-       :or {skip_mismatch false reshape false}} ]
-  
-   (py/call-attr-kw saving "load_weights_from_hdf5_group_by_name" [] {:f f :layers layers :skip_mismatch skip_mismatch :reshape reshape }))
-
+  [f layers & {:keys [skip_mismatch reshape]
+                       :or {skip_mismatch false reshape false}} ]
+    (py/call-attr-kw saving "load_weights_from_hdf5_group_by_name" [f layers] {:skip_mismatch skip_mismatch :reshape reshape }))
 (defn model-from-config 
   "Instantiates a Keras model from its config.
 
@@ -129,9 +195,8 @@
     # Raises
         TypeError: if `config` is not a dictionary.
     "
-  [ & {:keys [config custom_objects]} ]
-   (py/call-attr-kw saving "model_from_config" [] {:config config :custom_objects custom_objects }))
-
+  [config  & {:keys [custom_objects]} ]
+    (py/call-attr-kw saving "model_from_config" [config] {:custom_objects custom_objects }))
 (defn model-from-json 
   "Parses a JSON model configuration file and returns a model instance.
 
@@ -144,9 +209,8 @@
     # Returns
         A Keras model instance (uncompiled).
     "
-  [ & {:keys [json_string custom_objects]} ]
-   (py/call-attr-kw saving "model_from_json" [] {:json_string json_string :custom_objects custom_objects }))
-
+  [json_string  & {:keys [custom_objects]} ]
+    (py/call-attr-kw saving "model_from_json" [json_string] {:custom_objects custom_objects }))
 (defn model-from-yaml 
   "Parses a yaml model configuration file and returns a model instance.
 
@@ -159,13 +223,13 @@
     # Returns
         A Keras model instance (uncompiled).
     "
-  [ & {:keys [yaml_string custom_objects]} ]
-   (py/call-attr-kw saving "model_from_yaml" [] {:yaml_string yaml_string :custom_objects custom_objects }))
+  [yaml_string  & {:keys [custom_objects]} ]
+    (py/call-attr-kw saving "model_from_yaml" [yaml_string] {:custom_objects custom_objects }))
 
 (defn pickle-model 
   ""
-  [ & {:keys [model]} ]
-   (py/call-attr-kw saving "pickle_model" [] {:model model }))
+  [ model ]
+  (py/call-attr saving "pickle_model"  model ))
 
 (defn preprocess-weights-for-loading 
   "Converts layers weights from Keras 1 format to Keras 2.
@@ -182,10 +246,9 @@
     # Returns
         A list of weights values (Numpy arrays).
     "
-  [ & {:keys [layer weights original_keras_version original_backend reshape]
-       :or {reshape false}} ]
-  
-   (py/call-attr-kw saving "preprocess_weights_for_loading" [] {:layer layer :weights weights :original_keras_version original_keras_version :original_backend original_backend :reshape reshape }))
+  [layer weights & {:keys [original_keras_version original_backend reshape]
+                       :or {reshape false}} ]
+    (py/call-attr-kw saving "preprocess_weights_for_loading" [layer weights] {:original_keras_version original_keras_version :original_backend original_backend :reshape reshape }))
 
 (defn save-attributes-to-hdf5-group 
   "Saves attributes (data) of the specified name into the HDF5 group.
@@ -198,8 +261,8 @@
         name: A name of the attributes to save.
         data: Attributes data to store.
     "
-  [ & {:keys [group name data]} ]
-   (py/call-attr-kw saving "save_attributes_to_hdf5_group" [] {:group group :name name :data data }))
+  [ group name data ]
+  (py/call-attr saving "save_attributes_to_hdf5_group"  group name data ))
 
 (defn save-model 
   "Save a model to a HDF5 file.
@@ -222,8 +285,10 @@
     # Arguments
         model: Keras model instance to be saved.
         filepath: one of the following:
-            - string, path where to save the model, or
+            - string, path to the file to save the model to
             - h5py.File or h5py.Group object where to save the model
+            - any file-like object implementing the method `write` that accepts
+                `bytes` data (e.g. `io.BytesIO`).
         overwrite: Whether we should overwrite any existing
             model at the target location, or instead
             ask the user with a manual prompt.
@@ -232,17 +297,48 @@
     # Raises
         ImportError: if h5py is not available.
     "
-  [ & {:keys [model filepath overwrite include_optimizer]
-       :or {overwrite true include_optimizer true}} ]
-  
-   (py/call-attr-kw saving "save_model" [] {:model model :filepath filepath :overwrite overwrite :include_optimizer include_optimizer }))
+  [model filepath & {:keys [overwrite include_optimizer]
+                       :or {overwrite true include_optimizer true}} ]
+    (py/call-attr-kw saving "save_model" [model filepath] {:overwrite overwrite :include_optimizer include_optimizer }))
+
+(defn save-to-binary-h5py 
+  "Calls `save_function` on an in memory `h5py.File`.
+
+    The file is subsequently written to the binary `stream`.
+
+     # Arguments
+        save_function: A function that takes a `h5py.File`, writes to it and
+            (optionally) returns any object.
+        stream: Any file-like object implementing the method `write` that accepts
+            `bytes` data (e.g. `io.BytesIO`).
+     "
+  [ save_function stream ]
+  (py/call-attr saving "save_to_binary_h5py"  save_function stream ))
 
 (defn save-weights-to-hdf5-group 
-  ""
-  [ & {:keys [f layers]} ]
-   (py/call-attr-kw saving "save_weights_to_hdf5_group" [] {:f f :layers layers }))
+  "Saves weights into the HDF5 group.
+
+    # Arguments
+        group: A pointer to a HDF5 group.
+        layers: Layers to load.
+    "
+  [ group layers ]
+  (py/call-attr saving "save_weights_to_hdf5_group"  group layers ))
 
 (defn unpickle-model 
   ""
-  [ & {:keys [state]} ]
-   (py/call-attr-kw saving "unpickle_model" [] {:state state }))
+  [ state ]
+  (py/call-attr saving "unpickle_model"  state ))
+
+(defn wraps 
+  "Decorator factory to apply update_wrapper() to a wrapper function
+
+       Returns a decorator that invokes update_wrapper() with the decorated
+       function as the wrapper argument and the arguments to wraps() as the
+       remaining arguments. Default arguments are as for update_wrapper().
+       This is a convenience function to simplify applying partial() to
+       update_wrapper().
+    "
+  [wrapped & {:keys [assigned updated]
+                       :or {assigned ('__module__', '__name__', '__qualname__', '__doc__', '__annotations__') updated ('__dict__',)}} ]
+    (py/call-attr-kw saving "wraps" [wrapped] {:assigned assigned :updated updated }))

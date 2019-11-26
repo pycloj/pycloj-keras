@@ -48,4 +48,4 @@
     ```
     "
   [  ]
-  (py/call-attr utils "CustomObjectScope"   ))
+  (py/call-attr utils "CustomObjectScope"  ))

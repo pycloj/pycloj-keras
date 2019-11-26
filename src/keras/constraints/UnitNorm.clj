@@ -1,4 +1,4 @@
-(ns keras.constraints.unitnorm
+(ns keras.constraints.UnitNorm
   "Constrains the weights incident to each hidden unit to have unit norm.
 
     # Arguments
@@ -25,7 +25,7 @@
 (py/initialize!)
 (defonce constraints (import-module "keras.constraints"))
 
-(defn unitnorm 
+(defn UnitNorm 
   "Constrains the weights incident to each hidden unit to have unit norm.
 
     # Arguments
@@ -44,9 +44,9 @@
   [ & {:keys [axis]
        :or {axis 0}} ]
   
-   (py/call-attr-kw constraints "unitnorm" [] {:axis axis }))
+   (py/call-attr-kw constraints "UnitNorm" [] {:axis axis }))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr constraints "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

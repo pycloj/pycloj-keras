@@ -13,37 +13,37 @@
 
 (defn HTTPError 
   "Raised when HTTP error occurs, but also acts like non-error return"
-  [ & {:keys [url code msg hdrs fp]} ]
-   (py/call-attr-kw data-utils "HTTPError" [] {:url url :code code :msg msg :hdrs hdrs :fp fp }))
+  [ url code msg hdrs fp ]
+  (py/call-attr data-utils "HTTPError"  url code msg hdrs fp ))
 
 (defn close 
   "
         Close the temporary file, possibly deleting it.
         "
-  [ self ]
-  (py/call-attr data-utils "close"  self ))
+  [ self  ]
+  (py/call-attr self "close"  self  ))
 
 (defn getcode 
   ""
-  [ self ]
-  (py/call-attr data-utils "getcode"  self ))
+  [ self  ]
+  (py/call-attr self "getcode"  self  ))
 
 (defn geturl 
   ""
-  [ self ]
-  (py/call-attr data-utils "geturl"  self ))
+  [ self  ]
+  (py/call-attr self "geturl"  self  ))
 
 (defn headers 
   ""
   [ self ]
-    (py/call-attr data-utils "headers"  self))
+    (py/call-attr self "headers"))
 
 (defn info 
   ""
-  [ self ]
-  (py/call-attr data-utils "info"  self ))
+  [ self  ]
+  (py/call-attr self "info"  self  ))
 
 (defn reason 
   ""
   [ self ]
-    (py/call-attr data-utils "reason"  self))
+    (py/call-attr self "reason"))

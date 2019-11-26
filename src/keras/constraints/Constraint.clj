@@ -14,9 +14,9 @@
 (defn Constraint 
   ""
   [  ]
-  (py/call-attr constraints "Constraint"   ))
+  (py/call-attr constraints "Constraint"  ))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr constraints "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

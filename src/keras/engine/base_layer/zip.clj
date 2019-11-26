@@ -1,5 +1,5 @@
 (ns keras.engine.base-layer.zip
-  "zip(*iterables) --> zip object
+  "zip(iter1 [,iter2 [...]]) --> zip object
 
 Return a zip object whose .__next__() method returns a tuple where
 the i-th element comes from the i-th iterable argument.  The .__next__()

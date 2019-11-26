@@ -1,23 +1,27 @@
 (ns keras.backend.tensorflow-backend.name-scope
   "A context manager for use when defining a Python op.
 
-  This context manager validates that the given `values` are from the
-  same graph, makes that graph the default graph, and pushes a
-  name scope in that graph (see
-  `tf.Graph.name_scope`
-  for more details on that).
+  This context manager pushes a name scope, which will make the name of all
+  operations added within it have a prefix.
 
   For example, to define a new Python op called `my_op`:
 
   ```python
   def my_op(a, b, c, name=None):
-    with tf.name_scope(name, \"MyOp\", [a, b, c]) as scope:
+    with tf.name_scope(\"MyOp\") as scope:
       a = tf.convert_to_tensor(a, name=\"a\")
       b = tf.convert_to_tensor(b, name=\"b\")
       c = tf.convert_to_tensor(c, name=\"c\")
       # Define some computation that uses `a`, `b`, and `c`.
       return foo_op(..., name=scope)
   ```
+
+  When executed, the Tensors `a`, `b`, `c`, will have names `MyOp/a`, `MyOp/b`,
+  and `MyOp/c`.
+
+  If the scope name already exists, the name will be made unique by appending
+  `_n`. For example, calling `my_op` the second time will generate `MyOp_1/a`,
+  etc.
   "
   (:require [libpython-clj.python
              :refer [import-module
@@ -33,28 +37,32 @@
 (defn name-scope 
   "A context manager for use when defining a Python op.
 
-  This context manager validates that the given `values` are from the
-  same graph, makes that graph the default graph, and pushes a
-  name scope in that graph (see
-  `tf.Graph.name_scope`
-  for more details on that).
+  This context manager pushes a name scope, which will make the name of all
+  operations added within it have a prefix.
 
   For example, to define a new Python op called `my_op`:
 
   ```python
   def my_op(a, b, c, name=None):
-    with tf.name_scope(name, \"MyOp\", [a, b, c]) as scope:
+    with tf.name_scope(\"MyOp\") as scope:
       a = tf.convert_to_tensor(a, name=\"a\")
       b = tf.convert_to_tensor(b, name=\"b\")
       c = tf.convert_to_tensor(c, name=\"c\")
       # Define some computation that uses `a`, `b`, and `c`.
       return foo_op(..., name=scope)
   ```
+
+  When executed, the Tensors `a`, `b`, `c`, will have names `MyOp/a`, `MyOp/b`,
+  and `MyOp/c`.
+
+  If the scope name already exists, the name will be made unique by appending
+  `_n`. For example, calling `my_op` the second time will generate `MyOp_1/a`,
+  etc.
   "
-  [ & {:keys [name default_name values]} ]
-   (py/call-attr-kw tensorflow-backend "name_scope" [] {:name name :default_name default_name :values values }))
+  [ name ]
+  (py/call-attr tensorflow-backend "name_scope"  name ))
 
 (defn name 
   ""
   [ self ]
-    (py/call-attr tensorflow-backend "name"  self))
+    (py/call-attr self "name"))

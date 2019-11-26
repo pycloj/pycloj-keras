@@ -1,14 +1,13 @@
-(ns keras.optimizers.sgd
+(ns keras.optimizers.SGD
   "Stochastic gradient descent optimizer.
 
     Includes support for momentum,
     learning rate decay, and Nesterov momentum.
 
     # Arguments
-        lr: float >= 0. Learning rate.
+        learning_rate: float >= 0. Learning rate.
         momentum: float >= 0. Parameter that accelerates SGD
             in the relevant direction and dampens oscillations.
-        decay: float >= 0. Learning rate decay over each update.
         nesterov: boolean. Whether to apply Nesterov momentum.
     "
   (:require [libpython-clj.python
@@ -22,38 +21,37 @@
 (py/initialize!)
 (defonce optimizers (import-module "keras.optimizers"))
 
-(defn sgd 
+(defn SGD 
   "Stochastic gradient descent optimizer.
 
     Includes support for momentum,
     learning rate decay, and Nesterov momentum.
 
     # Arguments
-        lr: float >= 0. Learning rate.
+        learning_rate: float >= 0. Learning rate.
         momentum: float >= 0. Parameter that accelerates SGD
             in the relevant direction and dampens oscillations.
-        decay: float >= 0. Learning rate decay over each update.
         nesterov: boolean. Whether to apply Nesterov momentum.
     "
-  [ & {:keys [lr momentum decay nesterov]
-       :or {lr 0.01 momentum 0.0 decay 0.0 nesterov false}} ]
+  [ & {:keys [learning_rate momentum nesterov]
+       :or {learning_rate 0.01 momentum 0.0 nesterov false}} ]
   
-   (py/call-attr-kw optimizers "sgd" [] {:lr lr :momentum momentum :decay decay :nesterov nesterov }))
+   (py/call-attr-kw optimizers "SGD" [] {:learning_rate learning_rate :momentum momentum :nesterov nesterov }))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr optimizers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))
 
 (defn get-gradients 
   ""
-  [self  & {:keys [loss params]} ]
-    (py/call-attr-kw optimizers "get_gradients" [self] {:loss loss :params params }))
+  [ self loss params ]
+  (py/call-attr self "get_gradients"  self loss params ))
 
 (defn get-updates 
   ""
-  [self  & {:keys [loss params]} ]
-    (py/call-attr-kw optimizers "get_updates" [self] {:loss loss :params params }))
+  [ self loss params ]
+  (py/call-attr self "get_updates"  self loss params ))
 
 (defn get-weights 
   "Returns the current value of the weights of the optimizer.
@@ -61,8 +59,13 @@
         # Returns
             A list of numpy arrays.
         "
+  [ self  ]
+  (py/call-attr self "get_weights"  self  ))
+
+(defn lr 
+  ""
   [ self ]
-  (py/call-attr optimizers "get_weights"  self ))
+    (py/call-attr self "lr"))
 
 (defn set-weights 
   "Sets the weights of the optimizer, from Numpy arrays.
@@ -80,5 +83,5 @@
         # Raises
             ValueError: in case of incompatible weight shapes.
         "
-  [self  & {:keys [weights]} ]
-    (py/call-attr-kw optimizers "set_weights" [self] {:weights weights }))
+  [ self weights ]
+  (py/call-attr self "set_weights"  self weights ))

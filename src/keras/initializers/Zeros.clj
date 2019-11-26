@@ -1,4 +1,4 @@
-(ns keras.initializers.zeros
+(ns keras.initializers.Zeros
   "Initializer that generates tensors initialized to 0.
     "
   (:require [libpython-clj.python
@@ -12,13 +12,13 @@
 (py/initialize!)
 (defonce initializers (import-module "keras.initializers"))
 
-(defn zeros 
+(defn Zeros 
   "Initializer that generates tensors initialized to 0.
     "
   [  ]
-  (py/call-attr initializers "zeros"   ))
+  (py/call-attr initializers "Zeros"  ))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr initializers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

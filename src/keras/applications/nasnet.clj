@@ -14,24 +14,24 @@
 (defn NASNetLarge 
   ""
   [  ]
-  (py/call-attr nasnet "NASNetLarge"   ))
+  (py/call-attr nasnet "NASNetLarge"  ))
 
 (defn NASNetMobile 
   ""
   [  ]
-  (py/call-attr nasnet "NASNetMobile"   ))
+  (py/call-attr nasnet "NASNetMobile"  ))
 
 (defn decode-predictions 
   ""
   [  ]
-  (py/call-attr nasnet "decode_predictions"   ))
+  (py/call-attr nasnet "decode_predictions"  ))
 
 (defn keras-modules-injection 
   ""
-  [ & {:keys [base_fun]} ]
-   (py/call-attr-kw nasnet "keras_modules_injection" [] {:base_fun base_fun }))
+  [ base_fun ]
+  (py/call-attr nasnet "keras_modules_injection"  base_fun ))
 
 (defn preprocess-input 
   ""
   [  ]
-  (py/call-attr nasnet "preprocess_input"   ))
+  (py/call-attr nasnet "preprocess_input"  ))

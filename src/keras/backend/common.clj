@@ -35,8 +35,13 @@
         dtype('float32')
     ```
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw common "cast_to_floatx" [] {:x x }))
+  [ x ]
+  (py/call-attr common "cast_to_floatx"  x ))
+
+(defn eager 
+  "Dummy decorator used in TensorFlow 2.0 to exit the Keras graph."
+  [ func ]
+  (py/call-attr common "eager"  func ))
 
 (defn epsilon 
   "Returns the value of the fuzz factor used in numeric expressions.
@@ -51,7 +56,7 @@
     ```
     "
   [  ]
-  (py/call-attr common "epsilon"   ))
+  (py/call-attr common "epsilon"  ))
 
 (defn floatx 
   "Returns the default float type, as a string.
@@ -67,10 +72,10 @@
     ```
     "
   [  ]
-  (py/call-attr common "floatx"   ))
+  (py/call-attr common "floatx"  ))
 
 (defn image-data-format 
-  "Returns the default image data format convention ('channels_first' or 'channels_last').
+  "Returns the default image data format convention.
 
     # Returns
         A string, either `'channels_first'` or `'channels_last'`
@@ -82,7 +87,7 @@
     ```
     "
   [  ]
-  (py/call-attr common "image_data_format"   ))
+  (py/call-attr common "image_data_format"  ))
 
 (defn image-dim-ordering 
   "Legacy getter for `image_data_format`.
@@ -91,7 +96,7 @@
         string, one of `'th'`, `'tf'`
     "
   [  ]
-  (py/call-attr common "image_dim_ordering"   ))
+  (py/call-attr common "image_dim_ordering"  ))
 
 (defn normalize-data-format 
   "Checks that the value correspond to a valid data format.
@@ -114,8 +119,8 @@
     # Raises
         ValueError: if `value` or the global `data_format` invalid.
     "
-  [ & {:keys [value]} ]
-   (py/call-attr-kw common "normalize_data_format" [] {:value value }))
+  [ value ]
+  (py/call-attr common "normalize_data_format"  value ))
 
 (defn set-epsilon 
   "Sets the value of the fuzz factor used in numeric expressions.
@@ -133,8 +138,8 @@
         1e-05
     ```
     "
-  [ & {:keys [e]} ]
-   (py/call-attr-kw common "set_epsilon" [] {:e e }))
+  [ e ]
+  (py/call-attr common "set_epsilon"  e ))
 
 (defn set-floatx 
   "Sets the default float type.
@@ -152,8 +157,8 @@
         'float16'
     ```
     "
-  [ & {:keys [floatx]} ]
-   (py/call-attr-kw common "set_floatx" [] {:floatx floatx }))
+  [ floatx ]
+  (py/call-attr common "set_floatx"  floatx ))
 
 (defn set-image-data-format 
   "Sets the value of the data format convention.
@@ -171,8 +176,8 @@
         'channels_last'
     ```
     "
-  [ & {:keys [data_format]} ]
-   (py/call-attr-kw common "set_image_data_format" [] {:data_format data_format }))
+  [ data_format ]
+  (py/call-attr common "set_image_data_format"  data_format ))
 
 (defn set-image-dim-ordering 
   "Legacy setter for `image_data_format`.
@@ -193,5 +198,10 @@
     # Raises
         ValueError: if `dim_ordering` is invalid.
     "
-  [ & {:keys [dim_ordering]} ]
-   (py/call-attr-kw common "set_image_dim_ordering" [] {:dim_ordering dim_ordering }))
+  [ dim_ordering ]
+  (py/call-attr common "set_image_dim_ordering"  dim_ordering ))
+
+(defn symbolic 
+  "Dummy decorator used in TensorFlow 2.0 to enter the Keras graph."
+  [ func ]
+  (py/call-attr common "symbolic"  func ))

@@ -1,4 +1,4 @@
-(ns keras.initializers.orthogonal
+(ns keras.initializers.Orthogonal
   "Initializer that generates a random orthogonal matrix.
 
     # Arguments
@@ -6,7 +6,8 @@
         seed: A Python integer. Used to seed the random generator.
 
     # References
-        Saxe et al., http://arxiv.org/abs/1312.6120
+        - [Exact solutions to the nonlinear dynamics of learning in deep
+           linear neural networks](http://arxiv.org/abs/1312.6120)
     "
   (:require [libpython-clj.python
              :refer [import-module
@@ -19,7 +20,7 @@
 (py/initialize!)
 (defonce initializers (import-module "keras.initializers"))
 
-(defn orthogonal 
+(defn Orthogonal 
   "Initializer that generates a random orthogonal matrix.
 
     # Arguments
@@ -27,14 +28,15 @@
         seed: A Python integer. Used to seed the random generator.
 
     # References
-        Saxe et al., http://arxiv.org/abs/1312.6120
+        - [Exact solutions to the nonlinear dynamics of learning in deep
+           linear neural networks](http://arxiv.org/abs/1312.6120)
     "
   [ & {:keys [gain seed]
        :or {gain 1.0}} ]
   
-   (py/call-attr-kw initializers "orthogonal" [] {:gain gain :seed seed }))
+   (py/call-attr-kw initializers "Orthogonal" [] {:gain gain :seed seed }))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr initializers "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

@@ -66,7 +66,6 @@
        :or {sparse false}} ]
   
    (py/call-attr-kw models "Input" [] {:shape shape :batch_shape batch_shape :name name :dtype dtype :sparse sparse :tensor tensor }))
-
 (defn clone-model 
   "Clone any `Model` instance.
 
@@ -89,8 +88,8 @@
     # Raises
         ValueError: in case of invalid `model` argument value.
     "
-  [ & {:keys [model input_tensors]} ]
-   (py/call-attr-kw models "clone_model" [] {:model model :input_tensors input_tensors }))
+  [model  & {:keys [input_tensors]} ]
+    (py/call-attr-kw models "clone_model" [model] {:input_tensors input_tensors }))
 
 (defn has-arg 
   "Checks if a callable accepts a given keyword argument.
@@ -110,18 +109,19 @@
     # Returns
         bool, whether `fn` accepts a `name` keyword argument.
     "
-  [ & {:keys [fn name accept_all]
-       :or {accept_all false}} ]
-  
-   (py/call-attr-kw models "has_arg" [] {:fn fn :name name :accept_all accept_all }))
+  [fn name & {:keys [accept_all]
+                       :or {accept_all false}} ]
+    (py/call-attr-kw models "has_arg" [fn name] {:accept_all accept_all }))
 
 (defn load-model 
   "Loads a model saved via `save_model`.
 
     # Arguments
         filepath: one of the following:
-            - string, path to the saved model, or
+            - string, path to the saved model
             - h5py.File or h5py.Group object from which to load the model
+            - any file-like object implementing the method `read` that returns
+            `bytes` data (e.g. `io.BytesIO`) that represents a valid h5py file image.
         custom_objects: Optional dictionary mapping names
             (strings) to custom classes or functions to be
             considered during deserialization.
@@ -140,11 +140,9 @@
         ImportError: if h5py is not available.
         ValueError: In case of an invalid savefile.
     "
-  [ & {:keys [filepath custom_objects compile]
-       :or {compile true}} ]
-  
-   (py/call-attr-kw models "load_model" [] {:filepath filepath :custom_objects custom_objects :compile compile }))
-
+  [filepath & {:keys [custom_objects compile]
+                       :or {compile true}} ]
+    (py/call-attr-kw models "load_model" [filepath] {:custom_objects custom_objects :compile compile }))
 (defn model-from-config 
   "Instantiates a Keras model from its config.
 
@@ -160,9 +158,8 @@
     # Raises
         TypeError: if `config` is not a dictionary.
     "
-  [ & {:keys [config custom_objects]} ]
-   (py/call-attr-kw models "model_from_config" [] {:config config :custom_objects custom_objects }))
-
+  [config  & {:keys [custom_objects]} ]
+    (py/call-attr-kw models "model_from_config" [config] {:custom_objects custom_objects }))
 (defn model-from-json 
   "Parses a JSON model configuration file and returns a model instance.
 
@@ -175,9 +172,8 @@
     # Returns
         A Keras model instance (uncompiled).
     "
-  [ & {:keys [json_string custom_objects]} ]
-   (py/call-attr-kw models "model_from_json" [] {:json_string json_string :custom_objects custom_objects }))
-
+  [json_string  & {:keys [custom_objects]} ]
+    (py/call-attr-kw models "model_from_json" [json_string] {:custom_objects custom_objects }))
 (defn model-from-yaml 
   "Parses a yaml model configuration file and returns a model instance.
 
@@ -190,8 +186,8 @@
     # Returns
         A Keras model instance (uncompiled).
     "
-  [ & {:keys [yaml_string custom_objects]} ]
-   (py/call-attr-kw models "model_from_yaml" [] {:yaml_string yaml_string :custom_objects custom_objects }))
+  [yaml_string  & {:keys [custom_objects]} ]
+    (py/call-attr-kw models "model_from_yaml" [yaml_string] {:custom_objects custom_objects }))
 
 (defn save-model 
   "Save a model to a HDF5 file.
@@ -214,8 +210,10 @@
     # Arguments
         model: Keras model instance to be saved.
         filepath: one of the following:
-            - string, path where to save the model, or
+            - string, path to the file to save the model to
             - h5py.File or h5py.Group object where to save the model
+            - any file-like object implementing the method `write` that accepts
+                `bytes` data (e.g. `io.BytesIO`).
         overwrite: Whether we should overwrite any existing
             model at the target location, or instead
             ask the user with a manual prompt.
@@ -224,10 +222,9 @@
     # Raises
         ImportError: if h5py is not available.
     "
-  [ & {:keys [model filepath overwrite include_optimizer]
-       :or {overwrite true include_optimizer true}} ]
-  
-   (py/call-attr-kw models "save_model" [] {:model model :filepath filepath :overwrite overwrite :include_optimizer include_optimizer }))
+  [model filepath & {:keys [overwrite include_optimizer]
+                       :or {overwrite true include_optimizer true}} ]
+    (py/call-attr-kw models "save_model" [model filepath] {:overwrite overwrite :include_optimizer include_optimizer }))
 
 (defn to-list 
   "Normalizes a list/tensor into a list.
@@ -245,7 +242,6 @@
     # Returns
         A list.
     "
-  [ & {:keys [x allow_tuple]
-       :or {allow_tuple false}} ]
-  
-   (py/call-attr-kw models "to_list" [] {:x x :allow_tuple allow_tuple }))
+  [x & {:keys [allow_tuple]
+                       :or {allow_tuple false}} ]
+    (py/call-attr-kw models "to_list" [x] {:allow_tuple allow_tuple }))

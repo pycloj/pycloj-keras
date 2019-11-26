@@ -21,8 +21,13 @@
     # Returns
         The total number of scalars composing the weights
     "
-  [ & {:keys [weights]} ]
-   (py/call-attr-kw base-layer "count_params" [] {:weights weights }))
+  [ weights ]
+  (py/call-attr base-layer "count_params"  weights ))
+
+(defn disable-tracking 
+  ""
+  [ func ]
+  (py/call-attr base-layer "disable_tracking"  func ))
 
 (defn has-arg 
   "Checks if a callable accepts a given keyword argument.
@@ -42,20 +47,19 @@
     # Returns
         bool, whether `fn` accepts a `name` keyword argument.
     "
-  [ & {:keys [fn name accept_all]
-       :or {accept_all false}} ]
-  
-   (py/call-attr-kw base-layer "has_arg" [] {:fn fn :name name :accept_all accept_all }))
+  [fn name & {:keys [accept_all]
+                       :or {accept_all false}} ]
+    (py/call-attr-kw base-layer "has_arg" [fn name] {:accept_all accept_all }))
 
 (defn is-all-none 
   ""
-  [ & {:keys [iterable_or_element]} ]
-   (py/call-attr-kw base-layer "is_all_none" [] {:iterable_or_element iterable_or_element }))
+  [ iterable_or_element ]
+  (py/call-attr base-layer "is_all_none"  iterable_or_element ))
 
 (defn object-list-uid 
   ""
-  [ & {:keys [object_list]} ]
-   (py/call-attr-kw base-layer "object_list_uid" [] {:object_list object_list }))
+  [ object_list ]
+  (py/call-attr base-layer "object_list_uid"  object_list ))
 
 (defn to-list 
   "Normalizes a list/tensor into a list.
@@ -73,21 +77,20 @@
     # Returns
         A list.
     "
-  [ & {:keys [x allow_tuple]
-       :or {allow_tuple false}} ]
-  
-   (py/call-attr-kw base-layer "to_list" [] {:x x :allow_tuple allow_tuple }))
+  [x & {:keys [allow_tuple]
+                       :or {allow_tuple false}} ]
+    (py/call-attr-kw base-layer "to_list" [x] {:allow_tuple allow_tuple }))
 
 (defn unpack-singleton 
   "Gets the first element if the iterable has only one value.
 
     Otherwise return the iterable.
 
-    # Argument:
+    # Argument
         x: A list or tuple.
 
-    # Returns:
+    # Returns
         The same iterable or the first element.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw base-layer "unpack_singleton" [] {:x x }))
+  [ x ]
+  (py/call-attr base-layer "unpack_singleton"  x ))

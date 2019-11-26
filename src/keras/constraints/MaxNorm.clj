@@ -1,11 +1,11 @@
-(ns keras.constraints.maxnorm
+(ns keras.constraints.MaxNorm
   "MaxNorm weight constraint.
 
     Constrains the weights incident to each hidden unit
     to have a norm less than or equal to a desired value.
 
     # Arguments
-        m: the maximum norm for the incoming weights.
+        max_value: the maximum norm for the incoming weights.
         axis: integer, axis along which to calculate weight norms.
             For instance, in a `Dense` layer the weight matrix
             has shape `(input_dim, output_dim)`,
@@ -19,8 +19,8 @@
             `(rows, cols, input_depth)`.
 
     # References
-        - [Dropout: A Simple Way to Prevent Neural Networks from Overfitting]
-          (http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
+        - [Dropout: A Simple Way to Prevent Neural Networks from Overfitting](
+           http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
     "
   (:require [libpython-clj.python
              :refer [import-module
@@ -33,14 +33,14 @@
 (py/initialize!)
 (defonce constraints (import-module "keras.constraints"))
 
-(defn maxnorm 
+(defn MaxNorm 
   "MaxNorm weight constraint.
 
     Constrains the weights incident to each hidden unit
     to have a norm less than or equal to a desired value.
 
     # Arguments
-        m: the maximum norm for the incoming weights.
+        max_value: the maximum norm for the incoming weights.
         axis: integer, axis along which to calculate weight norms.
             For instance, in a `Dense` layer the weight matrix
             has shape `(input_dim, output_dim)`,
@@ -54,15 +54,15 @@
             `(rows, cols, input_depth)`.
 
     # References
-        - [Dropout: A Simple Way to Prevent Neural Networks from Overfitting]
-          (http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
+        - [Dropout: A Simple Way to Prevent Neural Networks from Overfitting](
+           http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
     "
   [ & {:keys [max_value axis]
        :or {max_value 2 axis 0}} ]
   
-   (py/call-attr-kw constraints "maxnorm" [] {:max_value max_value :axis axis }))
+   (py/call-attr-kw constraints "MaxNorm" [] {:max_value max_value :axis axis }))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr constraints "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))

@@ -11,6 +11,21 @@
 (py/initialize!)
 (defonce vis-utils (import-module "keras.utils.vis_utils"))
 
+(defn add-edge 
+  ""
+  [ dot src dst ]
+  (py/call-attr vis-utils "add_edge"  dot src dst ))
+
+(defn is-model 
+  ""
+  [ layer ]
+  (py/call-attr vis-utils "is_model"  layer ))
+
+(defn is-wrapped-model 
+  ""
+  [ layer ]
+  (py/call-attr vis-utils "is_wrapped_model"  layer ))
+
 (defn model-to-dot 
   "Convert a Keras model to dot format.
 
@@ -22,14 +37,18 @@
             a string specifying the format of the plot:
             'TB' creates a vertical plot;
             'LR' creates a horizontal plot.
+        expand_nested: whether to expand nested models into clusters.
+        dpi: dot DPI.
+        subgraph: whether to return a pydot.Cluster instance.
 
     # Returns
-        A `pydot.Dot` instance representing the Keras model.
+        A `pydot.Dot` instance representing the Keras model or
+        a `pydot.Cluster` instance representing nested model if
+        `subgraph=True`.
     "
-  [ & {:keys [model show_shapes show_layer_names rankdir]
-       :or {show_shapes false show_layer_names true rankdir "TB"}} ]
-  
-   (py/call-attr-kw vis-utils "model_to_dot" [] {:model model :show_shapes show_shapes :show_layer_names show_layer_names :rankdir rankdir }))
+  [model & {:keys [show_shapes show_layer_names rankdir expand_nested dpi subgraph]
+                       :or {show_shapes false show_layer_names true rankdir "TB" expand_nested false dpi 96 subgraph false}} ]
+    (py/call-attr-kw vis-utils "model_to_dot" [model] {:show_shapes show_shapes :show_layer_names show_layer_names :rankdir rankdir :expand_nested expand_nested :dpi dpi :subgraph subgraph }))
 
 (defn plot-model 
   "Converts a Keras model to dot format and save to a file.
@@ -43,8 +62,13 @@
             a string specifying the format of the plot:
             'TB' creates a vertical plot;
             'LR' creates a horizontal plot.
+        expand_nested: whether to expand nested models into clusters.
+        dpi: dot DPI.
+
+    # Returns
+        A Jupyter notebook Image object if Jupyter is installed.
+        This enables in-line display of the model plots in notebooks.
     "
-  [ & {:keys [model to_file show_shapes show_layer_names rankdir]
-       :or {to_file "model.png" show_shapes false show_layer_names true rankdir "TB"}} ]
-  
-   (py/call-attr-kw vis-utils "plot_model" [] {:model model :to_file to_file :show_shapes show_shapes :show_layer_names show_layer_names :rankdir rankdir }))
+  [model & {:keys [to_file show_shapes show_layer_names rankdir expand_nested dpi]
+                       :or {to_file "model.png" show_shapes false show_layer_names true rankdir "TB" expand_nested false dpi 96}} ]
+    (py/call-attr-kw vis-utils "plot_model" [model] {:to_file to_file :show_shapes show_shapes :show_layer_names show_layer_names :rankdir rankdir :expand_nested expand_nested :dpi dpi }))

@@ -20,8 +20,8 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "abs" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "abs"  x ))
 
 (defn all 
   "Bitwise reduction (logical AND).
@@ -35,11 +35,11 @@
 
     # Returns
         A uint8 tensor (0s and 1s).
+    {{np_implementation}}
     "
-  [ & {:keys [x axis keepdims]
-       :or {keepdims false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "all" [] {:x x :axis axis :keepdims keepdims }))
+  [x & {:keys [axis keepdims]
+                       :or {keepdims false}} ]
+    (py/call-attr-kw tensorflow-backend "all" [x] {:axis axis :keepdims keepdims }))
 
 (defn any 
   "Bitwise reduction (logical OR).
@@ -53,11 +53,11 @@
 
     # Returns
         A uint8 tensor (0s and 1s).
+    {{np_implementation}}
     "
-  [ & {:keys [x axis keepdims]
-       :or {keepdims false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "any" [] {:x x :axis axis :keepdims keepdims }))
+  [x & {:keys [axis keepdims]
+                       :or {keepdims false}} ]
+    (py/call-attr-kw tensorflow-backend "any" [x] {:axis axis :keepdims keepdims }))
 
 (defn arange 
   "Creates a 1D tensor containing a sequence of integers.
@@ -79,10 +79,9 @@
         An integer tensor.
 
     "
-  [ & {:keys [start stop step dtype]
-       :or {step 1 dtype "int32"}} ]
-  
-   (py/call-attr-kw tensorflow-backend "arange" [] {:start start :stop stop :step step :dtype dtype }))
+  [start & {:keys [stop step dtype]
+                       :or {step 1 dtype "int32"}} ]
+    (py/call-attr-kw tensorflow-backend "arange" [start] {:stop stop :step step :dtype dtype }))
 
 (defn argmax 
   "Returns the index of the maximum value along an axis.
@@ -93,11 +92,11 @@
 
     # Returns
         A tensor.
+    {{np_implementation}}
     "
-  [ & {:keys [x axis]
-       :or {axis -1}} ]
-  
-   (py/call-attr-kw tensorflow-backend "argmax" [] {:x x :axis axis }))
+  [x & {:keys [axis]
+                       :or {axis -1}} ]
+    (py/call-attr-kw tensorflow-backend "argmax" [x] {:axis axis }))
 
 (defn argmin 
   "Returns the index of the minimum value along an axis.
@@ -108,17 +107,16 @@
 
     # Returns
         A tensor.
+    {{np_implementation}}
     "
-  [ & {:keys [x axis]
-       :or {axis -1}} ]
-  
-   (py/call-attr-kw tensorflow-backend "argmin" [] {:x x :axis axis }))
-
+  [x & {:keys [axis]
+                       :or {axis -1}} ]
+    (py/call-attr-kw tensorflow-backend "argmin" [x] {:axis axis }))
 (defn batch-dot 
   "Batchwise dot product.
 
     `batch_dot` is used to compute dot product of `x` and `y` when
-    `x` and `y` are data in batch, i.e. in a shape of
+    `x` and `y` are data in batches, i.e. in a shape of
     `(batch_size, :)`.
     `batch_dot` results in a tensor or variable with less dimensions
     than the input. If the number of dimensions is reduced to 1,
@@ -127,8 +125,7 @@
     # Arguments
         x: Keras tensor or variable with `ndim >= 2`.
         y: Keras tensor or variable with `ndim >= 2`.
-        axes: list of (or single) int with target dimensions.
-            The lengths of `axes[0]` and `axes[1]` should be the same.
+        axes: int or tuple(int, int). Target dimensions to be reduced.
 
     # Returns
         A tensor with shape equal to the concatenation of `x`'s shape
@@ -141,6 +138,14 @@
         `batch_dot(x, y, axes=1) = [[17], [53]]` which is the main diagonal
         of `x.dot(y.T)`, although we never have to calculate the off-diagonal
         elements.
+
+        Pseudocode:
+        ```
+        inner_products = []
+        for xi, yi in zip(x, y):
+            inner_products.append(xi.dot(yi))
+        result = stack(inner_products)
+        ```
 
         Shape inference:
         Let `x`'s shape be `(100, 20)` and `y`'s shape be `(100, 30, 20)`.
@@ -160,13 +165,15 @@
     ```python
         >>> x_batch = K.ones(shape=(32, 20, 1))
         >>> y_batch = K.ones(shape=(32, 30, 20))
-        >>> xy_batch_dot = K.batch_dot(x_batch, y_batch, axes=[1, 2])
+        >>> xy_batch_dot = K.batch_dot(x_batch, y_batch, axes=(1, 2))
         >>> K.int_shape(xy_batch_dot)
         (32, 1, 30)
     ```
+
+    {{np_implementation}}
     "
-  [ & {:keys [x y axes]} ]
-   (py/call-attr-kw tensorflow-backend "batch_dot" [] {:x x :y y :axes axes }))
+  [x y  & {:keys [axes]} ]
+    (py/call-attr-kw tensorflow-backend "batch_dot" [x y] {:axes axes }))
 
 (defn batch-flatten 
   "Turn a nD tensor into a 2D tensor with same 0th dimension.
@@ -179,8 +186,8 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "batch_flatten" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "batch_flatten"  x ))
 
 (defn batch-get-value 
   "Returns the value of more than one tensor variable.
@@ -191,8 +198,8 @@
     # Returns
         A list of Numpy arrays.
     "
-  [ & {:keys [ops]} ]
-   (py/call-attr-kw tensorflow-backend "batch_get_value" [] {:ops ops }))
+  [ ops ]
+  (py/call-attr tensorflow-backend "batch_get_value"  ops ))
 
 (defn batch-normalization 
   "Applies batch normalization on x given mean, var, beta and gamma.
@@ -212,11 +219,12 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x mean var beta gamma axis epsilon]
-       :or {axis -1 epsilon 0.001}} ]
-  
-   (py/call-attr-kw tensorflow-backend "batch_normalization" [] {:x x :mean mean :var var :beta beta :gamma gamma :axis axis :epsilon epsilon }))
+  [x mean var beta gamma & {:keys [axis epsilon]
+                       :or {axis -1 epsilon 0.001}} ]
+    (py/call-attr-kw tensorflow-backend "batch_normalization" [x mean var beta gamma] {:axis axis :epsilon epsilon }))
 
 (defn batch-set-value 
   "Sets the values of many tensor variables at once.
@@ -225,9 +233,8 @@
         tuples: a list of tuples `(tensor, value)`.
             `value` should be a Numpy array.
     "
-  [ & {:keys [tuples]} ]
-   (py/call-attr-kw tensorflow-backend "batch_set_value" [] {:tuples tuples }))
-
+  [ tuples ]
+  (py/call-attr tensorflow-backend "batch_set_value"  tuples ))
 (defn bias-add 
   "Adds a bias vector to a tensor.
 
@@ -245,9 +252,10 @@
                     2. invalid bias shape.
                        the bias should be either a vector or
                        a tensor with ndim(x) - 1 dimension
+    {{np_implementation}}
     "
-  [ & {:keys [x bias data_format]} ]
-   (py/call-attr-kw tensorflow-backend "bias_add" [] {:x x :bias bias :data_format data_format }))
+  [x bias  & {:keys [data_format]} ]
+    (py/call-attr-kw tensorflow-backend "bias_add" [x bias] {:data_format data_format }))
 
 (defn binary-crossentropy 
   "Binary crossentropy between an output tensor and a target tensor.
@@ -262,10 +270,9 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [target output from_logits]
-       :or {from_logits false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "binary_crossentropy" [] {:target target :output output :from_logits from_logits }))
+  [target output & {:keys [from_logits]
+                       :or {from_logits false}} ]
+    (py/call-attr-kw tensorflow-backend "binary_crossentropy" [target output] {:from_logits from_logits }))
 
 (defn cast 
   "Casts a tensor to a different dtype and returns it.
@@ -296,8 +303,35 @@
         <tf.Tensor 'Cast_2:0' shape=(2, 3) dtype=float16>
     ```
     "
-  [ & {:keys [x dtype]} ]
-   (py/call-attr-kw tensorflow-backend "cast" [] {:x x :dtype dtype }))
+  [ x dtype ]
+  (py/call-attr tensorflow-backend "cast"  x dtype ))
+
+(defn cast-to-floatx 
+  "Cast a Numpy array to the default Keras float type.
+
+    # Arguments
+        x: Numpy array.
+
+    # Returns
+        The same Numpy array, cast to its new type.
+
+    # Example
+    ```python
+        >>> from keras import backend as K
+        >>> K.floatx()
+        'float32'
+        >>> arr = numpy.array([1.0, 2.0], dtype='float64')
+        >>> arr.dtype
+        dtype('float64')
+        >>> new_arr = K.cast_to_floatx(arr)
+        >>> new_arr
+        array([ 1.,  2.], dtype=float32)
+        >>> new_arr.dtype
+        dtype('float32')
+    ```
+    "
+  [ x ]
+  (py/call-attr tensorflow-backend "cast_to_floatx"  x ))
 
 (defn categorical-crossentropy 
   "Categorical crossentropy between an output tensor and a target tensor.
@@ -321,32 +355,32 @@
         ValueError: if `axis` is neither -1 nor one of
             the axes of `output`.
     "
-  [ & {:keys [target output from_logits axis]
-       :or {from_logits false axis -1}} ]
-  
-   (py/call-attr-kw tensorflow-backend "categorical_crossentropy" [] {:target target :output output :from_logits from_logits :axis axis }))
+  [target output & {:keys [from_logits axis]
+                       :or {from_logits false axis -1}} ]
+    (py/call-attr-kw tensorflow-backend "categorical_crossentropy" [target output] {:from_logits from_logits :axis axis }))
 
 (defn clear-session 
-  "Destroys the current TF graph and creates a new one.
+  "Destroys the current Keras graph and creates a new one.
 
     Useful to avoid clutter from old models / layers.
     "
   [  ]
-  (py/call-attr tensorflow-backend "clear_session"   ))
+  (py/call-attr tensorflow-backend "clear_session"  ))
 
 (defn clip 
   "Element-wise value clipping.
 
     # Arguments
         x: Tensor or variable.
-        min_value: Python float or integer.
-        max_value: Python float or integer.
+        min_value: Python float, integer or tensor.
+        max_value: Python float, integer or tensor.
 
     # Returns
         A tensor.
+    {{np_implementation}}
     "
-  [ & {:keys [x min_value max_value]} ]
-   (py/call-attr-kw tensorflow-backend "clip" [] {:x x :min_value min_value :max_value max_value }))
+  [ x min_value max_value ]
+  (py/call-attr tensorflow-backend "clip"  x min_value max_value ))
 
 (defn concatenate 
   "Concatenates a list of tensors alongside the specified axis.
@@ -358,11 +392,9 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [tensors axis]
-       :or {axis -1}} ]
-  
-   (py/call-attr-kw tensorflow-backend "concatenate" [] {:tensors tensors :axis axis }))
-
+  [tensors & {:keys [axis]
+                       :or {axis -1}} ]
+    (py/call-attr-kw tensorflow-backend "concatenate" [tensors] {:axis axis }))
 (defn constant 
   "Creates a constant tensor.
 
@@ -375,8 +407,23 @@
     # Returns
         A Constant Tensor.
     "
-  [ & {:keys [value dtype shape name]} ]
-   (py/call-attr-kw tensorflow-backend "constant" [] {:value value :dtype dtype :shape shape :name name }))
+  [value  & {:keys [dtype shape name]} ]
+    (py/call-attr-kw tensorflow-backend "constant" [value] {:dtype dtype :shape shape :name name }))
+
+(defn control-dependencies 
+  "A context manager that specifies control dependencies.
+
+    # Arguments
+        control_inputs: A list of Operation or Tensor objects
+            which must be executed
+            or computed before running the operations defined in the context.
+            Can also be None to clear the control dependencies.
+
+    # Returns
+        A context manager.
+    "
+  [ control_inputs ]
+  (py/call-attr tensorflow-backend "control_dependencies"  control_inputs ))
 
 (defn conv1d 
   "1D convolution.
@@ -396,10 +443,9 @@
         ValueError: If `data_format` is neither
             `\"channels_last\"` nor `\"channels_first\"`.
     "
-  [ & {:keys [x kernel strides padding data_format dilation_rate]
-       :or {strides 1 padding "valid" dilation_rate 1}} ]
-  
-   (py/call-attr-kw tensorflow-backend "conv1d" [] {:x x :kernel kernel :strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
+  [x kernel & {:keys [strides padding data_format dilation_rate]
+                       :or {strides 1 padding "valid" dilation_rate 1}} ]
+    (py/call-attr-kw tensorflow-backend "conv1d" [x kernel] {:strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
 
 (defn conv2d 
   "2D convolution.
@@ -421,10 +467,9 @@
         ValueError: If `data_format` is neither
             `\"channels_last\"` nor `\"channels_first\"`.
     "
-  [ & {:keys [x kernel strides padding data_format dilation_rate]
-       :or {strides (1, 1) padding "valid" dilation_rate (1, 1)}} ]
-  
-   (py/call-attr-kw tensorflow-backend "conv2d" [] {:x x :kernel kernel :strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
+  [x kernel & {:keys [strides padding data_format dilation_rate]
+                       :or {strides (1, 1) padding "valid" dilation_rate (1, 1)}} ]
+    (py/call-attr-kw tensorflow-backend "conv2d" [x kernel] {:strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
 
 (defn conv2d-transpose 
   "2D deconvolution (i.e. transposed convolution).
@@ -447,10 +492,9 @@
         ValueError: If `data_format` is neither
             `\"channels_last\"` nor `\"channels_first\"`.
     "
-  [ & {:keys [x kernel output_shape strides padding data_format dilation_rate]
-       :or {strides (1, 1) padding "valid" dilation_rate (1, 1)}} ]
-  
-   (py/call-attr-kw tensorflow-backend "conv2d_transpose" [] {:x x :kernel kernel :output_shape output_shape :strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
+  [x kernel output_shape & {:keys [strides padding data_format dilation_rate]
+                       :or {strides (1, 1) padding "valid" dilation_rate (1, 1)}} ]
+    (py/call-attr-kw tensorflow-backend "conv2d_transpose" [x kernel output_shape] {:strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
 
 (defn conv3d 
   "3D convolution.
@@ -472,10 +516,9 @@
         ValueError: If `data_format` is neither
             `\"channels_last\"` nor `\"channels_first\"`.
     "
-  [ & {:keys [x kernel strides padding data_format dilation_rate]
-       :or {strides (1, 1, 1) padding "valid" dilation_rate (1, 1, 1)}} ]
-  
-   (py/call-attr-kw tensorflow-backend "conv3d" [] {:x x :kernel kernel :strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
+  [x kernel & {:keys [strides padding data_format dilation_rate]
+                       :or {strides (1, 1, 1) padding "valid" dilation_rate (1, 1, 1)}} ]
+    (py/call-attr-kw tensorflow-backend "conv3d" [x kernel] {:strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
 
 (defn conv3d-transpose 
   "3D deconvolution (i.e. transposed convolution).
@@ -497,10 +540,9 @@
         ValueError: If `data_format` is neither
             `\"channels_last\"` nor `\"channels_first\"`.
     "
-  [ & {:keys [x kernel output_shape strides padding data_format]
-       :or {strides (1, 1, 1) padding "valid"}} ]
-  
-   (py/call-attr-kw tensorflow-backend "conv3d_transpose" [] {:x x :kernel kernel :output_shape output_shape :strides strides :padding padding :data_format data_format }))
+  [x kernel output_shape & {:keys [strides padding data_format]
+                       :or {strides (1, 1, 1) padding "valid"}} ]
+    (py/call-attr-kw tensorflow-backend "conv3d_transpose" [x kernel output_shape] {:strides strides :padding padding :data_format data_format }))
 
 (defn cos 
   "Computes cos of x element-wise.
@@ -511,8 +553,8 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "cos" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "cos"  x ))
 
 (defn count-params 
   "Returns the static number of elements in a Keras variable or tensor.
@@ -533,9 +575,10 @@
         array([[ 0.,  0.,  0.],
                [ 0.,  0.,  0.]], dtype=float32)
     ```
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "count_params" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "count_params"  x ))
 
 (defn ctc-batch-cost 
   "Runs CTC loss algorithm on each batch element.
@@ -554,8 +597,8 @@
         Tensor with shape (samples,1) containing the
             CTC loss of each element.
     "
-  [ & {:keys [y_true y_pred input_length label_length]} ]
-   (py/call-attr-kw tensorflow-backend "ctc_batch_cost" [] {:y_true y_true :y_pred y_pred :input_length input_length :label_length label_length }))
+  [ y_true y_pred input_length label_length ]
+  (py/call-attr tensorflow-backend "ctc_batch_cost"  y_true y_pred input_length label_length ))
 
 (defn ctc-decode 
   "Decodes the output of a softmax.
@@ -568,27 +611,28 @@
             containing the prediction, or output of the softmax.
         input_length: tensor `(samples, )` containing the sequence length for
             each batch item in `y_pred`.
-        greedy: perform much faster best-path search if `true`.
+        greedy: perform much faster best-path search if `True`.
             This does not use a dictionary.
-        beam_width: if `greedy` is `false`: a beam search decoder will be used
+        beam_width: if `greedy` is `False`: a beam search decoder will be used
             with a beam of this width.
-        top_paths: if `greedy` is `false`,
+        top_paths: if `greedy` is `False`,
             how many of the most probable paths will be returned.
+        merge_repeated: if `greedy` is `False`,
+            merge repeated classes in the output beams.
 
     # Returns
         Tuple:
-            List: if `greedy` is `true`, returns a list of one element that
+            List: if `greedy` is `True`, returns a list of one element that
                 contains the decoded sequence.
-                If `false`, returns the `top_paths` most probable
+                If `False`, returns the `top_paths` most probable
                 decoded sequences.
                 Important: blank labels are returned as `-1`.
             Tensor `(top_paths, )` that contains
                 the log probability of each decoded sequence.
     "
-  [ & {:keys [y_pred input_length greedy beam_width top_paths]
-       :or {greedy true beam_width 100 top_paths 1}} ]
-  
-   (py/call-attr-kw tensorflow-backend "ctc_decode" [] {:y_pred y_pred :input_length input_length :greedy greedy :beam_width beam_width :top_paths top_paths }))
+  [y_pred input_length & {:keys [greedy beam_width top_paths merge_repeated]
+                       :or {greedy true beam_width 100 top_paths 1 merge_repeated false}} ]
+    (py/call-attr-kw tensorflow-backend "ctc_decode" [y_pred input_length] {:greedy greedy :beam_width beam_width :top_paths top_paths :merge_repeated merge_repeated }))
 
 (defn ctc-label-dense-to-sparse 
   "Converts CTC labels from dense to sparse.
@@ -600,8 +644,8 @@
     # Returns
         A sparse tensor representation of the labels.
     "
-  [ & {:keys [labels label_lengths]} ]
-   (py/call-attr-kw tensorflow-backend "ctc_label_dense_to_sparse" [] {:labels labels :label_lengths label_lengths }))
+  [ labels label_lengths ]
+  (py/call-attr tensorflow-backend "ctc_label_dense_to_sparse"  labels label_lengths ))
 
 (defn cumprod 
   "Cumulative product of the values in a tensor, alongside the specified axis.
@@ -612,11 +656,11 @@
 
     # Returns
         A tensor of the cumulative product of values of `x` along `axis`.
+    {{np_implementation}}
     "
-  [ & {:keys [x axis]
-       :or {axis 0}} ]
-  
-   (py/call-attr-kw tensorflow-backend "cumprod" [] {:x x :axis axis }))
+  [x & {:keys [axis]
+                       :or {axis 0}} ]
+    (py/call-attr-kw tensorflow-backend "cumprod" [x] {:axis axis }))
 
 (defn cumsum 
   "Cumulative sum of the values in a tensor, alongside the specified axis.
@@ -627,11 +671,11 @@
 
     # Returns
         A tensor of the cumulative sum of values of `x` along `axis`.
+    {{np_implementation}}
     "
-  [ & {:keys [x axis]
-       :or {axis 0}} ]
-  
-   (py/call-attr-kw tensorflow-backend "cumsum" [] {:x x :axis axis }))
+  [x & {:keys [axis]
+                       :or {axis 0}} ]
+    (py/call-attr-kw tensorflow-backend "cumsum" [x] {:axis axis }))
 
 (defn depthwise-conv2d 
   "2D convolution with separable filters.
@@ -652,10 +696,9 @@
         ValueError: If `data_format` is neither
             `\"channels_last\"` nor `\"channels_first\"`.
     "
-  [ & {:keys [x depthwise_kernel strides padding data_format dilation_rate]
-       :or {strides (1, 1) padding "valid" dilation_rate (1, 1)}} ]
-  
-   (py/call-attr-kw tensorflow-backend "depthwise_conv2d" [] {:x x :depthwise_kernel depthwise_kernel :strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
+  [x depthwise_kernel & {:keys [strides padding data_format dilation_rate]
+                       :or {strides (1, 1) padding "valid" dilation_rate (1, 1)}} ]
+    (py/call-attr-kw tensorflow-backend "depthwise_conv2d" [x depthwise_kernel] {:strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
 
 (defn dot 
   "Multiplies 2 tensors (and/or variables) and returns a *tensor*.
@@ -698,10 +741,10 @@
         >>> K.int_shape(xy)
         (2, 4, 5)
     ```
+    {{np_implementation}}
     "
-  [ & {:keys [x y]} ]
-   (py/call-attr-kw tensorflow-backend "dot" [] {:x x :y y }))
-
+  [ x y ]
+  (py/call-attr tensorflow-backend "dot"  x y ))
 (defn dropout 
   "Sets entries in `x` to zero at random, while scaling the entire tensor.
 
@@ -715,9 +758,10 @@
 
     # Returns
         A tensor.
+    {{np_implementation}}
     "
-  [ & {:keys [x level noise_shape seed]} ]
-   (py/call-attr-kw tensorflow-backend "dropout" [] {:x x :level level :noise_shape noise_shape :seed seed }))
+  [x level  & {:keys [noise_shape seed]} ]
+    (py/call-attr-kw tensorflow-backend "dropout" [x level] {:noise_shape noise_shape :seed seed }))
 
 (defn dtype 
   "Returns the dtype of a Keras tensor or variable, as a string.
@@ -745,9 +789,22 @@
         >>> K.dtype(kvar)
         'float32_ref'
     ```
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "dtype" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "dtype"  x ))
+
+(defn eager 
+  "Decorator used in TensorFlow 2.0 to exit the Keras graph.
+
+    # Arguments
+        func: Function to decorate.
+
+    # Returns
+        Decorated function.
+    "
+  [ func ]
+  (py/call-attr tensorflow-backend "eager"  func ))
 
 (defn elu 
   "Exponential linear unit.
@@ -758,11 +815,12 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x alpha]
-       :or {alpha 1.0}} ]
-  
-   (py/call-attr-kw tensorflow-backend "elu" [] {:x x :alpha alpha }))
+  [x & {:keys [alpha]
+                       :or {alpha 1.0}} ]
+    (py/call-attr-kw tensorflow-backend "elu" [x] {:alpha alpha }))
 
 (defn epsilon 
   "Returns the value of the fuzz factor used in numeric expressions.
@@ -777,7 +835,7 @@
     ```
     "
   [  ]
-  (py/call-attr tensorflow-backend "epsilon"   ))
+  (py/call-attr tensorflow-backend "epsilon"  ))
 
 (defn equal 
   "Element-wise equality between two tensors.
@@ -788,15 +846,17 @@
 
     # Returns
         A bool tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x y]} ]
-   (py/call-attr-kw tensorflow-backend "equal" [] {:x x :y y }))
+  [ x y ]
+  (py/call-attr tensorflow-backend "equal"  x y ))
 
 (defn eval 
-  "Evaluates the value of a variable.
+  "Evaluates the value of a tensor.
 
     # Arguments
-        x: A variable.
+        x: A tensor.
 
     # Returns
         A Numpy array.
@@ -809,9 +869,10 @@
         array([[ 1.,  2.],
                [ 3.,  4.]], dtype=float32)
     ```
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "eval" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "eval"  x ))
 
 (defn exp 
   "Element-wise exponential.
@@ -822,8 +883,8 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "exp" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "exp"  x ))
 
 (defn expand-dims 
   "Adds a 1-sized dimension at index \"axis\".
@@ -835,16 +896,14 @@
     # Returns
         A tensor with expanded dimensions.
     "
-  [ & {:keys [x axis]
-       :or {axis -1}} ]
-  
-   (py/call-attr-kw tensorflow-backend "expand_dims" [] {:x x :axis axis }))
-
+  [x & {:keys [axis]
+                       :or {axis -1}} ]
+    (py/call-attr-kw tensorflow-backend "expand_dims" [x] {:axis axis }))
 (defn eye 
   "Instantiate an identity matrix and returns it.
 
     # Arguments
-        size: Integer, number of rows/columns.
+        size: Tuple, number of rows and columns. If Integer, number of rows.
         dtype: String, data type of returned Keras variable.
         name: String, name of returned Keras variable.
 
@@ -854,16 +913,18 @@
     # Example
     ```python
         >>> from keras import backend as K
-        >>> kvar = K.eye(3)
-        >>> K.eval(kvar)
+        >>> K.eval(K.eye(3))
         array([[ 1.,  0.,  0.],
                [ 0.,  1.,  0.],
                [ 0.,  0.,  1.]], dtype=float32)
+        >>> K.eval(K.eye((2, 3)))
+        array([[1., 0., 0.],
+               [0., 1., 0.]], dtype=float32)
     ```
-
+    {{np_implementation}}
     "
-  [ & {:keys [size dtype name]} ]
-   (py/call-attr-kw tensorflow-backend "eye" [] {:size size :dtype dtype :name name }))
+  [size  & {:keys [dtype name]} ]
+    (py/call-attr-kw tensorflow-backend "eye" [size] {:dtype dtype :name name }))
 
 (defn flatten 
   "Flatten a tensor.
@@ -874,8 +935,8 @@
     # Returns
         A tensor, reshaped into 1-D
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "flatten" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "flatten"  x ))
 
 (defn floatx 
   "Returns the default float type, as a string.
@@ -891,8 +952,7 @@
     ```
     "
   [  ]
-  (py/call-attr tensorflow-backend "floatx"   ))
-
+  (py/call-attr tensorflow-backend "floatx"  ))
 (defn foldl 
   "Reduce elems using fn to combine them from left to right.
 
@@ -906,9 +966,8 @@
     # Returns
         Tensor with same type and shape as `initializer`.
     "
-  [ & {:keys [fn elems initializer name]} ]
-   (py/call-attr-kw tensorflow-backend "foldl" [] {:fn fn :elems elems :initializer initializer :name name }))
-
+  [fn elems  & {:keys [initializer name]} ]
+    (py/call-attr-kw tensorflow-backend "foldl" [fn elems] {:initializer initializer :name name }))
 (defn foldr 
   "Reduce elems using fn to combine them from right to left.
 
@@ -922,26 +981,12 @@
     # Returns
         Tensor with same type and shape as `initializer`.
     "
-  [ & {:keys [fn elems initializer name]} ]
-   (py/call-attr-kw tensorflow-backend "foldr" [] {:fn fn :elems elems :initializer initializer :name name }))
-
+  [fn elems  & {:keys [initializer name]} ]
+    (py/call-attr-kw tensorflow-backend "foldr" [fn elems] {:initializer initializer :name name }))
 (defn function 
-  "Instantiates a Keras function.
-
-    # Arguments
-        inputs: List of placeholder tensors.
-        outputs: List of output tensors.
-        updates: List of update ops.
-        **kwargs: Passed to `tf.Session.run`.
-
-    # Returns
-        Output values as Numpy arrays.
-
-    # Raises
-        ValueError: if invalid kwargs are passed in.
-    "
-  [ & {:keys [inputs outputs updates]} ]
-   (py/call-attr-kw tensorflow-backend "function" [] {:inputs inputs :outputs outputs :updates updates }))
+  ""
+  [inputs outputs  & {:keys [updates]} ]
+    (py/call-attr-kw tensorflow-backend "function" [inputs outputs] {:updates updates }))
 
 (defn gather 
   "Retrieves the elements of indices `indices` in the tensor `reference`.
@@ -952,9 +997,16 @@
 
     # Returns
         A tensor of same type as `reference`.
+
+    {{np_implementation}}
     "
-  [ & {:keys [reference indices]} ]
-   (py/call-attr-kw tensorflow-backend "gather" [] {:reference reference :indices indices }))
+  [ reference indices ]
+  (py/call-attr tensorflow-backend "gather"  reference indices ))
+
+(defn get-graph 
+  ""
+  [  ]
+  (py/call-attr tensorflow-backend "get_graph"  ))
 
 (defn get-session 
   "Returns the TF session to be used by the backend.
@@ -971,18 +1023,31 @@
 
     # Returns
         A TensorFlow session.
+
+    # Raises
+        RuntimeError: if no session is available
+            (e.g. when using TensorFlow 2.0).
     "
   [  ]
-  (py/call-attr tensorflow-backend "get_session"   ))
+  (py/call-attr tensorflow-backend "get_session"  ))
 
 (defn get-uid 
-  "Get the uid for the default graph.
+  "Provides a unique UID given a string prefix.
 
     # Arguments
-        prefix: An optional prefix of the graph.
+        prefix: string.
 
     # Returns
-        A unique identifier for the graph.
+        An integer.
+
+    # Example
+    ```python
+        >>> keras.backend.get_uid('dense')
+        1
+        >>> keras.backend.get_uid('dense')
+        2
+    ```
+
     "
   [ & {:keys [prefix]
        :or {prefix ""}} ]
@@ -998,8 +1063,8 @@
     # Returns
         A Numpy array.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "get_value" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "get_value"  x ))
 
 (defn get-variable-shape 
   "Returns the shape of a variable.
@@ -1010,8 +1075,8 @@
     # Returns
         A tuple of integers.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "get_variable_shape" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "get_variable_shape"  x ))
 
 (defn gradients 
   "Returns the gradients of `loss` w.r.t. `variables`.
@@ -1023,8 +1088,8 @@
     # Returns
         A gradients tensor.
     "
-  [ & {:keys [loss variables]} ]
-   (py/call-attr-kw tensorflow-backend "gradients" [] {:loss loss :variables variables }))
+  [ loss variables ]
+  (py/call-attr tensorflow-backend "gradients"  loss variables ))
 
 (defn greater 
   "Element-wise truth value of (x > y).
@@ -1035,9 +1100,11 @@
 
     # Returns
         A bool tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x y]} ]
-   (py/call-attr-kw tensorflow-backend "greater" [] {:x x :y y }))
+  [ x y ]
+  (py/call-attr tensorflow-backend "greater"  x y ))
 
 (defn greater-equal 
   "Element-wise truth value of (x >= y).
@@ -1048,9 +1115,11 @@
 
     # Returns
         A bool tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x y]} ]
-   (py/call-attr-kw tensorflow-backend "greater_equal" [] {:x x :y y }))
+  [ x y ]
+  (py/call-attr tensorflow-backend "greater_equal"  x y ))
 
 (defn hard-sigmoid 
   "Segment-wise linear approximation of sigmoid.
@@ -1064,33 +1133,11 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "hard_sigmoid" [] {:x x }))
-
-(defn has-arg 
-  "Checks if a callable accepts a given keyword argument.
-
-    For Python 2, checks if there is an argument with the given name.
-
-    For Python 3, checks if there is an argument with the given name, and
-    also whether this argument can be called with a keyword (i.e. if it is
-    not a positional-only argument).
-
-    # Arguments
-        fn: Callable to inspect.
-        name: Check if `fn` can be called with `name` as a keyword argument.
-        accept_all: What to return if there is no parameter called `name`
-                    but the function accepts a `**kwargs` argument.
-
-    # Returns
-        bool, whether `fn` accepts a `name` keyword argument.
-    "
-  [ & {:keys [fn name accept_all]
-       :or {accept_all false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "has_arg" [] {:fn fn :name name :accept_all accept_all }))
-
+  [ x ]
+  (py/call-attr tensorflow-backend "hard_sigmoid"  x ))
 (defn identity 
   "Returns a tensor with the same content as the input tensor.
 
@@ -1101,18 +1148,23 @@
     # Returns
         A tensor of the same shape, type and content.
     "
-  [ & {:keys [x name]} ]
-   (py/call-attr-kw tensorflow-backend "identity" [] {:x x :name name }))
+  [x  & {:keys [name]} ]
+    (py/call-attr-kw tensorflow-backend "identity" [x] {:name name }))
 
-(defn image-dim-ordering 
-  "Legacy getter for `image_data_format`.
+(defn image-data-format 
+  "Returns the default image data format convention.
 
     # Returns
-        string, one of `'th'`, `'tf'`
+        A string, either `'channels_first'` or `'channels_last'`
+
+    # Example
+    ```python
+        >>> keras.backend.image_data_format()
+        'channels_first'
+    ```
     "
   [  ]
-  (py/call-attr tensorflow-backend "image_dim_ordering"   ))
-
+  (py/call-attr tensorflow-backend "image_data_format"  ))
 (defn in-test-phase 
   "Selects `x` in test phase, and `alt` otherwise.
 
@@ -1130,8 +1182,8 @@
     # Returns
         Either `x` or `alt` based on `K.learning_phase`.
     "
-  [ & {:keys [x alt training]} ]
-   (py/call-attr-kw tensorflow-backend "in_test_phase" [] {:x x :alt alt :training training }))
+  [x alt  & {:keys [training]} ]
+    (py/call-attr-kw tensorflow-backend "in_test_phase" [x alt] {:training training }))
 
 (defn in-top-k 
   "Returns whether the `targets` are in the top `k` `predictions`.
@@ -1146,9 +1198,8 @@
         `output[i]` is `True` if `predictions[i, targets[i]]` is within top-`k`
         values of `predictions[i]`.
     "
-  [ & {:keys [predictions targets k]} ]
-   (py/call-attr-kw tensorflow-backend "in_top_k" [] {:predictions predictions :targets targets :k k }))
-
+  [ predictions targets k ]
+  (py/call-attr tensorflow-backend "in_top_k"  predictions targets k ))
 (defn in-train-phase 
   "Selects `x` in train phase, and `alt` otherwise.
 
@@ -1167,8 +1218,8 @@
         Either `x` or `alt` based on the `training` flag.
         the `training` flag defaults to `K.learning_phase()`.
     "
-  [ & {:keys [x alt training]} ]
-   (py/call-attr-kw tensorflow-backend "in_train_phase" [] {:x x :alt alt :training training }))
+  [x alt  & {:keys [training]} ]
+    (py/call-attr-kw tensorflow-backend "in_train_phase" [x alt] {:training training }))
 
 (defn int-shape 
   "Returns the shape of tensor or variable as a tuple of int or None entries.
@@ -1190,9 +1241,11 @@
         >>> K.int_shape(kvar)
         (2, 2)
     ```
+
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "int_shape" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "int_shape"  x ))
 
 (defn is-keras-tensor 
   "Returns whether `x` is a Keras tensor.
@@ -1217,24 +1270,28 @@
         >>> K.is_keras_tensor(np_var) # A numpy array is not a symbolic tensor.
         ValueError
         >>> k_var = tf.placeholder('float32', shape=(1,1))
-        >>> K.is_keras_tensor(k_var) # A variable indirectly created outside of keras is not a Keras tensor.
+        >>> # A variable indirectly created outside of keras is not a Keras tensor.
+        >>> K.is_keras_tensor(k_var)
         False
         >>> keras_var = K.variable(np_var)
-        >>> K.is_keras_tensor(keras_var)  # A variable created with the keras backend is not a Keras tensor.
+        >>> # A variable created with the keras backend is not a Keras tensor.
+        >>> K.is_keras_tensor(keras_var)
         False
         >>> keras_placeholder = K.placeholder(shape=(2, 4, 5))
-        >>> K.is_keras_tensor(keras_placeholder)  # A placeholder is not a Keras tensor.
+        >>> # A placeholder is not a Keras tensor.
+        >>> K.is_keras_tensor(keras_placeholder)
         False
         >>> keras_input = Input([10])
         >>> K.is_keras_tensor(keras_input) # An Input is a Keras tensor.
         True
         >>> keras_layer_output = Dense(10)(keras_input)
-        >>> K.is_keras_tensor(keras_layer_output) # Any Keras layer output is a Keras tensor.
+        >>> # Any Keras layer output is a Keras tensor.
+        >>> K.is_keras_tensor(keras_layer_output)
         True
     ```
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "is_keras_tensor" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "is_keras_tensor"  x ))
 
 (defn is-placeholder 
   "Returns whether `x` is a placeholder.
@@ -1245,8 +1302,8 @@
     # Returns
         Boolean.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "is_placeholder" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "is_placeholder"  x ))
 
 (defn is-sparse 
   "Returns whether a tensor is a sparse tensor.
@@ -1268,14 +1325,23 @@
         True
     ```
     "
-  [ & {:keys [tensor]} ]
-   (py/call-attr-kw tensorflow-backend "is_sparse" [] {:tensor tensor }))
+  [ tensor ]
+  (py/call-attr tensorflow-backend "is_sparse"  tensor ))
+
+(defn is-symbolic 
+  ""
+  [ x ]
+  (py/call-attr tensorflow-backend "is_symbolic"  x ))
 
 (defn is-tensor 
   ""
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "is_tensor" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "is_tensor"  x ))
 
+(defn is-variable 
+  ""
+  [ x ]
+  (py/call-attr tensorflow-backend "is_variable"  x ))
 (defn l2-normalize 
   "Normalizes a tensor wrt the L2 norm alongside the specified axis.
 
@@ -1285,9 +1351,11 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x axis]} ]
-   (py/call-attr-kw tensorflow-backend "l2_normalize" [] {:x x :axis axis }))
+  [x  & {:keys [axis]} ]
+    (py/call-attr-kw tensorflow-backend "l2_normalize" [x] {:axis axis }))
 
 (defn learning-phase 
   "Returns the learning phase flag.
@@ -1300,7 +1368,7 @@
         Learning phase (scalar integer tensor or Python integer).
     "
   [  ]
-  (py/call-attr tensorflow-backend "learning_phase"   ))
+  (py/call-attr tensorflow-backend "learning_phase"  ))
 
 (defn less 
   "Element-wise truth value of (x < y).
@@ -1311,9 +1379,11 @@
 
     # Returns
         A bool tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x y]} ]
-   (py/call-attr-kw tensorflow-backend "less" [] {:x x :y y }))
+  [ x y ]
+  (py/call-attr tensorflow-backend "less"  x y ))
 
 (defn less-equal 
   "Element-wise truth value of (x <= y).
@@ -1324,10 +1394,11 @@
 
     # Returns
         A bool tensor.
-    "
-  [ & {:keys [x y]} ]
-   (py/call-attr-kw tensorflow-backend "less_equal" [] {:x x :y y }))
 
+    {{np_implementation}}
+    "
+  [ x y ]
+  (py/call-attr tensorflow-backend "less_equal"  x y ))
 (defn local-conv1d 
   "Apply 1D conv with un-shared weights.
 
@@ -1342,15 +1413,15 @@
         data_format: the data format, channels_first or channels_last
 
     # Returns
-        the tensor after 1d conv with un-shared weights, with shape (batch_size, output_length, filters)
+        the tensor after 1d conv with un-shared weights,
+        with shape (batch_size, output_length, filters)
 
     # Raises
         ValueError: If `data_format` is neither
             `\"channels_last\"` nor `\"channels_first\"`.
     "
-  [ & {:keys [inputs kernel kernel_size strides data_format]} ]
-   (py/call-attr-kw tensorflow-backend "local_conv1d" [] {:inputs inputs :kernel kernel :kernel_size kernel_size :strides strides :data_format data_format }))
-
+  [inputs kernel kernel_size strides  & {:keys [data_format]} ]
+    (py/call-attr-kw tensorflow-backend "local_conv1d" [inputs kernel kernel_size strides] {:data_format data_format }))
 (defn local-conv2d 
   "Apply 2D conv with un-shared weights.
 
@@ -1382,8 +1453,8 @@
         ValueError: if `data_format` is neither
                     `channels_last` or `channels_first`.
     "
-  [ & {:keys [inputs kernel kernel_size strides output_shape data_format]} ]
-   (py/call-attr-kw tensorflow-backend "local_conv2d" [] {:inputs inputs :kernel kernel :kernel_size kernel_size :strides strides :output_shape output_shape :data_format data_format }))
+  [inputs kernel kernel_size strides output_shape  & {:keys [data_format]} ]
+    (py/call-attr-kw tensorflow-backend "local_conv2d" [inputs kernel kernel_size strides output_shape] {:data_format data_format }))
 
 (defn log 
   "Element-wise log.
@@ -1394,8 +1465,8 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "log" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "log"  x ))
 
 (defn logsumexp 
   "Computes log(sum(exp(elements across dimensions of a tensor))).
@@ -1416,11 +1487,11 @@
 
     # Returns
         The reduced tensor.
+    {{np_implementation}}
     "
-  [ & {:keys [x axis keepdims]
-       :or {keepdims false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "logsumexp" [] {:x x :axis axis :keepdims keepdims }))
+  [x & {:keys [axis keepdims]
+                       :or {keepdims false}} ]
+    (py/call-attr-kw tensorflow-backend "logsumexp" [x] {:axis axis :keepdims keepdims }))
 
 (defn manual-variable-initialization 
   "Sets the manual variable initialization flag.
@@ -1428,15 +1499,13 @@
     This boolean flag determines whether
     variables should be initialized
     as they are instantiated (default), or if
-    the user should handle the initialization
-    (e.g. via `tf.initialize_all_variables()`).
+    the user should handle the initialization.
 
     # Arguments
         value: Python boolean.
     "
-  [ & {:keys [value]} ]
-   (py/call-attr-kw tensorflow-backend "manual_variable_initialization" [] {:value value }))
-
+  [ value ]
+  (py/call-attr tensorflow-backend "manual_variable_initialization"  value ))
 (defn map-fn 
   "Map the function fn over the elements elems and return the outputs.
 
@@ -1449,8 +1518,8 @@
     # Returns
         Tensor with dtype `dtype`.
     "
-  [ & {:keys [fn elems name dtype]} ]
-   (py/call-attr-kw tensorflow-backend "map_fn" [] {:fn fn :elems elems :name name :dtype dtype }))
+  [fn elems  & {:keys [name dtype]} ]
+    (py/call-attr-kw tensorflow-backend "map_fn" [fn elems] {:name name :dtype dtype }))
 
 (defn max 
   "Maximum value in a tensor.
@@ -1467,11 +1536,12 @@
 
     # Returns
         A tensor with maximum values of `x`.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x axis keepdims]
-       :or {keepdims false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "max" [] {:x x :axis axis :keepdims keepdims }))
+  [x & {:keys [axis keepdims]
+                       :or {keepdims false}} ]
+    (py/call-attr-kw tensorflow-backend "max" [x] {:axis axis :keepdims keepdims }))
 
 (defn maximum 
   "Element-wise maximum of two tensors.
@@ -1482,9 +1552,11 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x y]} ]
-   (py/call-attr-kw tensorflow-backend "maximum" [] {:x x :y y }))
+  [ x y ]
+  (py/call-attr tensorflow-backend "maximum"  x y ))
 
 (defn mean 
   "Mean of a tensor, alongside the specified axis.
@@ -1501,11 +1573,11 @@
 
     # Returns
         A tensor with the mean of elements of `x`.
+    {{np_implementation}}
     "
-  [ & {:keys [x axis keepdims]
-       :or {keepdims false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "mean" [] {:x x :axis axis :keepdims keepdims }))
+  [x & {:keys [axis keepdims]
+                       :or {keepdims false}} ]
+    (py/call-attr-kw tensorflow-backend "mean" [x] {:axis axis :keepdims keepdims }))
 
 (defn min 
   "Minimum value in a tensor.
@@ -1522,11 +1594,12 @@
 
     # Returns
         A tensor with miminum values of `x`.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x axis keepdims]
-       :or {keepdims false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "min" [] {:x x :axis axis :keepdims keepdims }))
+  [x & {:keys [axis keepdims]
+                       :or {keepdims false}} ]
+    (py/call-attr-kw tensorflow-backend "min" [x] {:axis axis :keepdims keepdims }))
 
 (defn minimum 
   "Element-wise minimum of two tensors.
@@ -1537,9 +1610,11 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x y]} ]
-   (py/call-attr-kw tensorflow-backend "minimum" [] {:x x :y y }))
+  [ x y ]
+  (py/call-attr tensorflow-backend "minimum"  x y ))
 
 (defn moving-average-update 
   "Compute the moving average of a variable.
@@ -1552,8 +1627,8 @@
     # Returns
         An operation to update the variable.
     "
-  [ & {:keys [x value momentum]} ]
-   (py/call-attr-kw tensorflow-backend "moving_average_update" [] {:x x :value value :momentum momentum }))
+  [ x value momentum ]
+  (py/call-attr tensorflow-backend "moving_average_update"  x value momentum ))
 
 (defn ndim 
   "Returns the number of axes in a tensor, as an integer.
@@ -1575,9 +1650,11 @@
         >>> K.ndim(kvar)
         2
     ```
+
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "ndim" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "ndim"  x ))
 
 (defn normalize-batch-in-training 
   "Computes mean and std for batch then apply batch_normalization on batch.
@@ -1593,10 +1670,9 @@
     # Returns
         A tuple length of 3, `(normalized_tensor, mean, variance)`.
     "
-  [ & {:keys [x gamma beta reduction_axes epsilon]
-       :or {epsilon 0.001}} ]
-  
-   (py/call-attr-kw tensorflow-backend "normalize_batch_in_training" [] {:x x :gamma gamma :beta beta :reduction_axes reduction_axes :epsilon epsilon }))
+  [x gamma beta reduction_axes & {:keys [epsilon]
+                       :or {epsilon 0.001}} ]
+    (py/call-attr-kw tensorflow-backend "normalize_batch_in_training" [x gamma beta reduction_axes] {:epsilon epsilon }))
 
 (defn normalize-data-format 
   "Checks that the value correspond to a valid data format.
@@ -1619,8 +1695,8 @@
     # Raises
         ValueError: if `value` or the global `data_format` invalid.
     "
-  [ & {:keys [value]} ]
-   (py/call-attr-kw tensorflow-backend "normalize_data_format" [] {:value value }))
+  [ value ]
+  (py/call-attr tensorflow-backend "normalize_data_format"  value ))
 
 (defn not-equal 
   "Element-wise inequality between two tensors.
@@ -1631,9 +1707,11 @@
 
     # Returns
         A bool tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x y]} ]
-   (py/call-attr-kw tensorflow-backend "not_equal" [] {:x x :y y }))
+  [ x y ]
+  (py/call-attr tensorflow-backend "not_equal"  x y ))
 
 (defn one-hot 
   "Computes the one-hot representation of an integer tensor.
@@ -1647,9 +1725,8 @@
         (n + 1)D one hot representation of the input
         with shape `(batch_size, dim1, dim2, ... dim(n-1), num_classes)`
     "
-  [ & {:keys [indices num_classes]} ]
-   (py/call-attr-kw tensorflow-backend "one_hot" [] {:indices indices :num_classes num_classes }))
-
+  [ indices num_classes ]
+  (py/call-attr tensorflow-backend "one_hot"  indices num_classes ))
 (defn ones 
   "Instantiates an all-ones variable and returns it.
 
@@ -1672,10 +1749,10 @@
                [ 1.,  1.,  1.,  1.],
                [ 1.,  1.,  1.,  1.]], dtype=float32)
     ```
+    {{np_implementation}}
     "
-  [ & {:keys [shape dtype name]} ]
-   (py/call-attr-kw tensorflow-backend "ones" [] {:shape shape :dtype dtype :name name }))
-
+  [shape  & {:keys [dtype name]} ]
+    (py/call-attr-kw tensorflow-backend "ones" [shape] {:dtype dtype :name name }))
 (defn ones-like 
   "Instantiates an all-ones variable of the same shape as another tensor.
 
@@ -1697,9 +1774,10 @@
         array([[ 1.,  1.,  1.],
                [ 1.,  1.,  1.]], dtype=float32)
     ```
+    {{np_implementation}}
     "
-  [ & {:keys [x dtype name]} ]
-   (py/call-attr-kw tensorflow-backend "ones_like" [] {:x x :dtype dtype :name name }))
+  [x  & {:keys [dtype name]} ]
+    (py/call-attr-kw tensorflow-backend "ones_like" [x] {:dtype dtype :name name }))
 
 (defn permute-dimensions 
   "Permutes axes in a tensor.
@@ -1712,8 +1790,8 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x pattern]} ]
-   (py/call-attr-kw tensorflow-backend "permute_dimensions" [] {:x x :pattern pattern }))
+  [ x pattern ]
+  (py/call-attr tensorflow-backend "permute_dimensions"  x pattern ))
 
 (defn placeholder 
   "Instantiates a placeholder tensor and returns it.
@@ -1761,13 +1839,13 @@
         A tensor, result of 2D pooling.
 
     # Raises
-        ValueError: if `data_format` is neither `\"channels_last\"` or `\"channels_first\"`.
+        ValueError: if `data_format` is
+        neither `\"channels_last\"` or `\"channels_first\"`.
         ValueError: if `pool_mode` is neither `\"max\"` or `\"avg\"`.
     "
-  [ & {:keys [x pool_size strides padding data_format pool_mode]
-       :or {strides (1, 1) padding "valid" pool_mode "max"}} ]
-  
-   (py/call-attr-kw tensorflow-backend "pool2d" [] {:x x :pool_size pool_size :strides strides :padding padding :data_format data_format :pool_mode pool_mode }))
+  [x pool_size & {:keys [strides padding data_format pool_mode]
+                       :or {strides (1, 1) padding "valid" pool_mode "max"}} ]
+    (py/call-attr-kw tensorflow-backend "pool2d" [x pool_size] {:strides strides :padding padding :data_format data_format :pool_mode pool_mode }))
 
 (defn pool3d 
   "3D Pooling.
@@ -1784,13 +1862,13 @@
         A tensor, result of 3D pooling.
 
     # Raises
-        ValueError: if `data_format` is neither `\"channels_last\"` or `\"channels_first\"`.
+        ValueError: if `data_format` is
+        neither `\"channels_last\"` or `\"channels_first\"`.
         ValueError: if `pool_mode` is neither `\"max\"` or `\"avg\"`.
     "
-  [ & {:keys [x pool_size strides padding data_format pool_mode]
-       :or {strides (1, 1, 1) padding "valid" pool_mode "max"}} ]
-  
-   (py/call-attr-kw tensorflow-backend "pool3d" [] {:x x :pool_size pool_size :strides strides :padding padding :data_format data_format :pool_mode pool_mode }))
+  [x pool_size & {:keys [strides padding data_format pool_mode]
+                       :or {strides (1, 1, 1) padding "valid" pool_mode "max"}} ]
+    (py/call-attr-kw tensorflow-backend "pool3d" [x pool_size] {:strides strides :padding padding :data_format data_format :pool_mode pool_mode }))
 
 (defn pow 
   "Element-wise exponentiation.
@@ -1801,21 +1879,23 @@
 
     # Returns
         A tensor.
+    {{np_implementation}}
     "
-  [ & {:keys [x a]} ]
-   (py/call-attr-kw tensorflow-backend "pow" [] {:x x :a a }))
+  [ x a ]
+  (py/call-attr tensorflow-backend "pow"  x a ))
 
 (defn print-tensor 
   "Prints `message` and the tensor value when evaluated.
 
-     Note that `print_tensor` returns a new tensor identical to `x`
-     which should be used in the following code. Otherwise the
-     print operation is not taken into account during evaluation.
+    Note that `print_tensor` returns a new tensor identical to `x`
+    which should be used in the following code. Otherwise the
+    print operation is not taken into account during evaluation.
 
-     # Example
-     ```python
-         >>> x = K.print_tensor(x, message=\"x is: \")
-     ```
+    # Example
+
+    ```python
+        >>> x = K.print_tensor(x, message=\"x is: \")
+    ```
 
     # Arguments
         x: Tensor to print.
@@ -1824,10 +1904,9 @@
     # Returns
         The same tensor `x`, unchanged.
     "
-  [ & {:keys [x message]
-       :or {message ""}} ]
-  
-   (py/call-attr-kw tensorflow-backend "print_tensor" [] {:x x :message message }))
+  [x & {:keys [message]
+                       :or {message ""}} ]
+    (py/call-attr-kw tensorflow-backend "print_tensor" [x] {:message message }))
 
 (defn prod 
   "Multiplies the values in a tensor, alongside the specified axis.
@@ -1844,11 +1923,12 @@
 
     # Returns
         A tensor with the product of elements of `x`.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x axis keepdims]
-       :or {keepdims false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "prod" [] {:x x :axis axis :keepdims keepdims }))
+  [x & {:keys [axis keepdims]
+                       :or {keepdims false}} ]
+    (py/call-attr-kw tensorflow-backend "prod" [x] {:axis axis :keepdims keepdims }))
 
 (defn random-binomial 
   "Returns a tensor with random binomial distribution of values.
@@ -1862,10 +1942,9 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [shape p dtype seed]
-       :or {p 0.0}} ]
-  
-   (py/call-attr-kw tensorflow-backend "random_binomial" [] {:shape shape :p p :dtype dtype :seed seed }))
+  [shape & {:keys [p dtype seed]
+                       :or {p 0.0}} ]
+    (py/call-attr-kw tensorflow-backend "random_binomial" [shape] {:p p :dtype dtype :seed seed }))
 
 (defn random-normal 
   "Returns a tensor with normal distribution of values.
@@ -1881,11 +1960,9 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [shape mean stddev dtype seed]
-       :or {mean 0.0 stddev 1.0}} ]
-  
-   (py/call-attr-kw tensorflow-backend "random_normal" [] {:shape shape :mean mean :stddev stddev :dtype dtype :seed seed }))
-
+  [shape & {:keys [mean stddev dtype seed]
+                       :or {mean 0.0 stddev 1.0}} ]
+    (py/call-attr-kw tensorflow-backend "random_normal" [shape] {:mean mean :stddev stddev :dtype dtype :seed seed }))
 (defn random-normal-variable 
   "Instantiates a variable with values drawn from a normal distribution.
 
@@ -1910,9 +1987,10 @@
         array([[ 1.19591331,  0.68685907, -0.63814116],
                [ 0.92629528,  0.28055015,  1.70484698]], dtype=float32)
     ```
+    {{np_implementation}}
     "
-  [ & {:keys [shape mean scale dtype name seed]} ]
-   (py/call-attr-kw tensorflow-backend "random_normal_variable" [] {:shape shape :mean mean :scale scale :dtype dtype :name name :seed seed }))
+  [shape mean scale  & {:keys [dtype name seed]} ]
+    (py/call-attr-kw tensorflow-backend "random_normal_variable" [shape mean scale] {:dtype dtype :name name :seed seed }))
 
 (defn random-uniform 
   "Returns a tensor with uniform distribution of values.
@@ -1929,11 +2007,9 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [shape minval maxval dtype seed]
-       :or {minval 0.0 maxval 1.0}} ]
-  
-   (py/call-attr-kw tensorflow-backend "random_uniform" [] {:shape shape :minval minval :maxval maxval :dtype dtype :seed seed }))
-
+  [shape & {:keys [minval maxval dtype seed]
+                       :or {minval 0.0 maxval 1.0}} ]
+    (py/call-attr-kw tensorflow-backend "random_uniform" [shape] {:minval minval :maxval maxval :dtype dtype :seed seed }))
 (defn random-uniform-variable 
   "Instantiates a variable with values drawn from a uniform distribution.
 
@@ -1958,9 +2034,10 @@
         array([[ 0.10940075,  0.10047495,  0.476143  ],
                [ 0.66137183,  0.00869417,  0.89220798]], dtype=float32)
     ```
+    {{np_implementation}}
     "
-  [ & {:keys [shape low high dtype name seed]} ]
-   (py/call-attr-kw tensorflow-backend "random_uniform_variable" [] {:shape shape :low low :high high :dtype dtype :name name :seed seed }))
+  [shape low high  & {:keys [dtype name seed]} ]
+    (py/call-attr-kw tensorflow-backend "random_uniform_variable" [shape low high] {:dtype dtype :name name :seed seed }))
 
 (defn relu 
   "Rectified linear unit.
@@ -1980,11 +2057,12 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x alpha max_value threshold]
-       :or {alpha 0.0 threshold 0.0}} ]
-  
-   (py/call-attr-kw tensorflow-backend "relu" [] {:x x :alpha alpha :max_value max_value :threshold threshold }))
+  [x & {:keys [alpha max_value threshold]
+                       :or {alpha 0.0 threshold 0.0}} ]
+    (py/call-attr-kw tensorflow-backend "relu" [x] {:alpha alpha :max_value max_value :threshold threshold }))
 
 (defn repeat 
   "Repeats a 2D tensor.
@@ -1999,8 +2077,8 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x n]} ]
-   (py/call-attr-kw tensorflow-backend "repeat" [] {:x x :n n }))
+  [ x n ]
+  (py/call-attr tensorflow-backend "repeat"  x n ))
 
 (defn repeat-elements 
   "Repeats the elements of a tensor along an axis, like `np.repeat`.
@@ -2016,14 +2094,13 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x rep axis]} ]
-   (py/call-attr-kw tensorflow-backend "repeat_elements" [] {:x x :rep rep :axis axis }))
+  [ x rep axis ]
+  (py/call-attr tensorflow-backend "repeat_elements"  x rep axis ))
 
 (defn reset-uids 
-  "Resets graph identifiers.
-    "
+  "Resets graph identifiers."
   [  ]
-  (py/call-attr tensorflow-backend "reset_uids"   ))
+  (py/call-attr tensorflow-backend "reset_uids"  ))
 
 (defn reshape 
   "Reshapes a tensor to the specified shape.
@@ -2035,8 +2112,8 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x shape]} ]
-   (py/call-attr-kw tensorflow-backend "reshape" [] {:x x :shape shape }))
+  [ x shape ]
+  (py/call-attr tensorflow-backend "reshape"  x shape ))
 
 (defn resize-images 
   "Resizes the images contained in a 4D tensor.
@@ -2052,12 +2129,12 @@
         A tensor.
 
     # Raises
-        ValueError: if `data_format` is neither `\"channels_last\"` or `\"channels_first\"`.
+        ValueError: if `data_format` is
+        neither `\"channels_last\"` or `\"channels_first\"`.
     "
-  [ & {:keys [x height_factor width_factor data_format interpolation]
-       :or {interpolation "nearest"}} ]
-  
-   (py/call-attr-kw tensorflow-backend "resize_images" [] {:x x :height_factor height_factor :width_factor width_factor :data_format data_format :interpolation interpolation }))
+  [x height_factor width_factor data_format & {:keys [interpolation]
+                       :or {interpolation "nearest"}} ]
+    (py/call-attr-kw tensorflow-backend "resize_images" [x height_factor width_factor data_format] {:interpolation interpolation }))
 
 (defn resize-volumes 
   "Resizes the volume contained in a 5D tensor.
@@ -2073,10 +2150,11 @@
         A tensor.
 
     # Raises
-        ValueError: if `data_format` is neither `\"channels_last\"` or `\"channels_first\"`.
+        ValueError: if `data_format` is
+        neither `\"channels_last\"` or `\"channels_first\"`.
     "
-  [ & {:keys [x depth_factor height_factor width_factor data_format]} ]
-   (py/call-attr-kw tensorflow-backend "resize_volumes" [] {:x x :depth_factor depth_factor :height_factor height_factor :width_factor width_factor :data_format data_format }))
+  [ x depth_factor height_factor width_factor data_format ]
+  (py/call-attr tensorflow-backend "resize_volumes"  x depth_factor height_factor width_factor data_format ))
 
 (defn reverse 
   "Reverses a tensor along the specified axes.
@@ -2088,9 +2166,11 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x axes]} ]
-   (py/call-attr-kw tensorflow-backend "reverse" [] {:x x :axes axes }))
+  [ x axes ]
+  (py/call-attr tensorflow-backend "reverse"  x axes ))
 
 (defn rnn 
   "Iterates over the time dimension of a tensor.
@@ -2136,11 +2216,12 @@
             but input timestep is not a fixed number.
         ValueError: If `mask` is provided (not `None`)
             but states is not provided (`len(states)` == 0).
+
+    {{np_implementation}}
     "
-  [ & {:keys [step_function inputs initial_states go_backwards mask constants unroll input_length]
-       :or {go_backwards false unroll false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "rnn" [] {:step_function step_function :inputs inputs :initial_states initial_states :go_backwards go_backwards :mask mask :constants constants :unroll unroll :input_length input_length }))
+  [step_function inputs initial_states & {:keys [go_backwards mask constants unroll input_length]
+                       :or {go_backwards false unroll false}} ]
+    (py/call-attr-kw tensorflow-backend "rnn" [step_function inputs initial_states] {:go_backwards go_backwards :mask mask :constants constants :unroll unroll :input_length input_length }))
 
 (defn round 
   "Element-wise rounding to the closest integer.
@@ -2153,8 +2234,8 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "round" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "round"  x ))
 
 (defn separable-conv1d 
   "1D convolution with separable filters.
@@ -2175,10 +2256,9 @@
         ValueError: If `data_format` is neither
             `\"channels_last\"` nor `\"channels_first\"`.
     "
-  [ & {:keys [x depthwise_kernel pointwise_kernel strides padding data_format dilation_rate]
-       :or {strides 1 padding "valid" dilation_rate 1}} ]
-  
-   (py/call-attr-kw tensorflow-backend "separable_conv1d" [] {:x x :depthwise_kernel depthwise_kernel :pointwise_kernel pointwise_kernel :strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
+  [x depthwise_kernel pointwise_kernel & {:keys [strides padding data_format dilation_rate]
+                       :or {strides 1 padding "valid" dilation_rate 1}} ]
+    (py/call-attr-kw tensorflow-backend "separable_conv1d" [x depthwise_kernel pointwise_kernel] {:strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
 
 (defn separable-conv2d 
   "2D convolution with separable filters.
@@ -2200,16 +2280,53 @@
         ValueError: If `data_format` is neither
             `\"channels_last\"` nor `\"channels_first\"`.
     "
-  [ & {:keys [x depthwise_kernel pointwise_kernel strides padding data_format dilation_rate]
-       :or {strides (1, 1) padding "valid" dilation_rate (1, 1)}} ]
-  
-   (py/call-attr-kw tensorflow-backend "separable_conv2d" [] {:x x :depthwise_kernel depthwise_kernel :pointwise_kernel pointwise_kernel :strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
+  [x depthwise_kernel pointwise_kernel & {:keys [strides padding data_format dilation_rate]
+                       :or {strides (1, 1) padding "valid" dilation_rate (1, 1)}} ]
+    (py/call-attr-kw tensorflow-backend "separable_conv2d" [x depthwise_kernel pointwise_kernel] {:strides strides :padding padding :data_format data_format :dilation_rate dilation_rate }))
 
-(defn set-image-dim-ordering 
-  "Legacy setter for `image_data_format`.
+(defn set-epsilon 
+  "Sets the value of the fuzz factor used in numeric expressions.
 
     # Arguments
-        dim_ordering: string. `tf` or `th`.
+        e: float. New value of epsilon.
+
+    # Example
+    ```python
+        >>> from keras import backend as K
+        >>> K.epsilon()
+        1e-07
+        >>> K.set_epsilon(1e-05)
+        >>> K.epsilon()
+        1e-05
+    ```
+    "
+  [ e ]
+  (py/call-attr tensorflow-backend "set_epsilon"  e ))
+
+(defn set-floatx 
+  "Sets the default float type.
+
+    # Arguments
+        floatx: String, 'float16', 'float32', or 'float64'.
+
+    # Example
+    ```python
+        >>> from keras import backend as K
+        >>> K.floatx()
+        'float32'
+        >>> K.set_floatx('float16')
+        >>> K.floatx()
+        'float16'
+    ```
+    "
+  [ floatx ]
+  (py/call-attr tensorflow-backend "set_floatx"  floatx ))
+
+(defn set-image-data-format 
+  "Sets the value of the data format convention.
+
+    # Arguments
+        data_format: string. `'channels_first'` or `'channels_last'`.
 
     # Example
     ```python
@@ -2220,12 +2337,9 @@
         >>> K.image_data_format()
         'channels_last'
     ```
-
-    # Raises
-        ValueError: if `dim_ordering` is invalid.
     "
-  [ & {:keys [dim_ordering]} ]
-   (py/call-attr-kw tensorflow-backend "set_image_dim_ordering" [] {:dim_ordering dim_ordering }))
+  [ data_format ]
+  (py/call-attr tensorflow-backend "set_image_data_format"  data_format ))
 
 (defn set-learning-phase 
   "Sets the learning phase to a fixed value.
@@ -2236,28 +2350,32 @@
     # Raises
         ValueError: if `value` is neither `0` nor `1`.
     "
-  [ & {:keys [value]} ]
-   (py/call-attr-kw tensorflow-backend "set_learning_phase" [] {:value value }))
+  [ value ]
+  (py/call-attr tensorflow-backend "set_learning_phase"  value ))
 
 (defn set-session 
   "Sets the global TensorFlow session.
 
     # Arguments
         session: A TF Session.
+
+    # Raises
+        RuntimeError: if no session is available
+            (e.g. when using TensorFlow 2.0).
     "
-  [ & {:keys [session]} ]
-   (py/call-attr-kw tensorflow-backend "set_session" [] {:session session }))
+  [ session ]
+  (py/call-attr tensorflow-backend "set_session"  session ))
 
 (defn set-value 
   "Sets the value of a variable, from a Numpy array.
 
     # Arguments
-        x: Tensor to set to a new value.
+        x: Variable to set to a new value.
         value: Value to set the tensor to, as a Numpy array
             (of the same shape).
     "
-  [ & {:keys [x value]} ]
-   (py/call-attr-kw tensorflow-backend "set_value" [] {:x x :value value }))
+  [ x value ]
+  (py/call-attr tensorflow-backend "set_value"  x value ))
 
 (defn shape 
   "Returns the symbolic shape of a tensor or variable.
@@ -2287,8 +2405,8 @@
         array([2, 4, 5], dtype=int32)
     ```
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "shape" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "shape"  x ))
 
 (defn sigmoid 
   "Element-wise sigmoid.
@@ -2298,9 +2416,11 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "sigmoid" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "sigmoid"  x ))
 
 (defn sign 
   "Element-wise sign.
@@ -2311,8 +2431,8 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "sign" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "sign"  x ))
 
 (defn sin 
   "Computes sin of x element-wise.
@@ -2323,8 +2443,30 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "sin" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "sin"  x ))
+(defn size 
+  "Returns the size of a tensor.
+
+    # Arguments
+        x: Tensor or variable.
+        name: A name for the operation (optional).
+
+    # Returns
+        Size of the tensor.
+
+    # Examples
+    ```python
+    >>> from keras import backend as K
+    >>> val = np.array([[1, 2], [3, 4]])
+    >>> kvar = K.variable(value=val)
+    >>> K.size(inputs)
+    <tf.Tensor: id=9, shape=(), dtype=int32, numpy=4>
+    ```
+
+    "
+  [x  & {:keys [name]} ]
+    (py/call-attr-kw tensorflow-backend "size" [x] {:name name }))
 
 (defn slice 
   "Extracts a slice from a tensor.
@@ -2339,12 +2481,18 @@
             along each axis.
 
     # Returns
-        Tensor `x[start[0]: start[0] + size[0],
-                  ...,
-                  start[-1]: start[-1] + size[-1]]`
+        A sliced tensor:
+        ```python
+        new_x = x[start[0]: start[0] + size[0], ..., start[-1]: start[-1] + size[-1]]
+        ```
+
+    # Raises
+        ValueError: if the dimension and the size of indices mismatches.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x start size]} ]
-   (py/call-attr-kw tensorflow-backend "slice" [] {:x x :start start :size size }))
+  [ x start size ]
+  (py/call-attr tensorflow-backend "slice"  x start size ))
 
 (defn softmax 
   "Softmax of a tensor.
@@ -2356,11 +2504,12 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x axis]
-       :or {axis -1}} ]
-  
-   (py/call-attr-kw tensorflow-backend "softmax" [] {:x x :axis axis }))
+  [x & {:keys [axis]
+                       :or {axis -1}} ]
+    (py/call-attr-kw tensorflow-backend "softmax" [x] {:axis axis }))
 
 (defn softplus 
   "Softplus of a tensor.
@@ -2370,9 +2519,11 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "softplus" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "softplus"  x ))
 
 (defn softsign 
   "Softsign of a tensor.
@@ -2382,9 +2533,11 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "softsign" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "softsign"  x ))
 
 (defn sparse-categorical-crossentropy 
   "Categorical crossentropy with integer targets.
@@ -2408,10 +2561,9 @@
         ValueError: if `axis` is neither -1 nor one of
             the axes of `output`.
     "
-  [ & {:keys [target output from_logits axis]
-       :or {from_logits false axis -1}} ]
-  
-   (py/call-attr-kw tensorflow-backend "sparse_categorical_crossentropy" [] {:target target :output output :from_logits from_logits :axis axis }))
+  [target output & {:keys [from_logits axis]
+                       :or {from_logits false axis -1}} ]
+    (py/call-attr-kw tensorflow-backend "sparse_categorical_crossentropy" [target output] {:from_logits from_logits :axis axis }))
 
 (defn spatial-2d-padding 
   "Pads the 2nd and 3rd dimensions of a 4D tensor.
@@ -2425,12 +2577,12 @@
         A padded 4D tensor.
 
     # Raises
-        ValueError: if `data_format` is neither `\"channels_last\"` or `\"channels_first\"`.
+        ValueError: if `data_format` is
+        neither `\"channels_last\"` or `\"channels_first\"`.
     "
-  [ & {:keys [x padding data_format]
-       :or {padding ((1, 1), (1, 1))}} ]
-  
-   (py/call-attr-kw tensorflow-backend "spatial_2d_padding" [] {:x x :padding padding :data_format data_format }))
+  [x & {:keys [padding data_format]
+                       :or {padding ((1, 1), (1, 1))}} ]
+    (py/call-attr-kw tensorflow-backend "spatial_2d_padding" [x] {:padding padding :data_format data_format }))
 
 (defn spatial-3d-padding 
   "Pads 5D tensor with zeros along the depth, height, width dimensions.
@@ -2452,13 +2604,13 @@
         A padded 5D tensor.
 
     # Raises
-        ValueError: if `data_format` is neither `\"channels_last\"` or `\"channels_first\"`.
+        ValueError: if `data_format` is
+        neither `\"channels_last\"` or `\"channels_first\"`.
 
     "
-  [ & {:keys [x padding data_format]
-       :or {padding ((1, 1), (1, 1), (1, 1))}} ]
-  
-   (py/call-attr-kw tensorflow-backend "spatial_3d_padding" [] {:x x :padding padding :data_format data_format }))
+  [x & {:keys [padding data_format]
+                       :or {padding ((1, 1), (1, 1), (1, 1))}} ]
+    (py/call-attr-kw tensorflow-backend "spatial_3d_padding" [x] {:padding padding :data_format data_format }))
 
 (defn sqrt 
   "Element-wise square root.
@@ -2468,9 +2620,10 @@
 
     # Returns
         A tensor.
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "sqrt" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "sqrt"  x ))
 
 (defn square 
   "Element-wise square.
@@ -2481,8 +2634,8 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "square" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "square"  x ))
 
 (defn squeeze 
   "Removes a 1-dimension from the tensor at index \"axis\".
@@ -2494,8 +2647,8 @@
     # Returns
         A tensor with the same data as `x` but reduced dimensions.
     "
-  [ & {:keys [x axis]} ]
-   (py/call-attr-kw tensorflow-backend "squeeze" [] {:x x :axis axis }))
+  [ x axis ]
+  (py/call-attr tensorflow-backend "squeeze"  x axis ))
 
 (defn stack 
   "Stacks a list of rank `R` tensors into a rank `R+1` tensor.
@@ -2506,11 +2659,12 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x axis]
-       :or {axis 0}} ]
-  
-   (py/call-attr-kw tensorflow-backend "stack" [] {:x x :axis axis }))
+  [x & {:keys [axis]
+                       :or {axis 0}} ]
+    (py/call-attr-kw tensorflow-backend "stack" [x] {:axis axis }))
 
 (defn std 
   "Standard deviation of a tensor, alongside the specified axis.
@@ -2527,11 +2681,11 @@
 
     # Returns
         A tensor with the standard deviation of elements of `x`.
+    {{np_implementation}}
     "
-  [ & {:keys [x axis keepdims]
-       :or {keepdims false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "std" [] {:x x :axis axis :keepdims keepdims }))
+  [x & {:keys [axis keepdims]
+                       :or {keepdims false}} ]
+    (py/call-attr-kw tensorflow-backend "std" [x] {:axis axis :keepdims keepdims }))
 
 (defn stop-gradient 
   "Returns `variables` but with zero gradient w.r.t. every other variable.
@@ -2544,8 +2698,8 @@
         A single tensor or a list of tensors (depending on the passed argument)
             that has constant gradient with respect to any other variable.
     "
-  [ & {:keys [variables]} ]
-   (py/call-attr-kw tensorflow-backend "stop_gradient" [] {:variables variables }))
+  [ variables ]
+  (py/call-attr tensorflow-backend "stop_gradient"  variables ))
 
 (defn sum 
   "Sum of the values in a tensor, alongside the specified axis.
@@ -2562,11 +2716,12 @@
 
     # Returns
         A tensor with sum of `x`.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x axis keepdims]
-       :or {keepdims false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "sum" [] {:x x :axis axis :keepdims keepdims }))
+  [x & {:keys [axis keepdims]
+                       :or {keepdims false}} ]
+    (py/call-attr-kw tensorflow-backend "sum" [x] {:axis axis :keepdims keepdims }))
 
 (defn switch 
   "Switches between two operations depending on a scalar value.
@@ -2584,9 +2739,23 @@
 
     # Raises
         ValueError: If rank of `condition` is greater than rank of expressions.
+
+    {{np_implementation}}
     "
-  [ & {:keys [condition then_expression else_expression]} ]
-   (py/call-attr-kw tensorflow-backend "switch" [] {:condition condition :then_expression then_expression :else_expression else_expression }))
+  [ condition then_expression else_expression ]
+  (py/call-attr tensorflow-backend "switch"  condition then_expression else_expression ))
+
+(defn symbolic 
+  "Decorator used in TensorFlow 2.0 to enter the Keras graph.
+
+    # Arguments
+        func: Function to decorate.
+
+    # Returns
+        Decorated function.
+    "
+  [ func ]
+  (py/call-attr tensorflow-backend "symbolic"  func ))
 
 (defn tanh 
   "Element-wise tanh.
@@ -2596,9 +2765,11 @@
 
     # Returns
         A tensor.
+
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "tanh" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "tanh"  x ))
 
 (defn temporal-padding 
   "Pads the middle dimension of a 3D tensor.
@@ -2611,10 +2782,9 @@
     # Returns
         A padded 3D tensor.
     "
-  [ & {:keys [x padding]
-       :or {padding (1, 1)}} ]
-  
-   (py/call-attr-kw tensorflow-backend "temporal_padding" [] {:x x :padding padding }))
+  [x & {:keys [padding]
+                       :or {padding (1, 1)}} ]
+    (py/call-attr-kw tensorflow-backend "temporal_padding" [x] {:padding padding }))
 
 (defn tile 
   "Creates a tensor by tiling `x` by `n`.
@@ -2626,9 +2796,22 @@
 
     # Returns
         A tiled tensor.
+
+    # Example
+    ```python
+        >>> from keras import backend as K
+        >>> kvar = K.variable(np.random.random((2, 3)))
+        >>> kvar_tile = K.tile(K.eye(2), (2, 3))
+        >>> K.eval(kvar_tile)
+        array([[1., 0., 1., 0., 1., 0.],
+               [0., 1., 0., 1., 0., 1.],
+               [1., 0., 1., 0., 1., 0.],
+               [0., 1., 0., 1., 0., 1.]], dtype=float32)
+    ```
+    {{np_implementation}}
     "
-  [ & {:keys [x n]} ]
-   (py/call-attr-kw tensorflow-backend "tile" [] {:x x :n n }))
+  [ x n ]
+  (py/call-attr tensorflow-backend "tile"  x n ))
 
 (defn to-dense 
   "Converts a sparse tensor into a dense tensor and returns it.
@@ -2650,8 +2833,8 @@
         False
     ```
     "
-  [ & {:keys [tensor]} ]
-   (py/call-attr-kw tensorflow-backend "to_dense" [] {:tensor tensor }))
+  [ tensor ]
+  (py/call-attr tensorflow-backend "to_dense"  tensor ))
 
 (defn transpose 
   "Transposes a tensor and returns it.
@@ -2684,9 +2867,10 @@
         <tf.Tensor 'transpose_4:0' shape=(3, 2) dtype=float32>
 
     ```
+    {{np_implementation}}
     "
-  [ & {:keys [x]} ]
-   (py/call-attr-kw tensorflow-backend "transpose" [] {:x x }))
+  [ x ]
+  (py/call-attr tensorflow-backend "transpose"  x ))
 
 (defn transpose-shape 
   "Converts a tuple or a list to the correct `data_format`.
@@ -2721,8 +2905,8 @@
     # Raises
         ValueError: if `value` or the global `data_format` invalid.
     "
-  [ & {:keys [shape target_format spatial_axes]} ]
-   (py/call-attr-kw tensorflow-backend "transpose_shape" [] {:shape shape :target_format target_format :spatial_axes spatial_axes }))
+  [ shape target_format spatial_axes ]
+  (py/call-attr tensorflow-backend "transpose_shape"  shape target_format spatial_axes ))
 
 (defn truncated-normal 
   "Returns a tensor with truncated random normal distribution of values.
@@ -2742,10 +2926,9 @@
     # Returns
         A tensor.
     "
-  [ & {:keys [shape mean stddev dtype seed]
-       :or {mean 0.0 stddev 1.0}} ]
-  
-   (py/call-attr-kw tensorflow-backend "truncated_normal" [] {:shape shape :mean mean :stddev stddev :dtype dtype :seed seed }))
+  [shape & {:keys [mean stddev dtype seed]
+                       :or {mean 0.0 stddev 1.0}} ]
+    (py/call-attr-kw tensorflow-backend "truncated_normal" [shape] {:mean mean :stddev stddev :dtype dtype :seed seed }))
 
 (defn update 
   "Update the value of `x` to `new_x`.
@@ -2757,8 +2940,8 @@
     # Returns
         The variable `x` updated.
     "
-  [ & {:keys [x new_x]} ]
-   (py/call-attr-kw tensorflow-backend "update" [] {:x x :new_x new_x }))
+  [ x new_x ]
+  (py/call-attr tensorflow-backend "update"  x new_x ))
 
 (defn update-add 
   "Update the value of `x` by adding `increment`.
@@ -2770,8 +2953,8 @@
     # Returns
         The variable `x` updated.
     "
-  [ & {:keys [x increment]} ]
-   (py/call-attr-kw tensorflow-backend "update_add" [] {:x x :increment increment }))
+  [ x increment ]
+  (py/call-attr tensorflow-backend "update_add"  x increment ))
 
 (defn update-sub 
   "Update the value of `x` by subtracting `decrement`.
@@ -2783,8 +2966,13 @@
     # Returns
         The variable `x` updated.
     "
-  [ & {:keys [x decrement]} ]
-   (py/call-attr-kw tensorflow-backend "update_sub" [] {:x x :decrement decrement }))
+  [ x decrement ]
+  (py/call-attr tensorflow-backend "update_sub"  x decrement ))
+
+(defn v1-variable-initialization 
+  ""
+  [  ]
+  (py/call-attr tensorflow-backend "v1_variable_initialization"  ))
 
 (defn var 
   "Variance of a tensor, alongside the specified axis.
@@ -2801,12 +2989,11 @@
 
     # Returns
         A tensor with the variance of elements of `x`.
+    {{np_implementation}}
     "
-  [ & {:keys [x axis keepdims]
-       :or {keepdims false}} ]
-  
-   (py/call-attr-kw tensorflow-backend "var" [] {:x x :axis axis :keepdims keepdims }))
-
+  [x & {:keys [axis keepdims]
+                       :or {keepdims false}} ]
+    (py/call-attr-kw tensorflow-backend "var" [x] {:axis axis :keepdims keepdims }))
 (defn variable 
   "Instantiates a variable and returns it.
 
@@ -2834,9 +3021,8 @@
                [ 3.,  4.]])
     ```
     "
-  [ & {:keys [value dtype name constraint]} ]
-   (py/call-attr-kw tensorflow-backend "variable" [] {:value value :dtype dtype :name name :constraint constraint }))
-
+  [value  & {:keys [dtype name constraint]} ]
+    (py/call-attr-kw tensorflow-backend "variable" [value] {:dtype dtype :name name :constraint constraint }))
 (defn zeros 
   "Instantiates an all-zeros variable and returns it.
 
@@ -2859,10 +3045,10 @@
                [ 0.,  0.,  0.,  0.],
                [ 0.,  0.,  0.,  0.]], dtype=float32)
     ```
+    {{np_implementation}}
     "
-  [ & {:keys [shape dtype name]} ]
-   (py/call-attr-kw tensorflow-backend "zeros" [] {:shape shape :dtype dtype :name name }))
-
+  [shape  & {:keys [dtype name]} ]
+    (py/call-attr-kw tensorflow-backend "zeros" [shape] {:dtype dtype :name name }))
 (defn zeros-like 
   "Instantiates an all-zeros variable of the same shape as another tensor.
 
@@ -2884,6 +3070,7 @@
         array([[ 0.,  0.,  0.],
                [ 0.,  0.,  0.]], dtype=float32)
     ```
+    {{np_implementation}}
     "
-  [ & {:keys [x dtype name]} ]
-   (py/call-attr-kw tensorflow-backend "zeros_like" [] {:x x :dtype dtype :name name }))
+  [x  & {:keys [dtype name]} ]
+    (py/call-attr-kw tensorflow-backend "zeros_like" [x] {:dtype dtype :name name }))

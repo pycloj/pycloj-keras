@@ -41,11 +41,10 @@
     of a collision is in relation to the dimension of the hashing space and
     the number of distinct objects.
     "
-  [ & {:keys [text n hash_function filters lower split]
-       :or {filters "!"#$%&()*+,-./:;<=>?@[\]^_`{|}~	
+  [text n & {:keys [hash_function filters lower split]
+                       :or {filters "!"#$%&()*+,-./:;<=>?@[\]^_`{|}~	
 " lower true split " "}} ]
-  
-   (py/call-attr-kw text "hashing_trick" [] {:text text :n n :hash_function hash_function :filters filters :lower lower :split split }))
+    (py/call-attr-kw text "hashing_trick" [text n] {:hash_function hash_function :filters filters :lower lower :split split }))
 
 (defn one-hot 
   "One-hot encodes a text into a list of word indexes of size n.
@@ -66,11 +65,10 @@
         List of integers in [1, n]. Each integer encodes a word
         (unicity non-guaranteed).
     "
-  [ & {:keys [text n filters lower split]
-       :or {filters "!"#$%&()*+,-./:;<=>?@[\]^_`{|}~	
+  [text n & {:keys [filters lower split]
+                       :or {filters "!"#$%&()*+,-./:;<=>?@[\]^_`{|}~	
 " lower true split " "}} ]
-  
-   (py/call-attr-kw text "one_hot" [] {:text text :n n :filters filters :lower lower :split split }))
+    (py/call-attr-kw text "one_hot" [text n] {:filters filters :lower lower :split split }))
 
 (defn text-to-word-sequence 
   "Converts a text to a sequence of words (or tokens).
@@ -86,8 +84,20 @@
     # Returns
         A list of words (or tokens).
     "
-  [ & {:keys [text filters lower split]
-       :or {filters "!"#$%&()*+,-./:;<=>?@[\]^_`{|}~	
+  [text & {:keys [filters lower split]
+                       :or {filters "!"#$%&()*+,-./:;<=>?@[\]^_`{|}~	
 " lower true split " "}} ]
-  
-   (py/call-attr-kw text "text_to_word_sequence" [] {:text text :filters filters :lower lower :split split }))
+    (py/call-attr-kw text "text_to_word_sequence" [text] {:filters filters :lower lower :split split }))
+
+(defn tokenizer-from-json 
+  "Parses a JSON tokenizer configuration file and returns a
+    tokenizer instance.
+
+    # Arguments
+        json_string: JSON string encoding a tokenizer configuration.
+
+    # Returns
+        A Keras Tokenizer instance
+    "
+  [ json_string ]
+  (py/call-attr text "tokenizer_from_json"  json_string ))

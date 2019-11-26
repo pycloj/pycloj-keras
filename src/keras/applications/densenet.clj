@@ -14,29 +14,29 @@
 (defn DenseNet121 
   ""
   [  ]
-  (py/call-attr densenet "DenseNet121"   ))
+  (py/call-attr densenet "DenseNet121"  ))
 
 (defn DenseNet169 
   ""
   [  ]
-  (py/call-attr densenet "DenseNet169"   ))
+  (py/call-attr densenet "DenseNet169"  ))
 
 (defn DenseNet201 
   ""
   [  ]
-  (py/call-attr densenet "DenseNet201"   ))
+  (py/call-attr densenet "DenseNet201"  ))
 
 (defn decode-predictions 
   ""
   [  ]
-  (py/call-attr densenet "decode_predictions"   ))
+  (py/call-attr densenet "decode_predictions"  ))
 
 (defn keras-modules-injection 
   ""
-  [ & {:keys [base_fun]} ]
-   (py/call-attr-kw densenet "keras_modules_injection" [] {:base_fun base_fun }))
+  [ base_fun ]
+  (py/call-attr densenet "keras_modules_injection"  base_fun ))
 
 (defn preprocess-input 
   ""
   [  ]
-  (py/call-attr densenet "preprocess_input"   ))
+  (py/call-attr densenet "preprocess_input"  ))

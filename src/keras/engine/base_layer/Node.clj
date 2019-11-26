@@ -53,7 +53,6 @@
 
 (py/initialize!)
 (defonce base-layer (import-module "keras.engine.base_layer"))
-
 (defn Node 
   "A `Node` describes the connectivity between two layers.
 
@@ -99,10 +98,10 @@
         A._outbound_nodes
         B._inbound_nodes
     "
-  [ & {:keys [outbound_layer inbound_layers node_indices tensor_indices input_tensors output_tensors input_masks output_masks input_shapes output_shapes arguments]} ]
-   (py/call-attr-kw base-layer "Node" [] {:outbound_layer outbound_layer :inbound_layers inbound_layers :node_indices node_indices :tensor_indices tensor_indices :input_tensors input_tensors :output_tensors output_tensors :input_masks input_masks :output_masks output_masks :input_shapes input_shapes :output_shapes output_shapes :arguments arguments }))
+  [outbound_layer inbound_layers node_indices tensor_indices input_tensors output_tensors input_masks output_masks input_shapes output_shapes  & {:keys [arguments]} ]
+    (py/call-attr-kw base-layer "Node" [outbound_layer inbound_layers node_indices tensor_indices input_tensors output_tensors input_masks output_masks input_shapes output_shapes] {:arguments arguments }))
 
 (defn get-config 
   ""
-  [ self ]
-  (py/call-attr base-layer "get_config"  self ))
+  [ self  ]
+  (py/call-attr self "get_config"  self  ))
